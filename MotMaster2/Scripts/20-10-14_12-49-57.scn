@@ -1,0 +1,11 @@
+{
+  "randomized": false,
+  "NextInChain": null,
+  "groupID": "20-10-14_12-49-57",
+  "AsString": "ChirpRate  \t10 .. 200; 10",
+  "sParam": "ChirpRate",
+  "sFrom": 10.0,
+  "sTo": 200.0,
+  "sBy": 10.0,
+  "Value": "NaN"
+}

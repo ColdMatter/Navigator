@@ -1,0 +1,3 @@
+I think the phase lock pdf is pretty much the most updated one. Also the phase lock that we are using in Plexal is pretty old. 
+I have a quick lock. For now, the parameter we want to scan with MOTMaster is called 
+“input_frequency” , which is on page 17.

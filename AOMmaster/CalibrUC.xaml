@@ -1,0 +1,28 @@
+﻿<UserControl x:Name="CalibrationUC" x:Class="AOMmaster.CalibrUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AOMmaster"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" Width="187.795">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="28"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition />
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <DataGrid x:Name="dgCalibr" Margin="0,0.797,-0.329,0.127" Grid.Row="2" CellEditEnding="dgCalibr_CellEditEnding"/>
+        <StackPanel Margin="0,1.722,-0.329,0.203" Grid.Row="1" Orientation="Horizontal">
+            <Button x:Name="btnInsertVal" Content=" Insert Val. " FontSize="13" Margin="5,6,0,6" Foreground="#FF820902" ></Button>
+            <Button x:Name="btnOpen" Content=" Open " FontSize="13" Margin="12,6,0,6" Foreground="#FF004F42" Click="btnOpen_Click"  ></Button>
+            <Button x:Name="btnSave" Content=" Save " FontSize="13" Margin="5,6,0,6" Foreground="#FF016801" RenderTransformOrigin="0.5,0.503" Click="btnSave_Click" ></Button>
+        </StackPanel>
+        <Button x:Name="btnDone" Content=" Done " FontSize="13" Grid.Row="3" Margin="0,5.873,6.671,6.228" HorizontalAlignment="Right" Foreground="#FF022397" Width="51" FontWeight="Bold" Click="btnDone_Click" ></Button>
+        <Button x:Name="btnCancel" Content="X" FontSize="13" Grid.Row="3" Margin="0,5.873,63,6.228" HorizontalAlignment="Right" Foreground="#FFD70202" Width="28" FontWeight="Bold" ></Button>
+        <Label x:Name="lbSemi" Content="Title" Margin="0,0,0,0" VerticalAlignment="Top" Height="30" FontSize="14" Foreground="#FF005661"/>
+        <Label x:Name="lbAnalog" Content="Units" Grid.Row="3" HorizontalAlignment="Left" Margin="2,0,0,0" VerticalAlignment="Center" Height="26" Width="37"/>
+        <TextBox x:Name="tbUnits" HorizontalAlignment="Left" Margin="42,5,0,5" Grid.Row="3" TextWrapping="Wrap" Text="" VerticalAlignment="Center" Width="42" FontSize="14"/>
+    </Grid>
+</UserControl>
