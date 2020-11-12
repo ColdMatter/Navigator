@@ -29,6 +29,7 @@ namespace MOTMaster2.ExtDevices
         {
             InitializeComponent();
             Factors = new List<Factor>();
+            BlockMode = false;
         }
         private bool _genOpt_Enabled;
         public bool genOpt_Enabled { get { return _genOpt_Enabled; } }
@@ -60,17 +61,18 @@ namespace MOTMaster2.ExtDevices
         }
         private ObservableDictionary<string,Parameter> Parameters { get { return seqData.Parameters; } }
         public List<Factor> Factors;
-        public void AddFactor(string fName, string extName = "")
+        public bool BlockMode; // it does not send individual factors, only the whole device state as one
+        public void AddFactor(string fName, string extName = "", bool RequireValue = false)
         {
-            Factor fc = new Factor(fName, extName);
+            Factor fc = new Factor(fName, extName, RequireValue);
             Factors.Add(fc); stackFactors.Children.Add(fc);
         }
-        public int IdxFromName(string nm)
+        public int IdxFromName(string nm) // ext.name
         {
             int idx = -1; 
             for (int i = 0; i < Factors.Count; i++)
             {
-                if (Factors[i].fName.Equals(nm))
+                if (Factors[i].extName.Equals(nm))
                 {
                     idx = i; break; 
                 }
@@ -125,32 +127,43 @@ namespace MOTMaster2.ExtDevices
                 state[factor.fName] = factor.Text;
             }
         }
-        public double UpdateFactors() // visual
-        {            
-            stackFactors.Children.Clear(); double h = 0;  
+        public double GetHeight()
+        {
+            double h = 0;
             foreach (Factor factor in Factors)
             {
-                stackFactors.Children.Add(factor);
-                h += Math.Max(factor.ActualHeight,65);
+                if (factor.isVisible) h += Math.Max(factor.ActualHeight, 56.5);
             }
-            factorRow.Height = new GridLength(h);
-            lastRow.Height = new GridLength(35);
-            Height = h + firstRow.Height.Value+lastRow.Height.Value;
-            return Height;
+            h += firstRow.Height.Value+lastRow.Height.Value;
+            return h;
+        }
+        public void UpdateFactors() // visual update 
+        {            
+            stackFactors.Children.Clear();  
+            foreach (Factor factor in Factors)
+            {
+                stackFactors.Children.Add(factor);               
+            }
+            return;
             //btnUpdate.Margin = new Thickness(0, stackFactors.Height+20, 0, 0);
         }
         public bool UpdateDevice(bool ignoreMutable = false) // before sequence (false) or update button (true)
-        {
-           
+        {          
             if (!ignoreMutable && !chkMutable.IsChecked.Value) return false;
             bool rslt = genOpt_Enabled && HW_Enabled;
             if (rslt)
+            {
+                if (BlockMode)
+                {
+                    Send2HW("_block_", (object)true);
+                }               
                 foreach (Factor factor in Factors)
                 {
-                    bool bb = factor.SendValue();
+                    bool bb = factor.SendValue(BlockMode);
                     if (!bb) ErrorMng.Log("Error: problem with factor <" + factor.fName + ">");
                     rslt &= bb;
-                }
+                    }
+            }
             return rslt;
         }
         public bool IsScannable(string prm) // is scanning param (prm) in Factors; prm = "" resets
@@ -191,14 +204,15 @@ namespace MOTMaster2.ExtDevices
             if (Utils.isNull(scanFactor)) return false;
             if (grpIdx.Equals(-1)) 
             {
-                Send2HW("_others_", (object)false);
+                if (!BlockMode) Send2HW("_others_", (object)false);
                 UpdateDevice(false);
                 scanFactor.Scanning("");
                 scanFactor = null;
                 return true;
             }
             // value is taken from parameters
-            if (!scanFactor.SendValue()) ErrorMng.Log("Error: problem with factor <" + scanFactor.fName + ">");      
+            if (BlockMode) Send2HW("_block_", (object)true);
+            if (!scanFactor.SendValue(BlockMode)) ErrorMng.errorMsg("Problem with factor <" + scanFactor.fName + ">",452);      
             return true;
         }
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -213,7 +227,7 @@ namespace MOTMaster2.ExtDevices
                 ErrorMng.Log("Error: the device is not available!", Brushes.DarkRed.Color);
                 return;
             }
-            Send2HW("_others_", (object)true);
+            if (!BlockMode) Send2HW("_others_", (object)true);
             UpdateDevice(true);
         }
     }

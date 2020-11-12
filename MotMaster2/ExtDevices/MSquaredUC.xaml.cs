@@ -131,7 +131,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.AddFactor("Chirp [MHz/s]", "ChirpRate");
             ucExtFactors.AddFactor("Duration [ms]", "ChirpDuration");
             //ucExtFactors.AddFactor(""); ucExtFactors.AddFactor("");
-            factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
+            factorRow.Height = new GridLength(ucExtFactors.GetHeight());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData); 
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);

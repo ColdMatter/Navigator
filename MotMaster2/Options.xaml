@@ -119,14 +119,11 @@
                     </GroupBox>
                     <GroupBox Header="External devices enabled" Grid.Row="3" Margin="10,0,0,0">
                         <Grid Margin="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="107.844"/>
-                                <ColumnDefinition Width="211.325"/>
-                                <ColumnDefinition Width="235.429"/>
-                            </Grid.ColumnDefinitions>
-
+                        <StackPanel Orientation="Horizontal">
                             <CheckBox x:Name="chkWindFreakEnabled" Grid.Column="1" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="WindFreak"/>
                             <CheckBox x:Name="chkM2Enabled" Grid.Column="0" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="MSquared"/>
+                            <CheckBox x:Name="chkFlexDDS" Grid.Column="0" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="FlexDDS"/>
+                            </StackPanel>
                         </Grid>
                     </GroupBox>
                 </Grid>

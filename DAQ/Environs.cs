@@ -227,6 +227,11 @@ namespace DAQ.Environment
                     Hardware = new PlexalHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
+                case "CHAMELEON-HP":
+                    Debug = false;
+                    Hardware = new ChameleonHardware();
+                    FileSystem = new NavigatorFileSystem();
+                    break;
                 default:
                     Debug = true;
 					Hardware = new PlexalHardware();

@@ -50,7 +50,7 @@ namespace MOTMaster2.ExtDevices
             set { isVisible = value; }
         }
 
-        public bool RequireValue { get; private set; } // is type of factorType.ftNone is allowed
+        public bool RequireValue { get; private set; } // if type of factorType.ftNone is allowed
         public enum factorType
         {
             ftNone, ftValue, ftParam
@@ -139,21 +139,38 @@ namespace MOTMaster2.ExtDevices
             set { cbFactor.Text = value; }
         }
 
-        public bool SendValue()
+        public bool SendValue(bool blockMode)
         {
             double d; bool b;
             switch (fType)
             {
                 case factorType.ftNone:
-                    fValue = Double.NaN; 
-                    return !RequireValue;                   
+                    fValue = Double.NaN;
+                    if (RequireValue)
+                    {
+                        d = 0; // default value
+                        if (blockMode) b = true;
+                        else b = Send2Dvc(extName, (object)d);
+                        if (b)
+                        {
+                            fValue = d; return true;
+                        }
+                        else
+                        {
+                            fValue = Double.NaN; ErrorMng.errorMsg("Problem in sending to " + fName, 235);
+                            return false;
+                        }
+                    }
+                    else return true;
                 case factorType.ftValue:
                 case factorType.ftParam:
-                    d = getReqValue(); b = Send2Dvc(extName,(object)d);
+                    d = getReqValue();
+                    if (blockMode) b = true;
+                    else b = Send2Dvc(extName,(object)d);
                     if (b) fValue = d;
                     else
                     {
-                        fValue = Double.NaN; ErrorMng.Log("Error in sending "+fName, Brushes.DarkRed.Color);
+                        fValue = Double.NaN; ErrorMng.errorMsg("Problem in sending to " + fName, 235);
                     }
                     return b;
                 default: return false;
@@ -189,4 +206,14 @@ namespace MOTMaster2.ExtDevices
             return sc;
         }
     }
+
+    // SELECT FACTOR
+    public class SelectFactor
+    {
+        public SelectFactor(string sfName, List<string> sfItems)
+        {
+
+        }
+    }
+
 }

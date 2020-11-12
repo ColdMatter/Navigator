@@ -60,7 +60,9 @@ namespace MOTMaster2
         //public double qTime { get; set; }
 
         public bool WindFreakEnabled { get; set; }
-        public bool m2Enabled;
+        public bool m2Enabled { get; set; }
+
+        public bool FlexDDSEnabled { get; set; }
 
         public void Save()
         {
@@ -84,6 +86,8 @@ namespace MOTMaster2
             hardwareJson = JsonConvert.SerializeObject(DAQ.Environment.Environs.Hardware, Formatting.Indented);
             LoadJsonToTreeView(hardwareTreeView, hardwareJson);
             LoadJsonToTreeView(filesystemTreeView, fileJson);
+            if (Controller.config.PlexalMachine) chkFlexDDS.Visibility = Visibility.Visible;
+            else chkFlexDDS.Visibility = Visibility.Collapsed;
         }       
         
         string hardwareJson = "";
@@ -131,6 +135,7 @@ namespace MOTMaster2
 
             Controller.genOptions.WindFreakEnabled = chkWindFreakEnabled.IsChecked.Value;
             Controller.genOptions.m2Enabled = chkM2Enabled.IsChecked.Value;
+            Controller.genOptions.FlexDDSEnabled = chkFlexDDS.IsChecked.Value;
             Controller.genOptions.Save();
             Close();
         }

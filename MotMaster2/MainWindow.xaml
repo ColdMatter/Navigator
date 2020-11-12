@@ -60,12 +60,12 @@
                 <ComboBoxItem Content="Local"/>
                 <ComboBoxItem Content="Axel-hub"/>
                 <ComboBoxItem Content="Image Process"/>
-                <ComboBoxItem Content="Mathematica"/>
+                
             </ComboBox>
             <Label Content="Hub" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" FontSize="13" Height="26"/>
             <Button x:Name="btnRemote" Content="Connect ?-&gt;" HorizontalAlignment="Left" Height="25" Margin="600,0,0,0" VerticalAlignment="Center" Width="130" Background="#FFBEFDD1" Click="btnRemote_Click" FontSize="13" Visibility="Hidden"/>
             <Image HorizontalAlignment="Right" Height="28" Margin="0,0,0.286,0" VerticalAlignment="Center" Width="30" Source="3axis.ico" MouseDown="Image_MouseDown"/>
-            <GroupBox HorizontalAlignment="Left" Margin="443,0,0,0" VerticalAlignment="Top" Width="150" Height="28">
+            <GroupBox x:Name="rgChannelSelect" HorizontalAlignment="Left" Margin="443,0,0,0" VerticalAlignment="Top" Width="150" Height="28">
                 <Grid Margin="0">
                     <RadioButton x:Name="rbX" Content="X" HorizontalAlignment="Left" Margin="5,5,0,0" FontSize="14" FontWeight="Bold" Foreground="#FF0B9102" Checked="rbX_Checked" IsChecked="True" Height="17" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rbY" Content="Y" HorizontalAlignment="Left" Margin="45,5,0,0" FontSize="14" FontWeight="Bold" Foreground="#FF034CBB" Checked="rbX_Checked"/>

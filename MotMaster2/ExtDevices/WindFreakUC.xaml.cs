@@ -107,7 +107,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.AddFactor("Frequency[MHz] chn.A", "frequency:A");
             ucExtFactors.AddFactor("Amplitude[dBm] chn.B", "amplitude:B");
             ucExtFactors.AddFactor("Frequency[MHz] chn.B", "frequency:B");
-            factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
+            factorRow.Height = new GridLength(ucExtFactors.GetHeight());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
@@ -116,6 +116,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.factorsState = cfg;
             if (cfg.ContainsKey("RFPowerA")) chkRFPowerA.IsChecked = Convert.ToBoolean(cfg["RFPowerA"]);
             if (cfg.ContainsKey("RFPowerB")) chkRFPowerB.IsChecked = Convert.ToBoolean(cfg["RFPowerB"]);
+            
         }
         public void Final() // closing stuff and save state 
         {

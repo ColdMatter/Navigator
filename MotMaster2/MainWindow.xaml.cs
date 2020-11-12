@@ -69,6 +69,8 @@ namespace MOTMaster2
             {
                 tiImageProcess.Visibility = System.Windows.Visibility.Visible; tcVisual.SelectedIndex = 2; cbHub.SelectedIndex = 3;
             }
+            if (Utils.isSingleChannel) rgChannelSelect.Visibility = Visibility.Hidden;
+            else rgChannelSelect.Visibility = Visibility.Visible;
             Utils.traceDest = (RichTextBox)tbLogger;
             InitVisuals();
         }
@@ -104,16 +106,21 @@ namespace MOTMaster2
                 //ucMSquared.Init(ref Controller.sequenceData, ref Controller.genOptions);
                 //ucMSquared.ucFactor1.ParamUpdate(Controller.sequenceData.Parameters);
              }
-       }
+        }
 
         private void frmMain_Loaded(object sender, RoutedEventArgs e)
         {
-             ExtDevices = new ExtDeviceDict(); ExtFactors = new ExtFactorList();
-             MSquaredUC ms = new MSquaredUC("MSquared", new System.Windows.Media.SolidColorBrush(Brushes.DarkRed.Color)); 
-             ExtDevices.Add("MSquared",ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);   
-             WindFreakUC wf = new WindFreakUC("WindFreak", new System.Windows.Media.SolidColorBrush(Brushes.Navy.Color)); 
-             ExtDevices.Add("WindFreak", wf); stackExtDevices.Children.Add(wf); ExtFactors.Add(wf.ucExtFactors);      
-             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
+            ExtDevices = new ExtDeviceDict(); ExtFactors = new ExtFactorList();
+            MSquaredUC ms = new MSquaredUC("MSquared", new System.Windows.Media.SolidColorBrush(Brushes.DarkRed.Color)); 
+            ExtDevices.Add("MSquared",ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);   
+            WindFreakUC wf = new WindFreakUC("WindFreak", new System.Windows.Media.SolidColorBrush(Brushes.Navy.Color)); 
+            ExtDevices.Add("WindFreak", wf); stackExtDevices.Children.Add(wf); ExtFactors.Add(wf.ucExtFactors);                
+            if (Controller.config.PlexalMachine)
+            {
+                FlexDDS_UC dds = new FlexDDS_UC("FlexDDS", new System.Windows.Media.SolidColorBrush(Brushes.ForestGreen.Color));
+                ExtDevices.Add("FlexDDS",dds); stackExtDevices.Children.Add(dds); ExtFactors.Add(dds.ucExtFactors);
+            } 
+            ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
         }
 
         private void OpenDefaultModes()
@@ -217,7 +224,7 @@ namespace MOTMaster2
                 return;
             }
             progBar.Minimum = 0;
-            progBar.Maximum = Iters - 1;
+            progBar.Maximum = Iters-1;
             int numInterations = Iters;
             if (Iters == -1)
             {
@@ -375,7 +382,7 @@ namespace MOTMaster2
                     return;
                 }
                 progBar.Minimum = 0;
-                progBar.Maximum = Iters - 1;
+                progBar.Maximum = Iters-1;
                 int numInterations = Iters;
                 Controller.ExpData.ClearData();
                 Controller.numInterations = numInterations; 
@@ -486,7 +493,7 @@ namespace MOTMaster2
             Controller.SaveTempSequence(null, scanParam);
 
             progBar.Minimum = 0;
-            progBar.Maximum = scanArray.Length;
+            progBar.Maximum = scanArray.Length - 1;
 
             int c = 0;
             Controller.ScanParam = scanParam.Clone();
@@ -535,6 +542,7 @@ namespace MOTMaster2
             {
                 btnScan.Content = "Cancel";
                 btnScan.Background = Brushes.Coral;
+                Controller.SaveTempSequence();
                 Controller.ExpData.grpMME.Clear();
                 try
                 {

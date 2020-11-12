@@ -36,6 +36,8 @@ namespace DAQ
             set { debug = value; }
         }
 
+        public bool PlexalMachine { get { return (Debug || ((string)System.Environment.GetEnvironmentVariables()["COMPUTERNAME"] == "DESKTOP-IHEEQUU")); } }
+
         private bool cameraUsed;
         public bool CameraUsed
         {
