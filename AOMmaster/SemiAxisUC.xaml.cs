@@ -16,9 +16,12 @@ using System.Windows.Shapes;
 
 namespace AOMmaster
 {
-    public struct SemiSetting
+    public struct CustiomSemiSetting
     {
-        
+        public string Title;
+        public AnalogConfig AO1, AO2;
+        public string titleEnabled;
+        public int chnEnabled;
     }
     /// <summary>
     /// Interaction logic for SemiAxisUC.xaml
@@ -27,6 +30,7 @@ namespace AOMmaster
     {
         private int chnEnabled;
         private string title;
+        public bool Custom { get; set; } // degroup enabled from analog
         public bool locked = false; // lock out visual 
         public SemiAxisUC()
         {
@@ -58,12 +62,15 @@ namespace AOMmaster
                 {
                     if (DigitalChanged(chnEnabled, value))
                     {
-                        if (value)
-                        {
-                            groupBox.Header = title + " (Enabled)";
-                            analogVCO.UpdateValue(); analogVCA.UpdateValue();
+                        if (!Custom)
+                        {                       
+                            if (value)
+                            {
+                                groupBox.Header = title + " (Enabled)";
+                                analogVCO.UpdateValue(); analogVCA.UpdateValue();
+                            }
+                            else groupBox.Header = title + " (Disabled)";
                         }
-                        else groupBox.Header = title + " (Disabled)";
                     }
                     else UtilsNS.Utils.TimedMessageBox("Hardware digital error ! (talk to Theo)");
                 }
@@ -105,14 +112,22 @@ namespace AOMmaster
             Enabled = chkEnabled.IsChecked.Value;
             locked = false;
         }
-
         public void Config(string _title, int _chnEnabled, AnalogConfig vco, AnalogConfig vca, Color? clr = null)
         {
             groupBox.Header = _title; title = _title;
             chnEnabled = _chnEnabled;
+            vco.groupTitle = title; vca.groupTitle = title;
             analogVCO.Config(vco); analogVCA.Config(vca);
             Color ForeColor = clr.GetValueOrDefault(Brushes.Black.Color);
             groupBox.BorderBrush = new System.Windows.Media.SolidColorBrush(ForeColor);
+        }
+        public void Config(string _title, string _titleEnabled, int _chnEnabled, AnalogConfig vco, AnalogConfig vca, Color? clr = null)
+        {
+            Config(_title, _chnEnabled, vco, vca, clr);
+            if (_titleEnabled.Equals("")) chkEnabled.Visibility = Visibility.Collapsed;
+            else chkEnabled.Content = _titleEnabled;
+            if (vco.title.Equals("")) analogVCO.Visibility = Visibility.Collapsed;
+            if (vca.title.Equals("")) analogVCA.Visibility = Visibility.Collapsed;
         }
         public void Closing()
         {

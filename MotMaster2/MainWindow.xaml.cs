@@ -69,7 +69,7 @@ namespace MOTMaster2
             {
                 tiImageProcess.Visibility = System.Windows.Visibility.Visible; tcVisual.SelectedIndex = 2; cbHub.SelectedIndex = 3;
             }
-            if (Utils.isSingleChannel) rgChannelSelect.Visibility = Visibility.Hidden;
+            if (Utils.isSingleChannelMachine) rgChannelSelect.Visibility = Visibility.Hidden;
             else rgChannelSelect.Visibility = Visibility.Visible;
             Utils.traceDest = (RichTextBox)tbLogger;
             InitVisuals();
@@ -709,8 +709,8 @@ namespace MOTMaster2
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = ""; // Default file name
                 dlg.DefaultExt = ".sm2"; // Default file extension
-                dlg.Filter = "Sequence (.sm2)|*.sm2,*.txt"; // Filter files by extension
-                //dlg.InitialDirectory = Controller.scriptListPath;
+                dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
+                dlg.InitialDirectory = Utils.basePath + "\\Scripts\\";
 
                 // Show open file dialog box
                 bool? result = dlg.ShowDialog();
@@ -729,6 +729,7 @@ namespace MOTMaster2
             dlg.FileName = ""; // Default file name
             dlg.DefaultExt = ".sm2"; // Default file extension
             dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
+            dlg.InitialDirectory = Utils.basePath + "\\Scripts\\";
 
             // Show open file dialog box
             bool? result = dlg.ShowDialog();
@@ -948,8 +949,6 @@ namespace MOTMaster2
         private void buildBtn_Click(object sender, RoutedEventArgs e)
         {
 
-            //Controller.M2DCS.axisControl(0); return;
-            // MetaDataWindow metaDataWindow = new MetaDataWindow(); metaDataWindow.ShowDialog(); 
             Button btn = sender as Button;
             switch (btn.Name)
             {
@@ -958,8 +957,6 @@ namespace MOTMaster2
                 case ("btnDown"):
                     break;
                 case ("btnBuild"):
-                    //if (Controller.M2DCS.Connected) 
-                    //    Controller.M2DCS.phaseControl(1);
                     ObservableCollection<SequenceStep> steps = this.sequenceControl.sequenceDataGrid.ItemsSource as ObservableCollection<SequenceStep>;
                     controller.BuildMOTMasterSequence(steps);
                     break;

@@ -82,7 +82,7 @@ namespace AOMmaster
         }
         public bool WriteSingleOut(int chn, bool Value)
         {
-            if (Utils.TheosComputer()) return true;
+            if (Utils.TheosComputer() || (chn < 0)) return true; // (chn < 0) channel to ignore
             bool[] dt = new bool[32]; bool[] mask = new bool[32];
             dt[chn] = Value;
             for (int i = 0; i < 32; i++) // normal order - the least significant is first
@@ -107,7 +107,7 @@ namespace AOMmaster
         #region analog hardware
         public bool AnalogOut(int chn, double voltage)
         {
-            if (Utils.TheosComputer()) return true;
+            if (Utils.TheosComputer() || (chn < 0)) return true; //  (chn < 0) channel to ignore
             try
             {
                 using (NationalInstruments.DAQmx.Task myTask = new NationalInstruments.DAQmx.Task()) // physicalChannel example /Dev2/ao2

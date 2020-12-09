@@ -10,11 +10,11 @@
         <GroupBox x:Name="groupBox" Header="GroupBox"  Margin="0"  >
             <GroupBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem x:Name="miCalibration" Header="Calibration" Click="miCalibration_Click" />
+                    <MenuItem x:Name="miCalibration" Header="Calibration (F2)" Click="miCalibration_Click" />
                 </ContextMenu>
             </GroupBox.ContextMenu>
             <Grid x:Name="gridAnalog" >
-                <ni:NumericTextBoxDouble x:Name="numValue" HorizontalAlignment="Left" Height="24" Margin="5,10,0,0" VerticalAlignment="Top" Width="90" Interval="0.1" ValueChanged="numValue_ValueChanged" FontSize="13" BorderBrush="#FF757474"/>
+                <ni:NumericTextBoxDouble x:Name="numValue" HorizontalAlignment="Left" Height="24" Margin="5,10,0,0" VerticalAlignment="Top" Width="90" Interval="0.1" ValueChanged="numValue_ValueChanged" FontSize="13" BorderBrush="#FF757474" KeyDown="numValue_KeyDown"/>
                 <ComboBox x:Name="cbUnits" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top" Width="57" SelectedIndex="0" FontWeight="Bold" SelectionChanged="cbUnits_SelectionChanged">
                     <ComboBoxItem Content="  V"/>
                 </ComboBox>

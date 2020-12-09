@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AOMmaster")]
-[assembly: AssemblyDescription("Control of AOMs and some other elements of Navoigator experiment")]
+[assembly: AssemblyTitle("WpfApp2")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Imperial College London")]
-[assembly: AssemblyProduct("AOMmaster")]
-[assembly: AssemblyCopyright("Teodor Krastev and Imperial College London Copyright ©  2020")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("WpfApp2")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,5 +51,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.3")]
-[assembly: AssemblyFileVersion("1.1.0.3")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -50,10 +50,13 @@ namespace MOTMaster2
         public int NSamples { get; set; }
         private Random random = new Random();
         public string InterferometerStepName { get; set; }
-        public Tuple<long,long> InterferometerStepInterval() // from..to [ticks]
+        public Tuple<long,long> InterferometerStepInterval() // from..to [ticks] relative to 
         {
             Tuple<long, long> rslt = new Tuple<long, long>(-1,-1);
             if (startSeqTime < 0) return rslt;
+            if (Utils.isNull(InterferometerStepName)) return rslt;
+            if (InterferometerStepName.Equals("")) return rslt;
+            //InterferometerStepName = "2T";
             if (AnalogSegments.ContainsKey(InterferometerStepName))
             {
                 long i1 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item1 / SampleRate);

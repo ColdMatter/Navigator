@@ -40,7 +40,12 @@ namespace AOMmaster
                 ["Y-positive"] = SemiAxisUC4,
                 ["Y-negative"] = SemiAxisUC5,
                 ["Z-positive"] = SemiAxisUC6,
-                ["Z-negative"] = SemiAxisUC7
+                ["Z-negative"] = SemiAxisUC7,
+                ["3DMOT-1"] = SemiAxisUC8,
+                ["3DMOT-2"] = SemiAxisUC9,
+                ["2DMOT-1"] = SemiAxisUC10,
+                ["2DMOT-2"] = SemiAxisUC11
+
             };
         }
         Dictionary<string, Dictionary<string, string>> semiValues
@@ -62,6 +67,8 @@ namespace AOMmaster
             {
                 foreach (KeyValuePair<string, SemiAxisUC> semi in semis)
                 {
+                    if (!value.ContainsKey(semi.Key)) continue;
+                    if (!value[semi.Key].ContainsKey("Enabled")) continue;
                     semi.Value.Enabled = Convert.ToBoolean(value[semi.Key]["Enabled"]);
                     semi.Value.VCO_U = false; semi.Value.VCA_U = false; // set to volts
                     semi.Value.VCO_V = Convert.ToDouble(value[semi.Key]["VCO-volt"]); semi.Value.VCA_V = Convert.ToDouble(value[semi.Key]["VCA-volt"]);
@@ -110,9 +117,12 @@ namespace AOMmaster
             int i = 0; Color clr = Brushes.Black.Color; 
             AnalogConfig vco = new AnalogConfig(); vco.title = "VCO"; vco.calibr = new List<Point>();
             AnalogConfig vca = new AnalogConfig(); vca.title = "VCA"; vca.calibr = new List<Point>();
+            vco.minVolt = hardware.analogMin; vca.minVolt = hardware.analogMin;
+            vco.maxVolt = hardware.analogMax; vca.maxVolt = hardware.analogMax;
+            // regular semis
             foreach (KeyValuePair<string, SemiAxisUC> semi in semis)
             {
-                vco.groupTitle = semi.Key; vca.groupTitle = semi.Key;
+                if (semi.Value.Custom) continue;
                 vco.chnNumb = 4+i; vca.chnNumb = 20+i; 
                 switch (i)
                 {
@@ -134,10 +144,29 @@ namespace AOMmaster
                     case 7:
                         clr = Brushes.Blue.Color;
                         break;
-                }
-                vco.minVolt = hardware.analogMin; vca.minVolt = hardware.analogMin;
-                vco.maxVolt = hardware.analogMax; vca.maxVolt = hardware.analogMax;
-                
+                }               
+                semi.Value.Config(semi.Key, i, vco, vca, clr);
+                i++;
+            }
+            // custion semis
+            vco.title = "3DMOTCoil"; vco.chnNumb = 18;
+            vca.title = "xbias3DCoil"; vca.chnNumb = 15;
+            semis["3DMOT-1"].Config("3DMOT-1", "Det_TTL", 21, vco, vca, Brushes.Goldenrod.Color);
+
+            vco.title = "ybias3DCoil"; vco.chnNumb = 16;
+            vca.title = "zbias3DCoil"; vca.chnNumb = 17;
+            semis["3DMOT-2"].Config("3DMOT-2", "FreeDO1", 25, vco, vca, Brushes.Goldenrod.Color);
+
+            vco.title = "2DMOTCoil"; vco.chnNumb = 19;
+            vca.title = "xbias2DCoil"; vca.chnNumb = 13;
+            semis["2DMOT-1"].Config("2DMOT-1", "M2TTL", 20, vco, vca, Brushes.Teal.Color);
+
+            vco.title = "ybias2DCoil"; vco.chnNumb = 14;
+            vca.title = ""; vca.chnNumb = -1;
+            semis["2DMOT-2"].Config("2DMOT-2", "", -1, vco, vca, Brushes.Teal.Color);
+
+            foreach (KeyValuePair<string, SemiAxisUC> semi in semis)
+            { 
                 semi.Value.analogVCO.OnAnalogChanged += new AnalogUC.AnalogChangedHandler(hardware.AnalogOut);
                 semi.Value.analogVCA.OnAnalogChanged += new AnalogUC.AnalogChangedHandler(hardware.AnalogOut);
                 semi.Value.OnDigitalChanged += new SemiAxisUC.DigitalChangedHandler(hardware.WriteSingleOut);
@@ -145,10 +174,7 @@ namespace AOMmaster
                 semi.Value.analogVCO.OnLog += new AnalogUC.LogHandler(log);
                 semi.Value.analogVCA.OnLog += new AnalogUC.LogHandler(log);
                 semi.Value.analogVCO.OnSelect += new AnalogUC.SelectHandler(setCalibration);
-                semi.Value.analogVCA.OnSelect += new AnalogUC.SelectHandler(setCalibration);
-
-                semi.Value.Config(semi.Key, i, vco, vca, clr);
-                i++;
+                semi.Value.analogVCA.OnSelect += new AnalogUC.SelectHandler(setCalibration);           
             }
             hardware.OnLog += new Hardware.LogHandler(log);
             CalibrUC1.btnDone.Click += new RoutedEventHandler(getCalibration);

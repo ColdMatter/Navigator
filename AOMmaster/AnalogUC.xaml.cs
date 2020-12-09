@@ -28,7 +28,7 @@ namespace AOMmaster
     {
         public string groupTitle;
         public string title;
-        public int chnNumb;
+        public int chnNumb; //  hardware channel number
         public double minVolt, maxVolt; // hardware limits
         public string calUnit;
         public List<Point> calibr;
@@ -161,7 +161,6 @@ namespace AOMmaster
                 if (!locked) numValue.Value = value;
             }
         }
-
         public bool isUnits
         {
             get { return cbUnits.SelectedIndex == 1; }
@@ -284,7 +283,10 @@ namespace AOMmaster
             if (cbUnits.SelectedIndex == 1) target = calV2unit(voltage);
             else target = voltage;
         }
-       #endregion
-
-     }
+        #endregion
+        private void numValue_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key.Equals(Key.F2)) miCalibration_Click(null, null);
+        }
+    }
 }
