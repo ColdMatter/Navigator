@@ -161,6 +161,8 @@ namespace MOTMaster2
 
         private void frmOptions_Loaded(object sender, RoutedEventArgs e) // internal to visual
         {
+            Title = " MotMaster2 Options  v" + Utils.getRunningVersion();
+
             rbSaveSeqYes.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.save);
             rbSaveSeqAsk.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.ask);
             rbSaveSeqNo.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.nosave);

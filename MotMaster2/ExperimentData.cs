@@ -50,21 +50,24 @@ namespace MOTMaster2
         public int NSamples { get; set; }
         private Random random = new Random();
         public string InterferometerStepName { get; set; }
-        public Tuple<long,long> InterferometerStepInterval() // from..to [ticks] relative to 
+     /*   public Tuple<long,long> InterferometerStepInterval() // from..to [ticks] relative to beginning of time
         {
             Tuple<long, long> rslt = new Tuple<long, long>(-1,-1);
             if (startSeqTime < 0) return rslt;
             if (Utils.isNull(InterferometerStepName)) return rslt;
             if (InterferometerStepName.Equals("")) return rslt;
-            //InterferometerStepName = "2T";
+
+
+
             if (AnalogSegments.ContainsKey(InterferometerStepName))
             {
                 long i1 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item1 / SampleRate);
                 long i2 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item2 / SampleRate);
+                rslt = new Tuple<long, long>(i1, i2);
             }
             return rslt;            
-        }
-        public long startSeqTime { get; set; } // relative to series start 
+        }*/
+        public long startSeqTime { get; set; } // abs ticks of shot (one sequence) start 
 
         //Rise time in seconds to be excluded from data
         public double RiseTime { get; set; }

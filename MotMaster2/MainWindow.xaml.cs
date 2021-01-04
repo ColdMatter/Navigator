@@ -231,6 +231,7 @@ namespace MOTMaster2
                 numInterations = Int32.MaxValue;
                 progBar.Maximum = 100;
             }
+            Controller.ScanParam = null;
             Controller.ExpData.ClearData();
             Controller.numInterations = numInterations;
             Controller.ExpData.ExperimentName = tbExperimentRun.Text;
@@ -258,13 +259,17 @@ namespace MOTMaster2
                 lbCurNumb.Content = i.ToString();
                 if (groupRun != GroupRun.repeat) break; 
                 DoEvents();
-                wait4adjust = (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.repeat);
+                bool bb = !Utils.isNull(Controller.ExpData.grpMME);
+                if (bb) bb &= Controller.ExpData.grpMME.id.Equals(cmdId);
+                if (bb) bb &= Controller.ExpData.grpMME.mmexec.Equals("diagnostics");
+                wait4adjust = (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.repeat) && !bb;
+
                 int j = 0;
                 while ((wait4adjust) && (j < 10))
                 {
                     Thread.Sleep(10);
                     DoEvents();
-                    j += 1;
+                    j++;
                 }
                 if (j == 10) ErrorMng.Log("Time-out at wait4adjust loop", Brushes.DarkOrange.Color);
                 controller.WaitForRunToFinish();
@@ -493,7 +498,7 @@ namespace MOTMaster2
             Controller.SaveTempSequence(null, scanParam);
 
             progBar.Minimum = 0;
-            progBar.Maximum = scanArray.Length - 1;
+            progBar.Maximum = scanArray.Length;
 
             int c = 0;
             Controller.ScanParam = scanParam.Clone();
@@ -1248,7 +1253,7 @@ namespace MOTMaster2
                     controller.StoreDCSParameter(entry.Key, entry.Value); 
                 }
                 //TODO fix handling of warnings if ICE-BLocs are not connected
-                controller.SetMSquaredParameters();
+                Controller.SetMSquaredParameters();
             }
         }
 
@@ -1272,7 +1277,7 @@ namespace MOTMaster2
 
         private void m2updateBtn_Click(object sender, RoutedEventArgs e)
         {
-            controller.SetMSquaredParameters();
+            Controller.SetMSquaredParameters();
             Log("Updated MSquared laser parameters");
         }
 

@@ -135,7 +135,7 @@ namespace MOTMaster2
         public static ICEBlocDCS M2DCS;
         public static ICEBlocPLL M2PLL;
         public PhaseStrobes phaseStrobes;
-        private Dictionary<string, object> DCSParams;
+        public static Dictionary<string, object> DCSParams;
         MMDataIOHelper ioHelper;
         static SequenceBuilder builder;
 
@@ -439,7 +439,30 @@ namespace MOTMaster2
                 else microSynth.ChannelB.Frequency = value; //default
             }
         }
-
+        public static Tuple<long, long> InterferometerInterval() // from..to [ticks] relative to beginning of time
+        {
+            Tuple<long, long> rslt = new Tuple<long, long>(-1, -1);
+            if (ExpData.startSeqTime < 0) return rslt; // no reference point
+            //if (Utils.isNull(ExpData.InterferometerStepName)) return rslt;
+            //if (ExpData.InterferometerStepName.Equals("")) return rslt;
+            long curr = ExpData.startSeqTime; long first = -1; long second = -1;
+            foreach (SequenceStep step in sequenceData.Steps)
+            {               
+                if (step.Description.IndexOf("Interferometer") > -1)
+                {
+                    if (first < 0)
+                    {
+                        first = curr; // first occurence
+                        second = first;
+                    }
+                    double d = step.evalDuration(true); long l = Utils.sec2tick(d);
+                    second += l; 
+                }
+                if (step.Enabled) curr += Utils.sec2tick(step.evalDuration(true));
+            }
+            rslt = new Tuple<long, long>(first, second);
+            return rslt;
+        }
         protected static void OnAnalogDataReceived(object sender, EventArgs e)
         {
             var rawData = config.Debug ? ExpData.GenerateFakeData() : aip.GetAnalogData();
@@ -467,7 +490,7 @@ namespace MOTMaster2
             {
                 if (SendDataRemotely && (ExpData.startSeqTime > 0))
                 {
-                    var tm = ExpData.InterferometerStepInterval();
+                    var tm = InterferometerInterval();
                     mme.prms["iTime"] = (string)(tm.Item1.ToString()); mme.prms["tTime"] = (string)((tm.Item2 - tm.Item1).ToString());
                 }
                     
@@ -933,17 +956,17 @@ namespace MOTMaster2
         
         private void runPattern(MOTMasterSequence sequence)
         {
-
             run(sequence);
-            if (Controller.genOptions.AIEnabled) aip.ReadAnalogDataFromBuffer();
+            if (Controller.genOptions.AIEnabled) 
+                aip.ReadAnalogDataFromBuffer();
             if (!StaticSequence) { releaseHardware(); status = RunningState.stopped; }
             //else pauseHardware();
         }
 
         private void debugRun(MOTMasterSequence sequence)
         {
-                int[] loopTimes = ((DAQ.Pattern.HSDIOPatternBuilder)sequence.DigitalPattern).LoopTimes;
-                hs.BuildScriptForDebug(sequence.DigitalPattern.Pattern, loopTimes);
+            int[] loopTimes = ((DAQ.Pattern.HSDIOPatternBuilder)sequence.DigitalPattern).LoopTimes;
+            hs.BuildScriptForDebug(sequence.DigitalPattern.Pattern, loopTimes);
         }
         public static MOTMasterScript prepareScript(string pathToPattern, Dictionary<String, Object> dict)
         {
@@ -1453,10 +1476,19 @@ namespace MOTMaster2
             ignoredSegments = sequenceData.Steps.Where(t => (t.Description.Contains("DNS") && t.GetDigitalData("acquisitionTrigger"))).Select(t => t.Name).ToList();
             ExpData.IgnoredSegments = ignoredSegments;
 
-            IEnumerable<string> interferometerStepNames=sequenceData.Steps.Where(t => (t.Description.Contains("Interferometer") && t.GetDigitalData("acquisitionTrigger"))).Select(t => t.Name);
+            /*IEnumerable<string> interferometerStepNames=sequenceData.Steps.Where(t => (t.Description.Contains("Interferometer") && t.GetDigitalData("acquisitionTrigger"))).Select(t => t.Name);
             if (interferometerStepNames.Count() > 0) ExpData.InterferometerStepName = interferometerStepNames.First();
-            else ExpData.InterferometerStepName = null;
+            else */           
+            ExpData.InterferometerStepName = null;
 
+            foreach (SequenceStep step in sequenceData.Steps)
+            {
+                if (step.Description.IndexOf("Interferometer") > -1)
+                {
+                    ExpData.InterferometerStepName = step.Name; break;
+                }
+            }
+            
             foreach (SequenceStep step in sequenceData.Steps)
             {
                 if (!step.GetDigitalData("acquisitionTrigger")) continue;
@@ -1573,8 +1605,10 @@ namespace MOTMaster2
             }
         }
 
-        public void SetMSquaredParameters()
+        public static void SetMSquaredParameters(Dictionary<string,double> mprm = null)
         {
+            
+            if (Utils.isNull(M2DCS) || Utils.isNull(M2PLL)) return;
 
             if (!M2DCS.Connected || !M2PLL.Connected)
             {
@@ -1584,8 +1618,15 @@ namespace MOTMaster2
             try
             {
                 CheckPhaseLock();
-                if ((sequenceData.Parameters.ContainsKey("PLLFreq") || sequenceData.Parameters.ContainsKey("ChirpRate") || sequenceData.Parameters.ContainsKey("ChirpDuration")) && (Controller.genOptions.m2Enabled)) 
-                        M2PLL.configure_lo_profile(true, false, "ecd", (double)sequenceData.Parameters["PLLFreq"].Value * 1e6, 0.0, (double)sequenceData.Parameters["ChirpRate"].Value * 1e6, (double)sequenceData.Parameters["ChirpDuration"].Value, false);
+                if (Utils.isNull(mprm))
+                {
+                   if ((sequenceData.Parameters.ContainsKey("PLLFreq") || sequenceData.Parameters.ContainsKey("ChirpRate") || sequenceData.Parameters.ContainsKey("ChirpDuration")) && (Controller.genOptions.m2Enabled)) 
+                            M2PLL.configure_lo_profile(true, false, "ecd", (double)sequenceData.Parameters["PLLFreq"].Value * 1e6, 0.0, (double)sequenceData.Parameters["ChirpRate"].Value * 1e6, (double)sequenceData.Parameters["ChirpDuration"].Value, false);
+                }
+                else
+                {
+                    M2PLL.configure_lo_profile(true, false, "ecd", mprm["PLLFreq"] * 1e6, mprm["BeatFreqTrim"], mprm["ChirpRate"] * 1e6, mprm["ChirpDuration"], false);
+                }
                 //Checks the phase lock has not come out-of-loop
                 CheckPhaseLock();
             }
@@ -1594,8 +1635,7 @@ namespace MOTMaster2
                 ErrorMng.warningMsg("Failed to set phase lock." + e.Message);
             }
             
-          //Updates DCS if parameters have been modified
-           
+          //Updates DCS if parameters have been modified           
             DCSParams.Clear();
             //TODO Send this to MainWindow Log
        /*     if (!config.Debug && (Controller.genOptions.m2Comm == GeneralOptions.M2CommOption.on)) // && updateDCS)
@@ -1607,7 +1647,7 @@ namespace MOTMaster2
              
         }
 
-        private static bool CheckPhaseLock()
+        public static bool CheckPhaseLock()
         {
             if (!config.Debug)
             {
@@ -1637,17 +1677,16 @@ namespace MOTMaster2
             if (SaveSeq)
             {
                 string fn = Utils.timeName();
-                if (!Utils.isNull(scan)) 
+                if (!Utils.isNull(scan))
                     if (!fn.Equals("---") && !scan.groupID.Equals("")) fn = scan.groupID;
                 string ffn = scriptListPath + "\\" + fn;
-                SaveSequenceToPath(ffn+".sm2");
+                SaveSequenceToPath(ffn + ".sm2");
                 if (!Utils.isNull(scan))
                 {
-                    File.WriteAllText(ffn+".scn", JsonConvert.SerializeObject(scan, Formatting.Indented));
+                    File.WriteAllText(ffn + ".scn", JsonConvert.SerializeObject(scan, Formatting.Indented));
                 }
             }
         }
-
         internal void StoreDCSParameter(string laserKey, object p)
         {
             if (DCSParams == null) DCSParams = new Dictionary<string, object>();

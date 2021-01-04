@@ -45,7 +45,7 @@
                         <MenuItem x:Name="mnYleading" Header="Y leading" HorizontalAlignment="Left" Width="218.285714285714" Click="mnXleading_Click"/>
                     </MenuItem>
                     <MenuItem Header="Help">
-                        <MenuItem x:Name="mWebHelp" Header=" Web Help..." Click="mWebHelp_Click" />
+                        <MenuItem x:Name="mWebHelp" Header=" Web Help..." Click="mWebHelp_Click" InputGestureText="F1"/>
                         <MenuItem Header=" About..." Click="About_Click"/>
                     </MenuItem>
                 </Menu>
