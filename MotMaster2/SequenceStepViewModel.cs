@@ -157,12 +157,6 @@ namespace MOTMaster2
             {
                 List<AnalogArgItem> items = arguments as List<AnalogArgItem>;
                 _selectedStep.SetAnalogDataItem(_selectedAnalogChannel.Key, _selectedAnalogChannel.Value, items);
-
-            }
-            else if (arguments.GetType() == typeof(List<SerialItem>))
-            {
-                List<SerialItem> items = arguments as List<SerialItem>;
-                _selectedStep.SetSerialCommands(items);
             }
             else throw new Exception("Incorrect argument passed to UpdateChannelValues");
         }

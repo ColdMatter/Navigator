@@ -219,17 +219,12 @@ namespace DAQ.Environment
                 case "THEOS":
                 case "THEO-PC":
                     Debug = true;
-                    Hardware = new NavigatorHardware();
+                    Hardware = new PlexalHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
                 case "DESKTOP-IHEEQUU":
                     Debug = false;
-                    Hardware = new PlexalHardware();
-                    FileSystem = new NavigatorFileSystem();
-                    break;
-                case "CHAMELEON-HP":
-                    Debug = false;
-                    Hardware = new ChameleonHardware();
+                    Hardware = new ShowcaseHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
                 default:

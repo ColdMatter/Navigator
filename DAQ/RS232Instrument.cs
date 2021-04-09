@@ -12,7 +12,7 @@ namespace DAQ.HAL
     public class RS232Instrument : Instrument
     {
         protected SerialSession serial;
-        protected string address;
+        public string address { get; protected set; }
         protected bool connected = false;
         protected int baudrate = 9600;
 

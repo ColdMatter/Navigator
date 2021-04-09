@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AOMmaster"
-             mc:Ignorable="d" Height="644.051" Width="984.709" Loaded="AOMmasterUC0_Loaded">
+             mc:Ignorable="d" Height="747.038" Width="984.709" Loaded="AOMmasterUC0_Loaded">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -69,6 +69,7 @@
             <local:SemiAxisUC x:Name="SemiAxisUC9" Height="103" Width="358" Custom="True"/>
             <local:SemiAxisUC x:Name="SemiAxisUC10" Height="103" Width="358" Custom="True"/>
             <local:SemiAxisUC x:Name="SemiAxisUC11" Height="103" Width="358" Custom="True"/>
+            <local:SemiAxisUC x:Name="SemiAxisUC12" Height="103" Width="358" Custom="True"/>
         </WrapPanel>
 
     </Grid>

@@ -29,10 +29,12 @@ namespace MOTMaster2.ExtDevices
         {
             InitializeComponent();
             Factors = new List<Factor>();
-            BlockMode = false;
         }
+        public string dvcName { get; set; }
         private bool _genOpt_Enabled;
         public bool genOpt_Enabled { get { return _genOpt_Enabled; } }
+        public bool groupUpdate { get; set; }
+
         private bool _HW_Enabled;
         public bool HW_Enabled { get { return _HW_Enabled; } } 
         public bool UpdateEnabled(bool __genOpt_Enabled, bool __HW_Enabled)
@@ -61,18 +63,17 @@ namespace MOTMaster2.ExtDevices
         }
         private ObservableDictionary<string,Parameter> Parameters { get { return seqData.Parameters; } }
         public List<Factor> Factors;
-        public bool BlockMode; // it does not send individual factors, only the whole device state as one
-        public void AddFactor(string fName, string extName = "", bool RequireValue = false)
+        public void AddFactor(string fName, string extName = "")
         {
-            Factor fc = new Factor(fName, extName, RequireValue);
+            Factor fc = new Factor(fName, extName, groupUpdate);
             Factors.Add(fc); stackFactors.Children.Add(fc);
         }
-        public int IdxFromName(string nm) // ext.name
+        public int IdxFromName(string nm)
         {
             int idx = -1; 
             for (int i = 0; i < Factors.Count; i++)
             {
-                if (Factors[i].extName.Equals(nm))
+                if (Factors[i].fName.Equals(nm))
                 {
                     idx = i; break; 
                 }
@@ -127,25 +128,24 @@ namespace MOTMaster2.ExtDevices
                 state[factor.fName] = factor.Text;
             }
         }
-        public double GetHeight()
-        {
-            double h = 0;
-            foreach (Factor factor in Factors)
-            {
-                if (factor.isVisible) h += Math.Max(factor.ActualHeight, 56.5);
-            }
-            h += firstRow.Height.Value+lastRow.Height.Value;
-            return h;
-        }
-        public void UpdateFactors() // visual update 
+        public double UpdateFactors() // (re)initial visual; return Height
         {            
-            stackFactors.Children.Clear();  
+            stackFactors.Children.Clear(); double h = 10;  
             foreach (Factor factor in Factors)
             {
-                stackFactors.Children.Add(factor);               
+                stackFactors.Children.Add(factor);
+                h += Math.Max(factor.ActualHeight,61);
             }
-            return;
+            factorRow.Height = new GridLength(h);
+            lastRow.Height = new GridLength(35);
+            Height = h + firstRow.Height.Value+lastRow.Height.Value;
+            return Height;
             //btnUpdate.Margin = new Thickness(0, stackFactors.Height+20, 0, 0);
+        }
+        public void UpdateValues()
+        {
+            foreach (Factor factor in Factors)
+                factor.VisUpdate();
         }
         public bool UpdateDevice(bool ignoreMutable = false) // before sequence (false) or update button (true)
         {          
@@ -153,17 +153,17 @@ namespace MOTMaster2.ExtDevices
             bool rslt = genOpt_Enabled && HW_Enabled;
             if (rslt)
             {
-                if (BlockMode)
+                if (groupUpdate) Send2HW("<ALL>", null);
+                else
                 {
-                    Send2HW("_block_", (object)true);
-                }               
-                foreach (Factor factor in Factors)
-                {
-                    bool bb = factor.SendValue(BlockMode);
-                    if (!bb) ErrorMng.Log("Error: problem with factor <" + factor.fName + ">");
-                    rslt &= bb;
+                    foreach(Factor factor in Factors)
+                    {
+                        bool bb = factor.SendValue();
+                        if (!bb) ErrorMng.Log("Error: problem with factor <" + factor.fName + ">");
+                        rslt &= bb;
                     }
-            }
+                }
+            }               
             return rslt;
         }
         public bool IsScannable(string prm) // is scanning param (prm) in Factors; prm = "" resets
@@ -204,15 +204,25 @@ namespace MOTMaster2.ExtDevices
             if (Utils.isNull(scanFactor)) return false;
             if (grpIdx.Equals(-1)) 
             {
-                if (!BlockMode) Send2HW("_others_", (object)false);
+                Send2HW("_others_", (object)false);
                 UpdateDevice(false);
                 scanFactor.Scanning("");
                 scanFactor = null;
                 return true;
             }
             // value is taken from parameters
-            if (BlockMode) Send2HW("_block_", (object)true);
-            if (!scanFactor.SendValue(BlockMode)) ErrorMng.errorMsg("Problem with factor <" + scanFactor.fName + ">",452);      
+            if (!scanFactor.SendValue()) ErrorMng.Log("Error: problem with factor <" + scanFactor.fName + ">");      
+            return true;
+        }
+        public bool SetFactor(string factor, string param)
+        {
+            if (Utils.isNull(seqData)) return false;            
+            int j = IdxFromName(factor);
+            if (j.Equals(-1))
+            {
+                Utils.TimedMessageBox("No factor <"+factor+"> found."); return false;
+            }
+            Factors[j].Text = param;
             return true;
         }
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
@@ -227,7 +237,7 @@ namespace MOTMaster2.ExtDevices
                 ErrorMng.Log("Error: the device is not available!", Brushes.DarkRed.Color);
                 return;
             }
-            if (!BlockMode) Send2HW("_others_", (object)true);
+            Send2HW("_others_", (object)true);
             UpdateDevice(true);
         }
     }

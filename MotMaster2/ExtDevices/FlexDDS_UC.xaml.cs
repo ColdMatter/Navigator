@@ -170,7 +170,7 @@ namespace MOTMaster2.ExtDevices
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
             flexDDS_HW = new FlexDDS_HW("102.0.45.87");
-            ucExtFactors.BlockMode = true;
+            ucExtFactors.groupUpdate = true;
             tiMain.Visibility = Visibility.Collapsed; tiEdit.Visibility = Visibility.Collapsed; tiTest.Visibility = Visibility.Collapsed;
             SelectFactors = new List<GroupBox>(); SelectFactors.Add(gbTrigger); SelectFactors.Add(gbBoolean);
         }
@@ -237,9 +237,9 @@ namespace MOTMaster2.ExtDevices
             seqFactors = Utils.readDict(Utils.configPath + "seq.factors.FDDS");
             foreach (var pr in seqFactors)
             {
-                ucExtFactors.AddFactor(pr.Value, pr.Key, true);
+                ucExtFactors.AddFactor(pr.Value, pr.Key);
             }
-            factorRow.Height = new GridLength(ucExtFactors.GetHeight());
+            factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
@@ -382,7 +382,7 @@ namespace MOTMaster2.ExtDevices
                 }
                 ucExtFactors.Factors[i].Enabled = true;
             }
-            factorRow.Height = new GridLength(ucExtFactors.GetHeight());
+            factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
         }
         private void SetSelectFactors(List<string> fcts)
         {

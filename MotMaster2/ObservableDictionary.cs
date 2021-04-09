@@ -268,6 +268,7 @@ namespace MOTMaster2
 
         private void DoAddEntry(TKey key, TValue value)
         {
+            if (Convert.ToString(key).Equals("")) return;
             if (AddEntry(key, value))
             {
                 _version++;

@@ -50,28 +50,32 @@ namespace MOTMaster2
         public int NSamples { get; set; }
         private Random random = new Random();
         public string InterferometerStepName { get; set; }
-        public Tuple<long,long> InterferometerStepInterval() // from..to [ticks] relative to 
+     /*   public Tuple<long,long> InterferometerStepInterval() // from..to [ticks] relative to beginning of time
         {
             Tuple<long, long> rslt = new Tuple<long, long>(-1,-1);
             if (startSeqTime < 0) return rslt;
             if (Utils.isNull(InterferometerStepName)) return rslt;
             if (InterferometerStepName.Equals("")) return rslt;
-            //InterferometerStepName = "2T";
+
+
+
             if (AnalogSegments.ContainsKey(InterferometerStepName))
             {
                 long i1 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item1 / SampleRate);
                 long i2 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item2 / SampleRate);
+                rslt = new Tuple<long, long>(i1, i2);
             }
             return rslt;            
-        }
-        public long startSeqTime { get; set; } // relative to series start 
+        }*/
+        public long startSeqTime { get; set; } // abs ticks of shot (one sequence) start 
 
         //Rise time in seconds to be excluded from data
         public double RiseTime { get; set; }
+        public Dictionary<string, int> SkimEdges { get; set; }
 
         //This depends on the number of channels and sampling rate
-        private int preTrigSamples = 32;
-        public int PreTrigSamples { get { return preTrigSamples; } set { preTrigSamples = value; } }
+        private int postTrigSamples = 32;
+        public int PostTrigSamples { get { return postTrigSamples; } set { postTrigSamples = value; } }
 
         public static double[] TransferFunc { get; set; }
 
@@ -86,29 +90,39 @@ namespace MOTMaster2
                       
         }
 
-        public Dictionary<string, double[]> SegmentShot(double[,] rawData, int idx = 1) 
+        public Dictionary<string, double[]> SegmentShot(double[,] rawData, int idx = 1)
         {
             int riseSamples = (int)(RiseTime * SampleRate);
-            int imin;
-            int imax;
+            int imin, imax, smin, smax;
             Dictionary<string, double[]> segData = new Dictionary<string, double[]>();
             foreach (KeyValuePair<string, Tuple<int, int>> entry in AnalogSegments.OrderBy(t => t.Value.Item1))
             {
                 if (!IgnoredSegments.Contains(entry.Key))
                 {
-                    imin = entry.Value.Item1 + riseSamples/2;
-                    imax = entry.Value.Item2 - riseSamples/2;
-                    double[] data = new double[imax-imin];
-                    for (int i = imin; i < imax; i++) data[i-imin] = rawData[idx,i];
+                    switch (entry.Key)
+                    {
+                        case ("N2"):
+                        case ("B2"):
+                            smin = SkimEdges["PreSkim2"]; smax = SkimEdges["PostSkim2"];
+                            break;
+                        case ("NTot"):
+                        case ("BTot"):
+                            smin = SkimEdges["PreSkimTot"]; smax = SkimEdges["PostSkimTot"];
+                            break;
+                        default:
+                            smin = 0; smax = 0;
+                            break;
+                    }
+                    imin = entry.Value.Item1 + smin;
+                    imax = entry.Value.Item2 - smax;
+                    if ((imax - imin) < 2)
+                    {
+                        Utils.TimedMessageBox("Too much skimming (Options) - No data left in <" + entry.Key + "> segment!","Error",3000); //ErrorMng.errorMsg
+                        return null;
+                    }                        
+                    double[] data = new double[imax - imin];
+                    for (int i = imin; i < imax; i++) data[i - imin] = rawData[idx, i];
                     segData[entry.Key] = data;
-                }
-                else if (entry.Key == InterferometerStepName)
-                {
-                    imin = entry.Value.Item1;
-                    imax = entry.Value.Item2;
-                    double[] accelData = new double[imax-imin];
-                    for (int i = imin; i < imax; i++) accelData[i - imin] = rawData[idx, i];
-                    segData["AccV"] = accelData;
                 }
             }
             return segData;
@@ -401,8 +415,4 @@ namespace MOTMaster2
             analogSegments = null;
         }
     }
-
-
-
-
 }

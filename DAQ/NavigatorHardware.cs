@@ -22,7 +22,7 @@ namespace DAQ.HAL
             config.HSDIOCard = true;
             config.UseAI = true;
             config.DigitalPatternClockFrequency = 20000000;
-            config.UseMuquans = true;
+            config.UseMuquans = false;
             config.UseMMScripts = false;
             config.UseMSquared = true;
             Info.Add("MotMasterConfiguration", config);
@@ -121,7 +121,7 @@ namespace DAQ.HAL
            // AddAnalogOutputChannel("analogTest", aoBoard + "/ao24", -10, 10);
 
             //map the analog input channels
-            AddAnalogInputChannel("accelerometer", aiBoard + "/ai0", AITerminalConfiguration.Pseudodifferential, -3, 3);
+            AddAnalogInputChannel("accelerometer", aiBoard + "/ai0", AITerminalConfiguration.Pseudodifferential, -10, 10);
             AddAnalogInputChannel("photodiode", aiBoard + "/ai1", AITerminalConfiguration.Pseudodifferential, -10, 10);
             AddAnalogInputChannel("fibrePD", aiBoard + "/ai3", AITerminalConfiguration.Differential);
             //AddAnalogInputChannel("forwardRamanPD", multiBoard + "/ai0", AITerminalConfiguration.Differential);

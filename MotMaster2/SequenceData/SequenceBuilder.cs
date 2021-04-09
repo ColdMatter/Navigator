@@ -140,7 +140,7 @@ namespace MOTMaster2.SequenceData
                     }
                 }
                 //Adds the Muquans string commands as well as the required serial pulses before digital pulses to prevent time order exceptions
-                if (step.RS232Commands && Controller.config.UseMuquans)
+               /* if (step.RS232Commands && Controller.config.UseMuquans)
                 {
                     //TODO Fix the sequence parser to make it work with more generic serial commands
                     foreach (SerialItem serialCommand in step.GetSerialData())
@@ -156,7 +156,7 @@ namespace MOTMaster2.SequenceData
                         double trigTime = (digitalSample - (serialPreTrigger + serialWait))/digitalClock;
                         throw new Exception(string.Format("Failed to add serial pre-trigger in step {0}. Expected at time {1}.", step.Name, trigTime));
                     }
-                }
+                }*/
                 //Adds the edges for each digital channel
                 foreach (string digitalChannel in step.GetUsedDigitalChannels(previousStep))
                 {
@@ -243,16 +243,7 @@ namespace MOTMaster2.SequenceData
             if (channelType == AnalogChannelSelector.Continue) return;
             double startTime = step.GetAnalogStartTime(analogChannel);
             int analogStartTime = ConvertToSampleTime(currentTime + startTime, analogClock);
-            double value = 0.0;
-            try
-            {
-                if (channelType != AnalogChannelSelector.Function && channelType != AnalogChannelSelector.XYPairs) value = step.GetAnalogValue(analogChannel);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(string.Format("Could not parse argument type {0}. Step: {1} Channel: {2}", channelType.ToString(), step.Name, analogChannel));
-            }
-            int duration;
+            double value = 0.0; double finalValue = 0; int duration;
             try
             {
                 switch (channelType)
@@ -260,21 +251,23 @@ namespace MOTMaster2.SequenceData
                     case AnalogChannelSelector.Continue:
                         break;
                     case AnalogChannelSelector.SingleValue:
+                        value = step.GetAnalogValue(analogChannel);
                         analogPB.AddAnalogValue(analogChannel, analogStartTime, value);
                         break;
                     case AnalogChannelSelector.LinearRamp:
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
+                        finalValue = step.GetAnalogFinalValue(analogChannel);
                         analogPB.AddLinearRamp(analogChannel, analogStartTime, duration, value);
                         break;
                     case AnalogChannelSelector.Pulse:
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
-                        double finalValue = step.GetAnalogFinalValue(analogChannel);
+                        finalValue = step.GetAnalogFinalValue(analogChannel);
                         analogPB.AddAnalogPulse(analogChannel, analogStartTime, duration, value, finalValue);
                         break;
                     case AnalogChannelSelector.Function:
                         string analogFunction = step.GetFunction(analogChannel);
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
-                        CompileAnalogFunction(analogChannel, analogFunction, startTime, analogStartTime, analogClock, duration);
+                        CompileAnalogFunction(analogChannel, analogFunction, startTime, analogStartTime, timeMultiplier, analogClock, duration);
                         break;
                     case AnalogChannelSelector.XYPairs:
                         List<double[]> xypairs = step.GetXYPairs(analogChannel);
@@ -312,6 +305,10 @@ namespace MOTMaster2.SequenceData
             {
                 throw new Exception(string.Format("Insufficient length for pattern. Step: {0} Channel: {1} Start time: {2}", step.Name, analogChannel, analogStartTime));
             }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Could not parse argument type {0}. Step: {1} Channel: {2}", channelType.ToString(), step.Name, analogChannel));
+            }
         }
 
         /// <summary>
@@ -339,9 +336,15 @@ namespace MOTMaster2.SequenceData
         /// <param name="analogStartTime">start time of the sequence step relative to the start of the whole pattern (in units of samples output by the card)</param>
         /// <param name="analogClock">Clock frequency of the card</param>
         /// <param name="duration">Duration of the function output in units of samples</param>
-        void CompileAnalogFunction(string analogChannel, string function, double startTime, int analogStartTime, int analogClock, int duration)
+        void CompileAnalogFunction(string analogChannel, string function, double startTime, int analogStartTime, double timeMultiplier, int analogClock, int duration)
         {
             if (function == "") throw new Exception(string.Format("Expected function for Channel: {0} in Step: {1}",analogChannel,_sequenceStep.Name));
+            double fValue = Double.NaN;
+            if (Double.TryParse(function, out fValue))
+            {
+                analogPB.AddAnalogValue(analogChannel, analogStartTime, fValue);
+                return;
+            }
             if (Parameters.Keys.Contains(function))
             {
                 analogPB.AddAnalogValue(analogChannel, analogStartTime, (double)Parameters[function]);
@@ -368,12 +371,13 @@ namespace MOTMaster2.SequenceData
             if (timeFunc)
             {
                 if (duration == 0) throw new Exception(string.Format("Duration not set for function {0} in step {1}", analogChannel, _sequenceStep.Name));
+                double curTime = timeMultiplier * startTime / 1000;
                 for (int i = 0; i < duration; i++)
                 {
-                    compiler.SetVariable("t", startTime);
+                    compiler.SetVariable("t", 1000 * curTime / timeMultiplier);
                     funcValue = compiler.Calculate();
                     analogPB.AddAnalogValue(analogChannel, analogStartTime + i, funcValue);
-                    startTime += 1.0 / analogClock;
+                    curTime += 1.0 / analogClock; // in sec
                 }
             }
             else

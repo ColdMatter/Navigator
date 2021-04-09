@@ -19,7 +19,6 @@ using DAQ.HAL;
 using ErrorManager;
 using UtilsNS;
 using NationalInstruments.Restricted;
-using NationalInstruments.Controls;
 
 namespace MOTMaster2.ExtDevices
 {
@@ -28,15 +27,13 @@ namespace MOTMaster2.ExtDevices
     /// </summary>
     public partial class WindFreakUC : UserControl, IExtDevice
     {
-        Dictionary<char, WindfreakSynth.WindfreakChannel> chns = new Dictionary<char, WindfreakSynth.WindfreakChannel>();
-        Dictionary<ArrowButton, NumericTextBoxDouble> phaseShift = new Dictionary<ArrowButton, NumericTextBoxDouble>();
         public WindFreakUC(string __dvcName, Brush brush)
         {
             InitializeComponent();
             _dvcName = __dvcName;
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
-            ucExtFactors.dvcName = _dvcName; ucExtFactors.groupUpdate = false;
+            groupUpdate = true;
         }
         protected string _dvcName;
         public string dvcName { get { return _dvcName; } }
@@ -44,6 +41,7 @@ namespace MOTMaster2.ExtDevices
         {
             return OptEnabled() && ignoreHardware ? true : CheckHardware();
         }
+        bool groupUpdate { get; set; }
         public GeneralOptions genOpt { get; set; }       
         public bool OptEnabled()
         {
@@ -56,15 +54,11 @@ namespace MOTMaster2.ExtDevices
             if (Controller.config.Debug) lastCheckHardware = true;
             else // check connection to the device
             {
-                if (Utils.isNull(Controller.microSynth) || Utils.isNull(Controller.microSynth2)) lastCheckHardware = false;   
+                if (Utils.isNull(Controller.microSynth)) lastCheckHardware = false;   
                 else
                 {
-                    if (OptEnabled())
-                    {
-                        if (!Controller.microSynth.Connected) Controller.microSynth.Connect();
-                        if (!Controller.microSynth2.Connected) Controller.microSynth2.Connect();
-                    }
-                    lastCheckHardware = Controller.microSynth.Connected && Controller.microSynth2.Connected;
+                    if (OptEnabled() && !Controller.microSynth.Connected) Controller.microSynth.Connect();
+                    lastCheckHardware = Controller.microSynth.Connected;
                 }              
             }                          
             return lastCheckHardware;
@@ -85,38 +79,29 @@ namespace MOTMaster2.ExtDevices
             }
             if (!GetEnabled(true)) return false;
             string[] fns = fctName.Split(':');
-            if (fns.Length == 1) // common commands (non-channel specific)
+            // call hardware
+            if (fns.Length == 1) // common commands
             {
-                return false; // nothing to do
+                
             }
-            if (fns.Length != 2) throw new Exception("Syntax problem (-789)");
-                    
-            WindfreakSynth.WindfreakChannel chn;
-            switch (fns[1])
+            else // channel-oriented commands
             {
-                case "A": chn = Controller.microSynth.ChannelA;
-                    break;
-                case "B": chn = Controller.microSynth.ChannelB;
-                    break;
-                case "C": chn = Controller.microSynth2.ChannelA;
-                    break;
-                case "D": chn = Controller.microSynth2.ChannelB;
-                    break;
-                default: chn = Controller.microSynth.ChannelA;
-                    break;
-            }          
-            switch (fns[0])
-            {
-                case "RFPower":
-                    chn.RFOn = Convert.ToBoolean(fctValue);
-                    break;
-                case "amplitude":
-                    chn.Amplitude = Convert.ToDouble(fctValue);
-                    break;
-                case "frequency":
-                    chn.Frequency = Convert.ToDouble(fctValue);
-                    break;
-            }           
+                WindfreakSynth.WindfreakChannel chn;
+                if (fns[1] == "A") chn = Controller.microSynth.ChannelA;
+                else chn = Controller.microSynth.ChannelB;
+                switch (fns[0])
+                {
+                    case "RFPower":
+                        chn.RFOn = Convert.ToBoolean(fctValue);
+                        break;
+                    case "amplitude":
+                        chn.Amplitude = Convert.ToDouble(fctValue);
+                        break;
+                    case "frequency":
+                        chn.Frequency = Convert.ToDouble(fctValue);
+                        break;
+                }
+            }
             return true;
         }
        public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts
@@ -125,10 +110,6 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.AddFactor("Frequency[MHz] chn.A", "frequency:A");
             ucExtFactors.AddFactor("Amplitude[dBm] chn.B", "amplitude:B");
             ucExtFactors.AddFactor("Frequency[MHz] chn.B", "frequency:B");
-            ucExtFactors.AddFactor("Amplitude[dBm] chn.C", "amplitude:C");
-            ucExtFactors.AddFactor("Frequency[MHz] chn.C", "frequency:C");
-            ucExtFactors.AddFactor("Amplitude[dBm] chn.D", "amplitude:D");
-            ucExtFactors.AddFactor("Frequency[MHz] chn.D", "frequency:D");
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
@@ -138,32 +119,18 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.factorsState = cfg;
             if (cfg.ContainsKey("RFPowerA")) chkRFPowerA.IsChecked = Convert.ToBoolean(cfg["RFPowerA"]);
             if (cfg.ContainsKey("RFPowerB")) chkRFPowerB.IsChecked = Convert.ToBoolean(cfg["RFPowerB"]);
-            if (cfg.ContainsKey("RFPowerC")) chkRFPowerC.IsChecked = Convert.ToBoolean(cfg["RFPowerC"]);
-            if (cfg.ContainsKey("RFPowerD")) chkRFPowerD.IsChecked = Convert.ToBoolean(cfg["RFPowerD"]);
-            
-            phaseShift[btnA] = numA; phaseShift[btnB] = numB; phaseShift[btnC] = numC; phaseShift[btnD] = numD;
-            if (Utils.isNull(Controller.microSynth)) return;
-            chns['A'] = Controller.microSynth.ChannelA; chns['B'] = Controller.microSynth.ChannelB;
-            chns['C'] = Controller.microSynth2.ChannelA; chns['D'] = Controller.microSynth2.ChannelB;           
         }
         public void Final() // closing stuff and save state 
         {
             // save config file
             Dictionary<string, string> cfg = ucExtFactors.factorsState;
-            cfg["RFPowerA"] = chkRFPowerA.IsChecked.Value.ToString(); cfg["RFPowerB"] = chkRFPowerB.IsChecked.Value.ToString();
-            cfg["RFPowerC"] = chkRFPowerC.IsChecked.Value.ToString(); cfg["RFPowerD"] = chkRFPowerD.IsChecked.Value.ToString();
-
-            if (!Controller.config.Debug)
-            {
-                cfg["dev1"] = Controller.microSynth.address; cfg["dev2"] = Controller.microSynth2.address;
-            }
+            cfg["RFPowerA"] = chkRFPowerA.IsChecked.Value.ToString(); cfg["RFPowerB"] = chkRFPowerB.IsChecked.Value.ToString();           
             Utils.writeDict(Utils.configPath + dvcName + ".CFG", cfg);
             // Disconnect
             if (!Utils.isNull(Controller.microSynth))
                 if (Controller.microSynth.Connected) Controller.microSynth.Disconnect();
-            if (!Utils.isNull(Controller.microSynth2))
-                if (Controller.microSynth2.Connected) Controller.microSynth2.Disconnect();
-        }      
+        }
+       
         public void UpdateFromOptions(ref GeneralOptions _genOptions)
         {
             genOpt = _genOptions;
@@ -174,7 +141,6 @@ namespace MOTMaster2.ExtDevices
             if (!ignoreMutable && !ucExtFactors.chkMutable.IsChecked.Value) return false;
             bool bb = true;
             bb &= Talk2Dvc("RFPower:A", chkRFPowerA.IsChecked.Value); bb &= Talk2Dvc("RFPower:B", chkRFPowerB.IsChecked.Value);
-            bb &= Talk2Dvc("RFPower:C", chkRFPowerC.IsChecked.Value); bb &= Talk2Dvc("RFPower:D", chkRFPowerD.IsChecked.Value);
             return bb;
         }
         public bool UpdateDevice(bool ignoreMutable = false)
@@ -182,13 +148,6 @@ namespace MOTMaster2.ExtDevices
             bool bb = ucExtFactors.UpdateDevice(ignoreMutable) && UpdateOthers(ignoreMutable);
             Thread.Sleep(500);
             return bb;
-        }
-        private void btnA_Click(object sender, RoutedEventArgs e)
-        {
-            double ps = phaseShift[sender as ArrowButton].Value;
-            char chnName = Convert.ToChar((sender as ArrowButton).Content);
-            if (chns.Count.Equals(0)) Utils.TimedMessageBox("No active devices found");
-            chns[chnName].phaseShift(2*ps);
         }
     }
 }

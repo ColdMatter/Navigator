@@ -1,29 +1,26 @@
-﻿<Window x:Name="frmOptions" x:Class="MOTMaster2.OptionWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:json ="clr-namespace:Newtonsoft.Json;assembly=Newtonsoft.Json"
         xmlns:jlinq ="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json"
         xmlns:w="clr-namespace:MOTMaster2"
-        Title="Options" Height="657.009" Width="662.469" ResizeMode="CanResizeWithGrip" Loaded="frmOptions_Loaded">
+        xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" x:Name="frmOptions" x:Class="MOTMaster2.OptionWindow"
+        Title="Options" Height="657.009" Width="662.469" ResizeMode="CanResizeWithGrip" Loaded="frmOptions_Loaded" WindowStartupLocation="Manual">
     <Window.Resources>
         <w:MethodToValueConverter x:Key="MethodToValueConverter"/>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JArray}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}"/>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JProperty}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}"/>
+                <TextBlock Text="{Binding Name, Mode=OneWay}"/>
             </StackPanel>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-        </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding Converter={StaticResource MethodToValueConverter}, ConverterParameter='Children'}">
-        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JObject}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}"/>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JConstructor}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}"/>
+        <HierarchicalDataTemplate DataType="{x:Type jlinq:JRaw}" ItemsSource="{Binding ConverterParameter=Children, Converter={StaticResource MethodToValueConverter}}"/>
         <DataTemplate DataType="{x:Type jlinq:JValue}">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="{Binding Path=Value, Mode=TwoWay}"/>
+                <TextBox Text="{Binding Value, Mode=TwoWay}"/>
             </StackPanel>
         </DataTemplate>
     </Window.Resources>
@@ -71,7 +68,7 @@
                                 <RadioButton x:Name="m2Off" Content="No"  Margin="86,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </GroupBox> -->
-                        <GroupBox Header="Force sequence sharging" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="46" Width="174" >
+                        <GroupBox Header="Force sequence loading in PXI" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="46" Width="183" >
                             <Grid Margin="0,0,0,0">
                                 <CheckBox x:Name="chkForceSeqCharge" Content="Enabled"  Margin="15,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
@@ -81,34 +78,49 @@
                                 <CheckBox x:Name="chkSaveSeqB4proc" Content="Enabled"  Margin="15,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </GroupBox>
+                        <GroupBox Header="Delay between shots [ms]" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" VerticalAlignment="Top" Height="50" Width="156" Grid.RowSpan="2">
+                            <Grid Margin="0,0,0,0">
+                                <ni:RadixNumericTextBoxInt32 x:Name="numDelayBwnShots" RadixVisibility="Collapsed" Margin="35,1,5,1"></ni:RadixNumericTextBoxInt32>
+                            </Grid>
+                        </GroupBox>
                     </StackPanel>
 
-                    <GroupBox Header="Analog input" Grid.Row="2" HorizontalAlignment="Left" Margin="10,0.091,0,0.247" Width="620">
-                        <Grid Margin="0,0,-33.429,-3.857">
+                    <GroupBox Header="Analog data acquisition" Grid.Row="1" HorizontalAlignment="Left" Margin="10,65.38,0,60.582" Width="626" Grid.RowSpan="3">
+                        <Grid Margin="0,0,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="82.286"/>
-                                <ColumnDefinition Width="184"/>
-                                <ColumnDefinition Width="185"/>
-                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="75"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="180"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="38.886"/>
+                                <RowDefinition Height="51.646"/>
                             </Grid.RowDefinitions>
 
-                            <CheckBox x:Name="aiEnable" Grid.Row="0" HorizontalAlignment="Center" Height="15" Margin="10,10,4.286,4.922" VerticalAlignment="Center" Click="aiEnable_Click" Width="68" RenderTransformOrigin="-1.104,0.752" Content="Enabled"/>
-                            <Label Content="Sample Rate [Hz]"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="78,2,0,1.922" Width="110" Grid.Row="0" Grid.ColumnSpan="2" Height="26"/>
-                            <TextBox x:Name="tbSampleRate" HorizontalAlignment="Left" Height="24" Margin="110.714,2,0,3.922" TextWrapping="Wrap" VerticalAlignment="Center" Width="66" Grid.Column="1" Grid.Row="0"/>
-                            <Label Content="PreTrig Samples"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1.714,2,0,1.714" Width="94" Grid.Column="2" Height="26"/>
-                            <TextBox x:Name="tbPreTrig" HorizontalAlignment="Left" Height="24" Margin="98.714,3,0,2.714" TextWrapping="Wrap" VerticalAlignment="Center" Width="80" Grid.Column="2" ToolTip="Initial number of samples per channel to exclude"/>
-                            <Label Content="Rise Time [s]"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1.818,17.078,0,16.766" Width="92" Grid.Column="2" Grid.Row="1" ToolTip="" Height="26"/>
-                            <TextBox x:Name="tbRiseTime" HorizontalAlignment="Left" Height="24" Margin="98.714,18.286,0,18.857" TextWrapping="Wrap" VerticalAlignment="Center" Width="80" Grid.Column="2" Grid.Row="1" ToolTip="Rise time for photodiode in seconds"/>
+                            <CheckBox x:Name="aiEnable" Grid.Row="0" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="68" RenderTransformOrigin="-1.104,0.752" Content="Enabled" Foreground="Black"/>
+                            <Label Content="Sample Rate [Hz]"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,6,0,7" Width="110" Grid.Row="0" Height="26" Foreground="#FF8A1300" Grid.Column="1"/>
+                            <ni:RadixNumericTextBoxInt32 x:Name="numSampleRate" HorizontalAlignment="Left" Height="24" Margin="98,7,0,8" VerticalAlignment="Center" Width="78" Grid.Column="1" Grid.Row="0" RadixVisibility="Collapsed"/>
+                            <Label Content="PostTrig Samples"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,13,0,13" Width="94" Grid.Column="1" Grid.Row="1" Height="26" Foreground="#FF256302"/>
+                            <ni:RadixNumericTextBoxInt32 x:Name="numPostTrig" HorizontalAlignment="Left" Height="24" Margin="98,15,0,13" VerticalAlignment="Center" Width="80" Grid.Column="1" Grid.Row="1" ToolTip="Initial number of samples per channel to exclude" RadixVisibility="Collapsed"/>
+                            <Label Content="Rise Time [s]"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="2,14,0,12" Width="92" Grid.Column="0" Grid.Row="1" ToolTip="" Height="26" Grid.ColumnSpan="2" Visibility="Hidden"/>
+                            <TextBox x:Name="tbRiseTime" HorizontalAlignment="Left" Height="24" Margin="0,15,0,13" TextWrapping="Wrap" VerticalAlignment="Center" Width="80" Grid.Column="0" Grid.Row="1" ToolTip="Rise time for photodiode in seconds" Visibility="Hidden" Grid.ColumnSpan="2"/>
 
-                    <!--    <Label Content="q.Start"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1.714,2,0,1.714" Width="94" Grid.Column="3" Height="26"/>
+                            <Label x:Name="label0" Content="PreSkim [ 2 ]" HorizontalAlignment="Left" Margin="5,7,0,7" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" Height="25" Width="79" Background="{x:Null}" Foreground="#FF012E7D"/>
+                            <ni:RadixNumericTextBoxInt32 Name="numPreSkim2" HorizontalAlignment="Left" Height="24" Margin="90,7,0,8" Grid.Column="2" Grid.Row="0" VerticalAlignment="Center" Width="79" RadixVisibility="Collapsed" Range="0, 500, System.Int32"/>
+                            <Label x:Name="label1" Content="PostSkim [ 2 ]" HorizontalAlignment="Left" Margin="5,7,0,7" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Height="25" Width="85" Background="{x:Null}" Foreground="#FF012E7D"/>
+                            <ni:RadixNumericTextBoxInt32 x:Name="numPostSkim2"  HorizontalAlignment="Left" Height="24" Margin="90,7,0,8" Grid.Column="3" Grid.Row="0" VerticalAlignment="Center" Width="79" RadixVisibility="Collapsed" Range="0, 500, System.Int32"/>
+                            <Label x:Name="label2" Content="PreSkim [Tot]" HorizontalAlignment="Left" Margin="4,13,0,14" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Height="25" Width="80" Background="{x:Null}" Foreground="#FF012E7D"/>
+                            <ni:RadixNumericTextBoxInt32 x:Name="numPreSkimTot"  HorizontalAlignment="Left" Height="24" Margin="90,14,0,14" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Width="79" RadixVisibility="Collapsed" Range="0, 500, System.Int32"/>
+                            <Label x:Name="label3" Content="PostSkim [Tot]" HorizontalAlignment="Left" Margin="2,13,0,14" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Height="25" Width="88" Background="{x:Null}" Foreground="#FF012E7D"/>
+                            <ni:RadixNumericTextBoxInt32 x:Name="numPostSkimTot"  HorizontalAlignment="Left" Height="24" Margin="90,14,0,14" Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Width="79" RadixVisibility="Collapsed" Range="0, 500, System.Int32"/>
+
+                            <!--    <Label Content="q.Start"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1.714,2,0,1.714" Width="94" Grid.Column="3" Height="26"/>
                             <ComboBox x:Name="cbQStart" Height="28" Width="124" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="3" Margin="49.675,0,0,0" IsEditable="True"/>
                             <Label Content="q.Time [s]"  HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1.818,17.078,0,16.766" Width="92" Grid.Column="3" Grid.Row="1" ToolTip="" Height="26"/>
                             <TextBox x:Name="tbQTime" HorizontalAlignment="Left" Height="24" Margin="70,17.078,0,18.766" TextWrapping="Wrap" VerticalAlignment="Center" Width="80" Grid.Column="3" Grid.Row="1" ToolTip="Duration of quant.measurement in seconds"/>
-                         --><GroupBox Header="Save Mode" HorizontalAlignment="Left" Margin="82,0.286,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="185" Height="51">
+                         -->
+                            <GroupBox Header="Save Mode" HorizontalAlignment="Left" Margin="1,32,0,0" VerticalAlignment="Top" Width="185" Height="51" Visibility="Collapsed" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="2">
                                 <Grid>
                                     <RadioButton x:Name="aiRaw" GroupName="analog" Content="Raw" HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Center" Height="16" Width="48" ToolTip="Save segmented raw data"/>
                                     <RadioButton x:Name="aiAverage" GroupName="analog" Content="Average" HorizontalAlignment="Left" Margin="53,0,0,0" VerticalAlignment="Center" Height="16" Width="67" ToolTip="Save averages/std. dev" RenderTransformOrigin="0.221,-0.304"/>
@@ -117,20 +129,18 @@
                             </GroupBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="External devices enabled" Grid.Row="3" Margin="10,0,0,0">
-                        <Grid Margin="0">
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox x:Name="chkWindFreakEnabled" Grid.Column="1" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="WindFreak"/>
-                            <CheckBox x:Name="chkM2Enabled" Grid.Column="0" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="MSquared"/>
-                            <CheckBox x:Name="chkFlexDDS" Grid.Column="0" HorizontalAlignment="Left" Height="15" Margin="8,0,0,0" VerticalAlignment="Center" Width="88" Content="FlexDDS"/>
-                            </StackPanel>
-                        </Grid>
+                    <GroupBox Header="External devices enabled" Grid.Row="3" Margin="10,0.177,9.873,-0.418">
+                        <StackPanel Orientation="Horizontal" Margin="10,3,0,0">
+                            <CheckBox x:Name="chkWindFreakEnabled" Grid.Column="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="WindFreak"/>
+                            <CheckBox x:Name="chkM2Enabled" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="MSquared"/>
+                            <CheckBox x:Name="chkFlexDDSEnabled" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="FlexDDS" Visibility="Collapsed"/>
+                        </StackPanel>
                     </GroupBox>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tiFileSystem" Header="File System" Height="24" Margin="-0.286,-1,0,1" HorizontalAlignment="Left" Width="140">
                 <Grid Background="#FFE5E5E5">
-                    <TreeView Name="filesystemTreeView" Margin="0,0,-0.143,-0.429">
+                    <TreeView x:Name="filesystemTreeView" Margin="0,0,-0.143,-0.429">
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="{x:Type TreeViewItem}">
                                 <Setter Property="IsExpanded" Value="True" />
@@ -145,7 +155,7 @@
                     <TabControl Margin="0">
                         <TabItem Header="  View  ">
                             <Grid>
-                                <TreeView Name="hardwareTreeView" Margin="0,0,-0.143,-0.429">
+                                <TreeView x:Name="hardwareTreeView" Margin="0,0,-0.143,-0.429">
                                     <TreeView.ItemContainerStyle>
                                         <Style TargetType="{x:Type TreeViewItem}">
                                             <Setter Property="IsExpanded" Value="True" />
@@ -160,8 +170,8 @@
                                     <FlowDocument>
                                         <Paragraph>
                                             <Run Text=""/>
-                                            <InlineUIContainer>
-                                            </InlineUIContainer>
+                                            <Run Text=" "/>
+                                            <InlineUIContainer/>
                                         </Paragraph>
                                     </FlowDocument>
                                 </RichTextBox>

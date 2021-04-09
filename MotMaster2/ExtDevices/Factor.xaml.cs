@@ -50,7 +50,7 @@ namespace MOTMaster2.ExtDevices
             set { isVisible = value; }
         }
 
-        public bool RequireValue { get; private set; } // if type of factorType.ftNone is allowed
+        public bool RequireValue { get; private set; } // is type of factorType.ftNone is allowed
         public enum factorType
         {
             ftNone, ftValue, ftParam
@@ -130,7 +130,7 @@ namespace MOTMaster2.ExtDevices
         public void VisUpdate() // 
         {
             if (Double.IsNaN(fValue)) lbFactor.Content = fName;
-            else lbFactor.Content = fName + " -> " + fValue.ToString("G5");
+            else lbFactor.Content = fName + " -> " + fValue.ToString("G7");
         }
 
         public string Text
@@ -139,38 +139,21 @@ namespace MOTMaster2.ExtDevices
             set { cbFactor.Text = value; }
         }
 
-        public bool SendValue(bool blockMode)
+        public bool SendValue()
         {
             double d; bool b;
             switch (fType)
             {
                 case factorType.ftNone:
-                    fValue = Double.NaN;
-                    if (RequireValue)
-                    {
-                        d = 0; // default value
-                        if (blockMode) b = true;
-                        else b = Send2Dvc(extName, (object)d);
-                        if (b)
-                        {
-                            fValue = d; return true;
-                        }
-                        else
-                        {
-                            fValue = Double.NaN; ErrorMng.errorMsg("Problem in sending to " + fName, 235);
-                            return false;
-                        }
-                    }
-                    else return true;
+                    fValue = Double.NaN; 
+                    return !RequireValue;                   
                 case factorType.ftValue:
                 case factorType.ftParam:
-                    d = getReqValue();
-                    if (blockMode) b = true;
-                    else b = Send2Dvc(extName,(object)d);
+                    d = getReqValue(); b = Send2Dvc(extName,(object)d);
                     if (b) fValue = d;
                     else
                     {
-                        fValue = Double.NaN; ErrorMng.errorMsg("Problem in sending to " + fName, 235);
+                        fValue = Double.NaN; ErrorMng.Log("Error in sending "+fName, Brushes.DarkRed.Color);
                     }
                     return b;
                 default: return false;
@@ -181,9 +164,12 @@ namespace MOTMaster2.ExtDevices
             string txt = cbFactor.Text; factorType kind = fType; 
             cbFactor.Items.Clear(); 
             if (!RequireValue) cbFactor.Items.Add(NoneFactor);
+            bool pressent = false;
             foreach (KeyValuePair<string, Parameter> prm in Parameters)
             {
-                if (prm.Value.IsLaser) cbFactor.Items.Add(prm.Key);
+                if (!prm.Value.IsLaser) continue;
+                cbFactor.Items.Add(prm.Key);
+                pressent |= txt.Equals(prm.Key);
             } 
             switch (kind)
             {
@@ -192,7 +178,7 @@ namespace MOTMaster2.ExtDevices
                 case factorType.ftValue: cbFactor.Text = txt;
                     break;
                 case factorType.ftParam:
-                    if (fType == factorType.ftParam) cbFactor.Text = txt;
+                    if (pressent) cbFactor.Text = txt;
                     else cbFactor.Text = NoneFactor;
                     break;
             }
@@ -206,14 +192,4 @@ namespace MOTMaster2.ExtDevices
             return sc;
         }
     }
-
-    // SELECT FACTOR
-    public class SelectFactor
-    {
-        public SelectFactor(string sfName, List<string> sfItems)
-        {
-
-        }
-    }
-
 }

@@ -44,7 +44,7 @@ namespace DAQ.Analog
             foreach (string keys in aiConfig.AIChannels.Keys)
             {
                 AddToAnalogInputTask(AITask, keys, aiConfig.AIChannels[keys].AIRangeLow,aiConfig.AIChannels[keys].AIRangeHigh);
-            };
+            }
             AIConfig.AIData = new double[AIConfig.AIChannels.Count, samples];
         //For the timiming - for now just derive the ai sample clock from the PCI card, but this isn't synchronised with the PXI Card, so in future will
         //need to create a counting task on the AICard and count an exported timiming signal from the PXI or something similar.
@@ -92,11 +92,12 @@ namespace DAQ.Analog
         public void ReadAnalogDataFromBuffer()
         {           
             try
-            {
-                Utils.Trace("read buff AI");
+            {                
                 if (AITask.IsDone) return;
+                Utils.Trace("read buff AI");
                 AIDataReader = new AnalogMultiChannelReader(AITask.Stream);
                 AIConfig.AIData = AIDataReader.ReadMultiSample(samples);
+                Utils.Trace("read buff AI-2");
             }
               catch (System.ObjectDisposedException e)
               {
@@ -107,9 +108,13 @@ namespace DAQ.Analog
                 AIDataReader = null;
             }            
         }
-
-        public double[,] GetAnalogData()
+        public double[,] GetAnalogData(bool pseudoDoubleChn = true) // EMERGENCY CHANGE, IT MUST false IN NORMAL CONDITIONS !!!
         {
+            if (pseudoDoubleChn && AIConfig.AIData.GetLength(0).Equals(2))
+            {
+                int d1 = AIConfig.AIData.GetLength(1);
+                for (int i = 0; i < d1; i++) AIConfig.AIData[0, i] = AIConfig.AIData[1, i]; // both channels are taken from Y-PD
+            }
             return AIConfig.AIData;
         }
         public double[] GetAnalogDataSingleArray()

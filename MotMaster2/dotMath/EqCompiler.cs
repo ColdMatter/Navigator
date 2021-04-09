@@ -73,7 +73,7 @@ namespace dotMath
 			///		requested operations.
 			/// </summary>
 			/// <param name="oValue">Child operation this object operates upon.</param>
-			public CSignNeg( CValue oValue )
+			public CSignNeg(CValue oValue)
 			{
 				m_oValue = oValue;
 			}
@@ -97,80 +97,80 @@ namespace dotMath
 		/// </summary>
 		/// <returns>CValue object that holds an operation.</returns>
 		private CValue Paren()
-        {
+		{
 			bool bFunc = false;
 			CValue oValue = null;
 
-            if (m_currentToken.ToString() == "(")
-            {
-                PositionNextToken();
-
-
-                oValue = Relational();
-
-                if (m_currentToken.ToString() == ",")
-                    return oValue;
-
-                if (m_currentToken.ToString() != ")")
-                    throw new ApplicationException("Unmatched parenthesis in equation.");
-
-            }
-            else
-            {
-                switch (m_currentToken.TokenType)
-                {
-                    case Parser.CharType.CT_NUMBER:
-                        oValue = new CNumber(m_currentToken.ToString());
-                        break;
-
-                    case Parser.CharType.CT_LETTER:
-                        {
-                            if (m_nextToken.ToString() == "(")
-                            {
-                                int iIdx = m_slFunctions.IndexOfKey(m_currentToken.ToString());
-
-                                if (iIdx < 0)
-                                    throw new ApplicationException("Function not found - " + m_currentToken.ToString());
-
-                                CFunction oFunc = (CFunction)m_slFunctions.GetByIndex(iIdx);
-
-                                ArrayList alValues = new ArrayList();
-
-                                PositionNextToken();
-
-
-                                do
-                                {
-                                    PositionNextToken();
-                                    oValue = AddSub();
-
-                                    alValues.Add(oValue);
-                                } while (m_currentToken.ToString() != ")" && m_currentToken!="");
-
-
-                                bFunc = true;
-
-                                oValue = oFunc.CreateInstance(alValues);
-
-                                PositionNextToken();
-
-
-                            }
-                            else
-                                oValue = GetVariableByName(m_currentToken.ToString());
-
-                            break;
-                        }
-                }
-
-            }
-
-
-			if( !bFunc )
+			if (m_currentToken.ToString() == "(")
+			{
 				PositionNextToken();
-            
+
+
+				oValue = Relational();
+
+				if (m_currentToken.ToString() == ",")
+					return oValue;
+
+				if (m_currentToken.ToString() != ")")
+					throw new ApplicationException("Unmatched parenthesis in equation.");
+
+			}
+			else
+			{
+				switch (m_currentToken.TokenType)
+				{
+					case Parser.CharType.CT_NUMBER:
+						oValue = new CNumber(m_currentToken.ToString());
+						break;
+
+					case Parser.CharType.CT_LETTER:
+						{
+							if (m_nextToken.ToString() == "(")
+							{
+								int iIdx = m_slFunctions.IndexOfKey(m_currentToken.ToString());
+
+								if (iIdx < 0)
+									throw new ApplicationException("Function not found - " + m_currentToken.ToString());
+
+								CFunction oFunc = (CFunction)m_slFunctions.GetByIndex(iIdx);
+
+								ArrayList alValues = new ArrayList();
+
+								PositionNextToken();
+
+
+								do
+								{
+									PositionNextToken();
+									oValue = AddSub();
+
+									alValues.Add(oValue);
+								} while (m_currentToken.ToString() != ")" && m_currentToken != "");
+
+
+								bFunc = true;
+
+								oValue = oFunc.CreateInstance(alValues);
+
+								PositionNextToken();
+
+
+							}
+							else
+								oValue = GetVariableByName(m_currentToken.ToString());
+
+							break;
+						}
+				}
+
+			}
+
+
+			if (!bFunc)
+				PositionNextToken();
+
 			return oValue;
-			
+
 		}
 
 
@@ -183,7 +183,7 @@ namespace dotMath
 		{
 			bool bNeg = false;
 			Parser.Token oToken = null;
-			if( m_currentToken == "+" || m_currentToken == "-" )
+			if (m_currentToken == "+" || m_currentToken == "-")
 			{
 				oToken = m_currentToken;
 				bNeg = (m_currentToken == "-");
@@ -194,15 +194,15 @@ namespace dotMath
 			CValue oFunc = Paren();
 
 
-			if( bNeg )
+			if (bNeg)
 			{
-				CheckParms( oToken, oFunc);
-				oFunc = new CSignNeg( oFunc );
+				CheckParms(oToken, oFunc);
+				oFunc = new CSignNeg(oFunc);
 			}
 
 			return oFunc;
 
-			
+
 		}
 
 		/// <summary>
@@ -214,7 +214,7 @@ namespace dotMath
 		{
 			CValue oValue = Sign();
 
-			while( m_currentToken == "^" )
+			while (m_currentToken == "^")
 			{
 				Parser.Token oOp = m_currentToken;
 
@@ -222,36 +222,56 @@ namespace dotMath
 
 				CValue oNextVal = Sign();
 
-				CheckParms( oOp, oValue, oNextVal);
-				oValue = OpFactory(oOp, oValue, oNextVal );
+				CheckParms(oOp, oValue, oNextVal);
+				oValue = OpFactory(oOp, oValue, oNextVal);
 			}
 
 			return oValue;
 		}
+		/// <summary>
+		/// Detects the modulo operator (%)
+		/// </summary>
+		/// <returns>CValue object representing an operation.</returns>
+		private CValue Modulo()
+		{
+			CValue oValue = Power();
 
+			while (m_currentToken == "%")
+			{
+				Parser.Token oOp = m_currentToken;
+				PositionNextToken();
+
+				CValue oNextVal = Power();
+
+				CheckParms(oOp, oValue, oNextVal);
+				oValue = OpFactory(oOp, oValue, oNextVal);
+			}
+
+			return oValue;
+		}
 		/// <summary>
 		/// MultDiv(): Detects the operation to perform multiplication or division.
 		/// </summary>
 		/// <returns>CValue object representing an operation.</returns>
 		private CValue MultDiv()
 		{
-			CValue oValue = Power();
-			
-			while( m_currentToken == "*" || m_currentToken == "/" )
+			CValue oValue = Modulo();
+
+			while (m_currentToken == "*" || m_currentToken == "/")
 			{
 				Parser.Token oOp = m_currentToken;
 
 				PositionNextToken();
 
-				CValue oNextVal = Power();
+				CValue oNextVal = Modulo();
 
-				CheckParms( oOp, oValue, oNextVal);
-				oValue = OpFactory( oOp, oValue, oNextVal );
+				CheckParms(oOp, oValue, oNextVal);
+				oValue = OpFactory(oOp, oValue, oNextVal);
 			}
 
 			return oValue;
 		}
-		
+
 		/// <summary>
 		/// AddSub(): Detects the operation to perform addition or substraction.
 		/// </summary>
@@ -259,16 +279,16 @@ namespace dotMath
 		private CValue AddSub()
 		{
 			CValue oValue = MultDiv();
-			
-			while( m_currentToken == "+" || m_currentToken == "-" )
+
+			while (m_currentToken == "+" || m_currentToken == "-")
 			{
 				Parser.Token oOp = m_currentToken;
 				PositionNextToken();
 
 				CValue oNextVal = MultDiv();
-				
-				CheckParms( oOp, oValue, oNextVal);
-				oValue = OpFactory( oOp, oValue, oNextVal );
+
+				CheckParms(oOp, oValue, oNextVal);
+				oValue = OpFactory(oOp, oValue, oNextVal);
 			}
 
 			return oValue;
@@ -296,8 +316,8 @@ namespace dotMath
 				PositionNextToken();
 				CValue oNextVal = Relational();
 
-				CheckParms( oOp, oValue, oNextVal);
-				oValue = OpFactory( oOp, oValue, oNextVal );
+				CheckParms(oOp, oValue, oNextVal);
+				oValue = OpFactory(oOp, oValue, oNextVal);
 
 			}
 
@@ -312,13 +332,13 @@ namespace dotMath
 		/// <param name="oValue1">The first value object to be operated on.</param>
 		/// <param name="oValue2">The second value object to be operated on.</param>
 		/// <returns>CValue object representing an operation.</returns>
-		private CValue OpFactory( Parser.Token oSourceOp, CValue oValue1, CValue oValue2 )
+		private CValue OpFactory(Parser.Token oSourceOp, CValue oValue1, CValue oValue2)
 		{
 
-			foreach( COperator oOp in m_aOps ) 
+			foreach (COperator oOp in m_aOps)
 			{
 
-				if( oOp.IsMatch( oSourceOp ))
+				if (oOp.IsMatch(oSourceOp))
 					return oOp.Factory(oValue1, oValue2);
 			}
 
@@ -359,7 +379,7 @@ namespace dotMath
 			///		compile-time assigned variable name.
 			/// </summary>
 			/// <param name="sVarName">Name of the variable within the expression.</param>
-			public CVariable( string sVarName )
+			public CVariable(string sVarName)
 			{
 				m_sVarName = sVarName;
 			}
@@ -370,16 +390,16 @@ namespace dotMath
 			/// </summary>
 			/// <param name="sVarName">string containing the variable name</param>
 			/// <param name="dValue">double containing the assigned variable value</param>
-			public CVariable( string sVarName, double dValue )
+			public CVariable(string sVarName, double dValue)
 			{
-                m_sVarName = sVarName;
+				m_sVarName = sVarName;
 			}
 
 			/// <summary>
 			/// SetValue(): Allows the setting of the variables value at runtime.
 			/// </summary>
 			/// <param name="dValue"></param>
-			public void SetValue( double dValue )
+			public void SetValue(double dValue)
 			{
 				m_dValue = dValue;
 			}
@@ -408,9 +428,9 @@ namespace dotMath
 			///		and stores it for future retrieval.
 			/// </summary>
 			/// <param name="sValue">string/text representation of a number</param>
-			public CNumber( string sValue )
+			public CNumber(string sValue)
 			{
-                m_dValue = Convert.ToDouble(sValue, System.Globalization.CultureInfo.InvariantCulture);
+				m_dValue = Convert.ToDouble(sValue, System.Globalization.CultureInfo.InvariantCulture);
 			}
 
 			/// <summary>
@@ -418,18 +438,18 @@ namespace dotMath
 			/// and stores it for future retrieval.
 			/// </summary>
 			/// <param name="dValue"></param>
-			public CNumber( double dValue )
+			public CNumber(double dValue)
 			{
 				m_dValue = dValue;
 			}
-			
+
 			/// <summary>
 			/// GetValue(): returns the static value when called upon.
 			/// </summary>
 			/// <returns>double</returns>
 			public override double GetValue()
 			{
-                return m_dValue;
+				return m_dValue;
 			}
 		}
 
@@ -446,7 +466,7 @@ namespace dotMath
 			/// </summary>
 			/// <param name="tkn">Parser.Token containing the operator in question</param>
 			/// <returns>bool returning true if the object is reponsible for implementing the operator at hand.</returns>
-			public abstract bool IsMatch( Parser.Token tkn);
+			public abstract bool IsMatch(Parser.Token tkn);
 
 			/// <summary>
 			/// Factory(CValue, CValue): responsible for providing an evaluation-time object that
@@ -455,7 +475,7 @@ namespace dotMath
 			/// <param name="arg1">First CValue object to operate on</param>
 			/// <param name="arg2">Second CValue object to operate on</param>
 			/// <returns>"Evaluation time" COperator object</returns>
-			public abstract COperator Factory( CValue arg1, CValue arg2);
+			public abstract COperator Factory(CValue arg1, CValue arg2);
 
 			/// <summary>
 			/// CheckParms( string, CValue, CValue): Helper function that verifies the two arguments
@@ -466,7 +486,7 @@ namespace dotMath
 			/// <param name="arg2">CValue object representing the second oepration</param>
 			protected void CheckParms(string sOp, CValue arg1, CValue arg2)
 			{
-				if( arg1 == null || arg2 == null )
+				if (arg1 == null || arg2 == null)
 					throw new ApplicationException("Missing expression on " + sOp + " operator.");
 			}
 		}
@@ -490,7 +510,7 @@ namespace dotMath
 			///		the function.
 			/// </summary>
 			/// <param name="alValues">ArrayList of CValue parameter objects.</param>
-			public abstract void SetValue( ArrayList alValues );
+			public abstract void SetValue(ArrayList alValues);
 
 			/// <summary>
 			/// CreateInstance( ArrayList ):  Requests that an evaluation-time object be created
@@ -498,7 +518,7 @@ namespace dotMath
 			/// </summary>
 			/// <param name="alValues">ArrayList of CValue parameter objects.</param>
 			/// <returns>Returns a CFunction object that references parameters for evaluation purposes.</returns>
-			public abstract CFunction CreateInstance( ArrayList alValues );
+			public abstract CFunction CreateInstance(ArrayList alValues);
 
 			/// <summary>
 			/// CheckParms(ArrayList, int): Helper function that accepts an array list and insures an appropriate 
@@ -506,15 +526,15 @@ namespace dotMath
 			/// </summary>
 			/// <param name="alValues">ArrayList of CValue-based objects representing parameters to the function</param>
 			/// <param name="iRequiredValueCount">integer: required parameter count</param>
-			protected void CheckParms( ArrayList alValues, int iRequiredValueCount )
+			protected void CheckParms(ArrayList alValues, int iRequiredValueCount)
 			{
-				if( alValues.Count != iRequiredValueCount )
+				if (alValues.Count != iRequiredValueCount)
 				{
-					string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' requires {0} parameter(s).", iRequiredValueCount );
+					string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' requires {0} parameter(s).", iRequiredValueCount);
 					throw new ApplicationException(sMsg);
 				}
 			}
-			
+
 			/// <summary>
 			/// CheckParms(ArrayList, int, int): Helper function that accepts an array list and insures an appropriate
 			///		number (min and/or max) of CValue objects have been passed.  If not an ApplicationException is thrown.  
@@ -522,27 +542,27 @@ namespace dotMath
 			/// <param name="alValues">ArrayList of CValue object that have been passed by the compiler.</param>
 			/// <param name="iMinReq">int value indicating a minimum number of parameters.  -1 if no minimum exists</param>
 			/// <param name="iMaxReq">int value indicating a maximum number of parameters.  -1 if no maximum exists</param>
-			protected void CheckParms(ArrayList alValues, int iMinReq, int iMaxReq )
+			protected void CheckParms(ArrayList alValues, int iMinReq, int iMaxReq)
 			{
-				if( iMinReq > -1 )
+				if (iMinReq > -1)
 				{
-					if( iMinReq > alValues.Count )
+					if (iMinReq > alValues.Count)
 					{
-						string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' requires a minimum of {0} parameter(s).", iMinReq );
+						string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' requires a minimum of {0} parameter(s).", iMinReq);
 						throw new ApplicationException(sMsg);
 					}
 				}
 
-				if( iMaxReq > -1 )
+				if (iMaxReq > -1)
 				{
-					if( iMaxReq < alValues.Count )
+					if (iMaxReq < alValues.Count)
 					{
-						string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' is limited to a maximum of {0} parameter(s).", iMaxReq );
+						string sMsg = string.Format("Invalid parameter count. Function '" + GetFunction() + "' is limited to a maximum of {0} parameter(s).", iMaxReq);
 						throw new ApplicationException(sMsg);
 					}
 				}
 			}
-		
+
 		}
 
 		#endregion
@@ -562,7 +582,7 @@ namespace dotMath
 			{
 			}
 
-			public CAdd( CValue arg1, CValue arg2 )
+			public CAdd(CValue arg1, CValue arg2)
 			{
 
 				CheckParms("+", arg1, arg2);
@@ -575,12 +595,12 @@ namespace dotMath
 				return m_arg1.GetValue() + m_arg2.GetValue();
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return ( tkn.ToString() == "+" );
+				return (tkn.ToString() == "+");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CAdd(arg1, arg2);
 			}
@@ -598,7 +618,7 @@ namespace dotMath
 			public CSubtract()
 			{
 			}
-			public CSubtract( CValue arg1, CValue arg2 )
+			public CSubtract(CValue arg1, CValue arg2)
 			{
 				CheckParms("-", arg1, arg2);
 				m_arg1 = arg1;
@@ -608,15 +628,15 @@ namespace dotMath
 			{
 				return m_arg1.GetValue() - m_arg2.GetValue();
 			}
-			
-			public override bool IsMatch( Parser.Token tkn)
+
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return tkn.ToString() == "-";
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
-				return new CSubtract( arg1, arg2 );
+				return new CSubtract(arg1, arg2);
 			}
 
 		}
@@ -636,7 +656,7 @@ namespace dotMath
 			{
 			}
 
-			public CLessThan( CValue arg1, CValue arg2 )
+			public CLessThan(CValue arg1, CValue arg2)
 			{
 				CheckParms("<", arg1, arg2);
 
@@ -646,18 +666,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() < m_arg2.GetValue() )
+				if (m_arg1.GetValue() < m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return ( tkn.ToString() == "<" );
+				return (tkn.ToString() == "<");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CLessThan(arg1, arg2);
 			}
@@ -677,7 +697,7 @@ namespace dotMath
 			{
 			}
 
-			public COr( CValue arg1, CValue arg2 )
+			public COr(CValue arg1, CValue arg2)
 			{
 				CheckParms("||", arg1, arg2);
 
@@ -687,20 +707,20 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue()!= 0 ||  m_arg2.GetValue() != 0 )
+				if (m_arg1.GetValue() != 0 || m_arg2.GetValue() != 0)
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return (tkn.ToString() == "||" );
+				return (tkn.ToString() == "||");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
-				return new COr( arg1, arg2);
+				return new COr(arg1, arg2);
 			}
 		}
 
@@ -718,7 +738,7 @@ namespace dotMath
 			{
 			}
 
-			public CAnd( CValue arg1, CValue arg2 )
+			public CAnd(CValue arg1, CValue arg2)
 			{
 				CheckParms("&&", arg1, arg2);
 
@@ -728,18 +748,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() != 0 &&  m_arg2.GetValue() != 0 )
+				if (m_arg1.GetValue() != 0 && m_arg2.GetValue() != 0)
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return (tkn.ToString() == "&&" );
+				return (tkn.ToString() == "&&");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CAnd(arg1, arg2);
 			}
@@ -759,7 +779,7 @@ namespace dotMath
 			{
 			}
 
-			public CEqual( CValue arg1, CValue arg2 )
+			public CEqual(CValue arg1, CValue arg2)
 			{
 				CheckParms("= or ==", arg1, arg2);
 				m_arg1 = arg1;
@@ -768,18 +788,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() == m_arg2.GetValue() )
+				if (m_arg1.GetValue() == m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == "=" || tkn.ToString() == "==");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CEqual(arg1, arg2);
 			}
@@ -799,7 +819,7 @@ namespace dotMath
 			{
 			}
 
-			public CNotEqual( CValue arg1, CValue arg2 )
+			public CNotEqual(CValue arg1, CValue arg2)
 			{
 				CheckParms("<> or !=", arg1, arg2);
 				m_arg1 = arg1;
@@ -808,18 +828,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() != m_arg2.GetValue() )
+				if (m_arg1.GetValue() != m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return (tkn.ToString() == "!=" || tkn.ToString() == "<>" );
+				return (tkn.ToString() == "!=" || tkn.ToString() == "<>");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CNotEqual(arg1, arg2);
 			}
@@ -839,7 +859,7 @@ namespace dotMath
 			{
 			}
 
-			public CGreaterThan( CValue arg1, CValue arg2 )
+			public CGreaterThan(CValue arg1, CValue arg2)
 			{
 				CheckParms(">", arg1, arg2);
 
@@ -849,19 +869,19 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() > m_arg2.GetValue() )
+				if (m_arg1.GetValue() > m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == ">");
 			}
 
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CGreaterThan(arg1, arg2);
 			}
@@ -881,7 +901,7 @@ namespace dotMath
 			{
 			}
 
-			public CGreaterThanEq( CValue arg1, CValue arg2 )
+			public CGreaterThanEq(CValue arg1, CValue arg2)
 			{
 				CheckParms(">=", arg1, arg2);
 				m_arg1 = arg1;
@@ -890,18 +910,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() >= m_arg2.GetValue() )
+				if (m_arg1.GetValue() >= m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == ">=");
 			}
-			
-			public override COperator Factory( CValue arg1, CValue arg2)
+
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CGreaterThanEq(arg1, arg2);
 			}
@@ -921,7 +941,7 @@ namespace dotMath
 			{
 			}
 
-			public CLessThanEq( CValue arg1, CValue arg2 )
+			public CLessThanEq(CValue arg1, CValue arg2)
 			{
 				CheckParms("<=", arg1, arg2);
 
@@ -931,18 +951,18 @@ namespace dotMath
 
 			public override double GetValue()
 			{
-				if( m_arg1.GetValue() <= m_arg2.GetValue() )
+				if (m_arg1.GetValue() <= m_arg2.GetValue())
 					return 1;
 				else
 					return 0;
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == "<=");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CLessThanEq(arg1, arg2);
 			}
@@ -962,7 +982,7 @@ namespace dotMath
 			{
 			}
 
-			public CMultiply( CValue arg1, CValue arg2 )
+			public CMultiply(CValue arg1, CValue arg2)
 			{
 				CheckParms("*", arg1, arg2);
 
@@ -974,12 +994,12 @@ namespace dotMath
 				return m_arg1.GetValue() * m_arg2.GetValue();
 			}
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
-				return (tkn.ToString() == "*" );
+				return (tkn.ToString() == "*");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CMultiply(arg1, arg2);
 			}
@@ -999,7 +1019,7 @@ namespace dotMath
 			{
 			}
 
-			public CDivide( CValue arg1, CValue arg2 )
+			public CDivide(CValue arg1, CValue arg2)
 			{
 				CheckParms("/", arg1, arg2);
 
@@ -1010,13 +1030,13 @@ namespace dotMath
 			{
 				return m_arg1.GetValue() / m_arg2.GetValue();
 			}
-			
-			public override bool IsMatch( Parser.Token tkn)
+
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == "/");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CDivide(arg1, arg2);
 			}
@@ -1037,7 +1057,7 @@ namespace dotMath
 			{
 			}
 
-			public CPower( CValue arg1, CValue arg2 )
+			public CPower(CValue arg1, CValue arg2)
 			{
 				CheckParms("^", arg1, arg2);
 
@@ -1051,16 +1071,55 @@ namespace dotMath
 			}
 
 
-			public override bool IsMatch( Parser.Token tkn)
+			public override bool IsMatch(Parser.Token tkn)
 			{
 				return (tkn.ToString() == "^");
 			}
 
-			public override COperator Factory( CValue arg1, CValue arg2)
+			public override COperator Factory(CValue arg1, CValue arg2)
 			{
 				return new CPower(arg1, arg2);
 			}
 		}
+
+		/// <summary>
+		/// CModulo class: Implements the Modulo(%) operation. Refer to COperator base class
+		///		for a description of the methods.
+		/// </summary>
+		private class CModulo : COperator
+		{
+			private CValue m_arg1 = null;
+			private CValue m_arg2 = null;
+
+			public CModulo()
+			{
+			}
+
+			public CModulo(CValue arg1, CValue arg2)
+			{
+				CheckParms("%", arg1, arg2);
+
+				m_arg1 = arg1;
+				m_arg2 = arg2;
+			}
+
+			public override double GetValue()
+			{
+				return (int)m_arg1.GetValue() % (int)m_arg2.GetValue();
+			}
+
+
+			public override bool IsMatch(Parser.Token tkn)
+			{
+				return (tkn.ToString() == "%");
+			}
+
+			public override COperator Factory(CValue arg1, CValue arg2)
+			{
+				return new CModulo(arg1, arg2);
+			}
+		}
+
 
 		#endregion
 
@@ -1072,21 +1131,21 @@ namespace dotMath
 		/// <param name="oToken">Currently processed Parser.Token object</param>
 		/// <param name="arg1">CValue argument 1</param>
 		/// <param name="arg2">CValue argument 2</param>
-		private void CheckParms( Parser.Token oToken, CValue arg1, CValue arg2 )
+		private void CheckParms(Parser.Token oToken, CValue arg1, CValue arg2)
 		{
-			if( arg1==null || arg2 == null )
-				throw new ApplicationException( "Argument not supplied near " + oToken.ToString() + " operation.");
+			if (arg1 == null || arg2 == null)
+				throw new ApplicationException("Argument not supplied near " + oToken.ToString() + " operation.");
 		}
 
-        /// <summary>
-        /// CheckParms( Parser.Token, CValue) - This method makes certain the single argument is non-null.
-        ///		Raises an exception if it is.
-        /// </summary>
-        /// <param name="oToken">Parser.Token object</param>
-        /// <param name="arg1">CValue argument</param>
-		private void CheckParms( Parser.Token oToken, CValue arg1 )
+		/// <summary>
+		/// CheckParms( Parser.Token, CValue) - This method makes certain the single argument is non-null.
+		///		Raises an exception if it is.
+		/// </summary>
+		/// <param name="oToken">Parser.Token object</param>
+		/// <param name="arg1">CValue argument</param>
+		private void CheckParms(Parser.Token oToken, CValue arg1)
 		{
-			if( arg1 == null )
+			if (arg1 == null)
 				throw new ApplicationException("Argument not supplied near " + oToken.ToString() + " operation.");
 		}
 
@@ -1095,7 +1154,7 @@ namespace dotMath
 		/// </summary>
 		private void InitFunctions()
 		{
-			m_aOps = new COperator[11];
+			m_aOps = new COperator[12];
 
 			m_aOps[0] = new CAdd();
 			m_aOps[1] = new CSubtract();
@@ -1108,6 +1167,7 @@ namespace dotMath
 			m_aOps[8] = new CEqual();
 			m_aOps[9] = new CNotEqual();
 			m_aOps[10] = new CPower();
+			m_aOps[11] = new CModulo();
 		}
 
 		/// <summary>
@@ -1116,17 +1176,17 @@ namespace dotMath
 		/// </summary>
 		private void PositionNextToken()
 		{
-			if(  m_currentToken == null)
+			if (m_currentToken == null)
 			{
-				if( !m_enumTokens.MoveNext() )
-					throw new ApplicationException( "Invalid equation." );
+				if (!m_enumTokens.MoveNext())
+					throw new ApplicationException("Invalid equation.");
 
 				m_nextToken = (Parser.Token)m_enumTokens.Current;
 			}
 
 			m_currentToken = m_nextToken;
 
-			if( !m_enumTokens.MoveNext() )
+			if (!m_enumTokens.MoveNext())
 				m_nextToken = new Parser.Token();
 			else
 				m_nextToken = (Parser.Token)m_enumTokens.Current;
@@ -1139,18 +1199,18 @@ namespace dotMath
 		/// </summary>
 		/// <param name="sVarName">string variable name</param>
 		/// <returns>CVariable object mapped to the passed variable name</returns>
-		private CVariable GetVariableByName( string sVarName )
+		private CVariable GetVariableByName(string sVarName)
 		{
-			if( m_slVariables == null )
+			if (m_slVariables == null)
 				m_slVariables = new SortedList();
 
 			int iIdx = m_slVariables.IndexOfKey(sVarName);
 
-			if( iIdx > -1 )
-				return (CVariable)m_slVariables.GetByIndex( iIdx );
+			if (iIdx > -1)
+				return (CVariable)m_slVariables.GetByIndex(iIdx);
 
 			CVariable oVar = new CVariable(sVarName);
-			m_slVariables.Add( sVarName, oVar );
+			m_slVariables.Add(sVarName, oVar);
 
 			return oVar;
 		}
@@ -1162,7 +1222,7 @@ namespace dotMath
 		/// VariableCount property: This property reports the current
 		///		variable count.  It is valid after a 'Compile()' function is executed.
 		/// </summary>
-		public int VariableCount { get {return m_slVariables.Count;}}
+		public int VariableCount { get { return m_slVariables.Count; } }
 
 		/// <summary>
 		/// SetVariable( string, double):  Sets the object mapped to the string variable name
@@ -1170,10 +1230,10 @@ namespace dotMath
 		/// </summary>
 		/// <param name="sVarName">Variable Name</param>
 		/// <param name="dValue">New Value for variable</param>
-		public void SetVariable( string sVarName, double dValue )
+		public void SetVariable(string sVarName, double dValue)
 		{
-			CVariable oVar = GetVariableByName( sVarName );
-			oVar.SetValue( dValue );
+			CVariable oVar = GetVariableByName(sVarName);
+			oVar.SetValue(dValue);
 		}
 
 
@@ -1184,37 +1244,37 @@ namespace dotMath
 		/// <returns>string array of current variable names</returns>
 		public string[] GetVariableList()
 		{
-			if( m_slVariables.Count == 0)
+			if (m_slVariables.Count == 0)
 				return null;
 
 			string[] asVars = new string[m_slVariables.Count];
 
 			IEnumerator enu = m_slVariables.GetKeyList().GetEnumerator();
-			
+
 			string sValue = "";
 			int iPos = 0;
 
-			while( enu.MoveNext() )
+			while (enu.MoveNext())
 			{
 				sValue = (string)enu.Current;
 
 				asVars[iPos] = sValue;
 				iPos++;
-				
+
 			}
 
 			return asVars;
 		}
 
-        
+
 		/// <summary>
 		/// EqCompiler() constructor: creates the compiler object with an empty function that returns '0' if evaluated.
 		/// </summary>
-		public EqCompiler( bool bIncludeStandardFunctions )
+		public EqCompiler(bool bIncludeStandardFunctions)
 		{
-			SetFunction( "0" );
+			SetFunction("0");
 
-			if( bIncludeStandardFunctions )
+			if (bIncludeStandardFunctions)
 				CFunctionLibrary.AddFunctions(this);
 		}
 
@@ -1222,12 +1282,12 @@ namespace dotMath
 		/// EqCompiler(string) constructor: creates the compiler object and sets the current function to the string passed
 		/// </summary>
 		/// <param name="sEquation"></param>
-		public EqCompiler( string sEquation, bool bIncludeStandardFunctions )
+		public EqCompiler(string sEquation, bool bIncludeStandardFunctions)
 		{
-			SetFunction( sEquation );
+			SetFunction(sEquation);
 
-			if( bIncludeStandardFunctions )
-				CFunctionLibrary.AddFunctions( this );
+			if (bIncludeStandardFunctions)
+				CFunctionLibrary.AddFunctions(this);
 
 		}
 
@@ -1236,7 +1296,7 @@ namespace dotMath
 		/// SetFunction(string): Sets the current function to a passed string.
 		/// </summary>
 		/// <param name="sEquation">string representing the function being used</param>
-		public void SetFunction( string sEquation )
+		public void SetFunction(string sEquation)
 		{
 			m_currentToken = null;
 			m_nextToken = null;
@@ -1255,15 +1315,15 @@ namespace dotMath
 		public void Compile()
 		{
 
-			Parser oParser = new Parser(m_sEquation );
+			Parser oParser = new Parser(m_sEquation);
 			m_enumTokens = oParser.GetTokenEnumerator();
 
 			PositionNextToken();
-            
+
 			m_Function = Relational();
 		}
 
-		
+
 
 		/// <summary>
 		/// Calculate():  Calls into the runnable function set to evaluate the function and returns the result.
@@ -1271,7 +1331,7 @@ namespace dotMath
 		/// <returns>double value evaluation of the function in its current state</returns>
 		public double Calculate()
 		{
-			if( m_Function == null)
+			if (m_Function == null)
 				Compile();
 
 			return m_Function.GetValue();
@@ -1284,8 +1344,8 @@ namespace dotMath
 		/// <param name="oFunc">CFunction object that implements a functionality extension for the compiler.</param>
 		public void AddFunction(CFunction oFunc)
 		{
-			m_slFunctions.Add( oFunc.GetFunction(), oFunc );
-			
+			m_slFunctions.Add(oFunc.GetFunction(), oFunc);
+
 		}
 	}
 }

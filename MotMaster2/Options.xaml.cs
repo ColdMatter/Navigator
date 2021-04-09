@@ -51,17 +51,16 @@ namespace MOTMaster2
         public bool MatematicaLogger { get; set; }
         public bool BriefData { get; set; }
         public bool ParamIncl { get; set; }
+        public int DelayBwnShots { get; set; }
 
         public bool AIEnabled { get; set; }
         public int AISampleRate { get; set; }
-        public int PreTrigSamples { get; set; }
+        public int PostTrigSamples { get; set; }
         public double RiseTime { get; set; }
-        //public string qStart { get; set; }
-        //public double qTime { get; set; }
-
+        public Dictionary<string,int> Skim { get; set; }
+        
         public bool WindFreakEnabled { get; set; }
         public bool m2Enabled { get; set; }
-
         public bool FlexDDSEnabled { get; set; }
 
         public void Save()
@@ -86,8 +85,6 @@ namespace MOTMaster2
             hardwareJson = JsonConvert.SerializeObject(DAQ.Environment.Environs.Hardware, Formatting.Indented);
             LoadJsonToTreeView(hardwareTreeView, hardwareJson);
             LoadJsonToTreeView(filesystemTreeView, fileJson);
-            if (Controller.config.PlexalMachine) chkFlexDDS.Visibility = Visibility.Visible;
-            else chkFlexDDS.Visibility = Visibility.Collapsed;
         }       
         
         string hardwareJson = "";
@@ -118,13 +115,19 @@ namespace MOTMaster2
             Controller.genOptions.ParamIncl = chkParamIncl.IsChecked.Value;
 
             Controller.genOptions.ForceSeqCharge = chkForceSeqCharge.IsChecked.Value;
-            Controller.genOptions.SaveSeqB4proc = chkSaveSeqB4proc.IsChecked.Value; 
+            Controller.genOptions.SaveSeqB4proc = chkSaveSeqB4proc.IsChecked.Value;
+            Controller.genOptions.DelayBwnShots = numDelayBwnShots.Value;
 
             Controller.genOptions.AIEnabled = aiEnable.IsChecked.Value;
-            
-            Controller.genOptions.AISampleRate = Convert.ToInt32(tbSampleRate.Text);
-            Controller.genOptions.PreTrigSamples = Convert.ToInt32(tbPreTrig.Text);
-            Controller.genOptions.RiseTime = Convert.ToDouble(tbRiseTime.Text);
+            // AI
+            Controller.genOptions.AISampleRate = numSampleRate.Value;
+            Controller.genOptions.PostTrigSamples = numPostTrig.Value;
+            Controller.genOptions.RiseTime = 32; // Convert.ToDouble(tbRiseTime.Text);
+            Controller.genOptions.Skim["PreSkim2"] = numPreSkim2.Value;
+            Controller.genOptions.Skim["PostSkim2"] = numPostSkim2.Value;
+            Controller.genOptions.Skim["PreSkimTot"] = numPreSkimTot.Value;
+            Controller.genOptions.Skim["PostSkimTot"] = numPostSkimTot.Value;
+
             if (aiRaw.IsChecked.Value) Controller.genOptions.aiSaveMode = GeneralOptions.AISaveOption.rawData;
             if (aiAverage.IsChecked.Value) Controller.genOptions.aiSaveMode = GeneralOptions.AISaveOption.average;
             if (aiBoth.IsChecked.Value) Controller.genOptions.aiSaveMode = GeneralOptions.AISaveOption.both;
@@ -135,7 +138,7 @@ namespace MOTMaster2
 
             Controller.genOptions.WindFreakEnabled = chkWindFreakEnabled.IsChecked.Value;
             Controller.genOptions.m2Enabled = chkM2Enabled.IsChecked.Value;
-            Controller.genOptions.FlexDDSEnabled = chkFlexDDS.IsChecked.Value;
+            Controller.genOptions.FlexDDSEnabled = chkFlexDDSEnabled.IsChecked.Value;
             Controller.genOptions.Save();
             Close();
         }
@@ -161,6 +164,8 @@ namespace MOTMaster2
 
         private void frmOptions_Loaded(object sender, RoutedEventArgs e) // internal to visual
         {
+            Title = "Options  v" + Utils.getAppFileVersion;
+
             rbSaveSeqYes.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.save);
             rbSaveSeqAsk.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.ask);
             rbSaveSeqNo.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.nosave);
@@ -169,7 +174,8 @@ namespace MOTMaster2
             chkMatematicaLogger.IsChecked = Controller.genOptions.MatematicaLogger;
             chkBriefData.IsChecked = Controller.genOptions.BriefData;
             chkParamIncl.IsChecked = Controller.genOptions.ParamIncl;
- 
+            numDelayBwnShots.Value = Controller.genOptions.DelayBwnShots;
+
             chkForceSeqCharge.IsChecked = Controller.genOptions.ForceSeqCharge; 
             chkSaveSeqB4proc.IsChecked = Controller.genOptions.SaveSeqB4proc; 
             aiEnable.IsChecked = Controller.genOptions.AIEnabled;
@@ -189,33 +195,26 @@ namespace MOTMaster2
                     break;
             }
 
-            tbSampleRate.Text = Controller.genOptions.AISampleRate.ToString();
-            tbPreTrig.Text = Controller.genOptions.PreTrigSamples.ToString();
-            tbRiseTime.Text = Controller.genOptions.RiseTime.ToString();
-            //cbQStart.Text = Controller.genOptions.qStart;
-            //tbQTime.Text = Controller.genOptions.qTime.ToString();
+            numSampleRate.Value = Controller.genOptions.AISampleRate;
+            numPostTrig.Value = Controller.genOptions.PostTrigSamples;
+
+            //Controller.genOptions.RiseTime = Convert.ToDouble(tbRiseTime.Text);
+            if (Utils.isNull(Controller.genOptions.Skim)) Controller.genOptions.Skim = new Dictionary<string, int>();
+            numPreSkim2.Value = Controller.genOptions.Skim.ContainsKey("PreSkim2") ? Controller.genOptions.Skim["PreSkim2"] : 0;
+            numPostSkim2.Value = Controller.genOptions.Skim.ContainsKey("PostSkim2") ? Controller.genOptions.Skim["PostSkim2"] : 0;
+            numPreSkimTot.Value = Controller.genOptions.Skim.ContainsKey("PreSkimTot") ? Controller.genOptions.Skim["PreSkimTot"] : 0;
+            numPostSkimTot.Value = Controller.genOptions.Skim.ContainsKey("PostSkimTot") ? Controller.genOptions.Skim["PostSkimTot"]: 0;
 
             chkWindFreakEnabled.IsChecked = Controller.genOptions.WindFreakEnabled;
             chkM2Enabled.IsChecked = Controller.genOptions.m2Enabled;
-       }
+            chkFlexDDSEnabled.IsChecked = Controller.genOptions.FlexDDSEnabled;
+        }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
         }
-
-        private void aiEnable_Click(object sender, RoutedEventArgs e)
-        {
-            bool state = aiEnable.IsChecked.Value;
-            tbSampleRate.IsReadOnly = !state;
-            tbRiseTime.IsReadOnly = !state;
-            tbPreTrig.IsReadOnly = !state;            
-
-            aiRaw.IsEnabled = state;
-            aiAverage.IsEnabled = state;
-            aiBoth.IsEnabled = state;
-        }
-     }
+    }
 
     public sealed class MethodToValueConverter : IValueConverter
     {

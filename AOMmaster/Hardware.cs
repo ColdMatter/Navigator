@@ -49,16 +49,16 @@ namespace AOMmaster
         {            
             // Digital In/Out
             dvcDIO = _dvcDIO;
-            string ChannelList = "0,1,2,3,4,5,6,7";  
+            string ChannelList = "0,1,2,3,4,5,6,7,20,21,25,26";  
             analogMin = _analogMin; analogMax = _analogMax;          
             if ((dvcDIO == "") || Utils.TheosComputer()) return false;
             hsTaskIn = null; hsTaskOut = null;
             // read in
-            hsTaskIn = niHSDIO.InitAcquisitionSession(dvcDIO, false, false, "");
+            hsTaskIn = niHSDIO.InitAcquisitionSession(dvcDIO, false, true, "");
             hsTaskIn.AssignStaticChannels(ChannelList);
             hsTaskIn.ConfigureDataVoltageLogicFamily(ChannelList, niHSDIOConstants._33vLogic);
             // write out
-            hsTaskOut = niHSDIO.InitGenerationSession(dvcDIO, false, false, "");
+            hsTaskOut = niHSDIO.InitGenerationSession(dvcDIO, false, true, "");
             hsTaskOut.AssignStaticChannels(ChannelList);
             hsTaskOut.ConfigureDataVoltageLogicFamily(ChannelList, niHSDIOConstants._33vLogic);
             // Analog Out
@@ -82,7 +82,7 @@ namespace AOMmaster
         }
         public bool WriteSingleOut(int chn, bool Value)
         {
-            if (Utils.TheosComputer() || (chn < 0)) return true; // (chn < 0) channel to ignore
+            if (Utils.TheosComputer() || (chn < 0)) return true;
             bool[] dt = new bool[32]; bool[] mask = new bool[32];
             dt[chn] = Value;
             for (int i = 0; i < 32; i++) // normal order - the least significant is first
@@ -107,7 +107,7 @@ namespace AOMmaster
         #region analog hardware
         public bool AnalogOut(int chn, double voltage)
         {
-            if (Utils.TheosComputer() || (chn < 0)) return true; //  (chn < 0) channel to ignore
+            if (Utils.TheosComputer() || (chn < 0)) return true;
             try
             {
                 using (NationalInstruments.DAQmx.Task myTask = new NationalInstruments.DAQmx.Task()) // physicalChannel example /Dev2/ao2

@@ -21,7 +21,7 @@ namespace MOTMaster2.SequenceData
             try 
 	        {	        
 		        compiler.Compile();
-    	    }
+    	        }
 	        catch (Exception e)
 	        {
 		        return false;
