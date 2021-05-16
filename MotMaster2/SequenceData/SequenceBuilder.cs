@@ -1,13 +1,14 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
 using DAQ.Environment;
 using DAQ.Analog;
 using DAQ.Pattern;
-using DataStructures;
-using DAQ;
+using DAQ.HAL;
 using dotMath;
 using System.Collections.ObjectModel;
+using UtilsNS;
 
 namespace MOTMaster2.SequenceData
 {
@@ -105,7 +106,7 @@ namespace MOTMaster2.SequenceData
         {
             //List of digital channels which are reserved for trigger pulses. These are excluded when adding the edges for digital channels
             List<string> digitalChannelExcludeList = new List<string>() { "serialPreTrigger" };
-            CreatePatternBuilders();
+            CreatePatternBuilders(); Dictionary<Int32, Double> analCF;
 
             foreach (string channel in Environs.Hardware.AnalogOutputChannels.Keys) analogPB.AddChannel(channel);
 
@@ -139,23 +140,19 @@ namespace MOTMaster2.SequenceData
                        throw new Exception(string.Format("Failed to add analog data for Channel:{0} Step:{1}",analogChannel,step.Name));
                     }
                 }
-                //Adds the Muquans string commands as well as the required serial pulses before digital pulses to prevent time order exceptions
-                if (step.RS232Commands && Controller.config.UseMuquans)
+
+                if ((step.Name == "2D3D") && false) // monitor for the analog pattern  
                 {
-                    //TODO Fix the sequence parser to make it work with more generic serial commands
-                    foreach (SerialItem serialCommand in step.GetSerialData())
+                    if (analogPB.AnalogPatterns.ContainsKey("chirpFreq"))
                     {
-                        AddSerialCommand(serialCommand);
-                    }
-                    try
-                    {
-                        digitalPB.Pulse(digitalSample - (serialPreTrigger + serialWait), 0, 200, "serialPreTrigger");
-                    }
-                    catch
-                    {
-                        double trigTime = (digitalSample - (serialPreTrigger + serialWait))/digitalClock;
-                        throw new Exception(string.Format("Failed to add serial pre-trigger in step {0}. Expected at time {1}.", step.Name, trigTime));
-                    }
+                        analCF = analogPB.AnalogPatterns["chirpFreq"];
+                        List<string> ls = new List<string>();
+                        foreach(var itm in analCF)
+                        {
+                            ls.Add(itm.Key.ToString()+ "\t"+itm.Value.ToString("G5"));
+                        }
+                        Utils.writeList(Utils.dataPath + "ChirpFreq.txt", ls);
+                    }                   
                 }
                 //Adds the edges for each digital channel
                 foreach (string digitalChannel in step.GetUsedDigitalChannels(previousStep))
@@ -218,8 +215,9 @@ namespace MOTMaster2.SequenceData
             MMAIConfiguration mmaiConfig = new MMAIConfiguration();
             try
             {
-                mmaiConfig.AddChannel("accelerometer", -3.0, 3.0);
-                mmaiConfig.AddChannel("photodiode", -3.0, 3.0);
+                //mmaiConfig.AddChannel("accelerometer", -3.0, 3.0);
+                foreach (AnalogInputChannel chn in Environs.Hardware.AnalogInputChannels.Values)
+                    mmaiConfig.AddChannel(chn.Name, chn.inputRangeLow, chn.inputRangeHigh);
             }
             catch (Exception e)
             {
@@ -243,16 +241,7 @@ namespace MOTMaster2.SequenceData
             if (channelType == AnalogChannelSelector.Continue) return;
             double startTime = step.GetAnalogStartTime(analogChannel);
             int analogStartTime = ConvertToSampleTime(currentTime + startTime, analogClock);
-            double value = 0.0;
-            try
-            {
-                if (channelType != AnalogChannelSelector.Function && channelType != AnalogChannelSelector.XYPairs) value = step.GetAnalogValue(analogChannel);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(string.Format("Could not parse argument type {0}. Step: {1} Channel: {2}", channelType.ToString(), step.Name, analogChannel));
-            }
-            int duration;
+            double value = 0.0; double finalValue = 0; int duration;
             try
             {
                 switch (channelType)
@@ -260,21 +249,23 @@ namespace MOTMaster2.SequenceData
                     case AnalogChannelSelector.Continue:
                         break;
                     case AnalogChannelSelector.SingleValue:
+                        value = step.GetAnalogValue(analogChannel);
                         analogPB.AddAnalogValue(analogChannel, analogStartTime, value);
                         break;
                     case AnalogChannelSelector.LinearRamp:
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
-                        analogPB.AddLinearRamp(analogChannel, analogStartTime, duration, value);
+                        finalValue = step.GetAnalogFinalValue(analogChannel);
+                        analogPB.AddLinearRamp(analogChannel, analogStartTime, duration, finalValue);
                         break;
                     case AnalogChannelSelector.Pulse:
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
-                        double finalValue = step.GetAnalogFinalValue(analogChannel);
+                        finalValue = step.GetAnalogFinalValue(analogChannel);
                         analogPB.AddAnalogPulse(analogChannel, analogStartTime, duration, value, finalValue);
                         break;
                     case AnalogChannelSelector.Function:
                         string analogFunction = step.GetFunction(analogChannel);
                         duration = ConvertToSampleTime(step.GetAnalogDuration(analogChannel) * timeMultiplier, analogClock);
-                        CompileAnalogFunction(analogChannel, analogFunction, startTime, analogStartTime, analogClock, duration);
+                        CompileAnalogFunction(analogChannel, analogFunction, startTime, analogStartTime, timeMultiplier, analogClock, duration);
                         break;
                     case AnalogChannelSelector.XYPairs:
                         List<double[]> xypairs = step.GetXYPairs(analogChannel);
@@ -296,7 +287,7 @@ namespace MOTMaster2.SequenceData
                             {
                                 nClockCycles = ConvertToSampleTime((xvals[i + 1] - xvals[i]) * timeMultiplier, analogClock);
                                 analogPB.AddLinearRamp(analogChannel, analogStartTime, nClockCycles, yvals[i + 1]);
-                                if (i == xvals.Length - 2) analogPB.AddAnalogValue(analogChannel, analogStartTime, yvals[i + 1]);
+                                //if (i == xvals.Length - 2) analogPB.AddAnalogValue(analogChannel, analogStartTime, yvals[i + 1]);
                                 analogStartTime += nClockCycles;
                             }
                         }
@@ -311,6 +302,10 @@ namespace MOTMaster2.SequenceData
             catch (DAQ.Analog.AnalogPatternBuilder.InsufficientPatternLengthException e)
             {
                 throw new Exception(string.Format("Insufficient length for pattern. Step: {0} Channel: {1} Start time: {2}", step.Name, analogChannel, analogStartTime));
+            }
+            catch (Exception e)
+            {
+                throw new Exception(string.Format("Could not parse argument type {0}. Step: {1} Channel: {2}", channelType.ToString(), step.Name, analogChannel));
             }
         }
 
@@ -339,9 +334,15 @@ namespace MOTMaster2.SequenceData
         /// <param name="analogStartTime">start time of the sequence step relative to the start of the whole pattern (in units of samples output by the card)</param>
         /// <param name="analogClock">Clock frequency of the card</param>
         /// <param name="duration">Duration of the function output in units of samples</param>
-        void CompileAnalogFunction(string analogChannel, string function, double startTime, int analogStartTime, int analogClock, int duration)
+        void CompileAnalogFunction(string analogChannel, string function, double startTime, int analogStartTime, double timeMultiplier, int analogClock, int duration)
         {
             if (function == "") throw new Exception(string.Format("Expected function for Channel: {0} in Step: {1}",analogChannel,_sequenceStep.Name));
+            double fValue = Double.NaN;
+            if (Double.TryParse(function, out fValue))
+            {
+                analogPB.AddAnalogValue(analogChannel, analogStartTime, fValue);
+                return;
+            }
             if (Parameters.Keys.Contains(function))
             {
                 analogPB.AddAnalogValue(analogChannel, analogStartTime, (double)Parameters[function]);
@@ -368,12 +369,13 @@ namespace MOTMaster2.SequenceData
             if (timeFunc)
             {
                 if (duration == 0) throw new Exception(string.Format("Duration not set for function {0} in step {1}", analogChannel, _sequenceStep.Name));
+                double curTime = timeMultiplier * startTime / 1000;
                 for (int i = 0; i < duration; i++)
                 {
-                    compiler.SetVariable("t", startTime);
+                    compiler.SetVariable("t", 1000 * curTime / timeMultiplier);
                     funcValue = compiler.Calculate();
                     analogPB.AddAnalogValue(analogChannel, analogStartTime + i, funcValue);
-                    startTime += 1.0 / analogClock;
+                    curTime += 1.0 / analogClock; // in sec
                 }
             }
             else

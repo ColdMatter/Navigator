@@ -27,18 +27,19 @@ namespace MOTMaster2.ExtDevices
         public MSquaredUC(string __dvcName, Brush brush)
         {
             InitializeComponent();
-            _dvcName = __dvcName;
+            _dvcName = __dvcName; 
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
+            ucExtFactors.dvcName = _dvcName; ucExtFactors.groupUpdate = true;
         }
         protected string _dvcName;
         public string dvcName { get { return _dvcName; } }
 
         public bool GetEnabled(bool ignoreHardware = false) // ready to operate
         {
-            return OptEnabled() && ignoreHardware ? true : CheckHardware();
+            return OptEnabled() && (ignoreHardware ? true : CheckHardware());
         }
-
+        
         private bool CheckPhaseLock()
         {
             if (!Controller.config.Debug)
@@ -66,31 +67,57 @@ namespace MOTMaster2.ExtDevices
                 return false;
             }
             if (!GetEnabled(true)) return false;
+            bool bAll = fctName.Equals("<ALL>");
+            if ((fctName.Equals("RamanPhase") || bAll) && false)
+            {
+                double sVal = bAll ? ucExtFactors.Factors[4].getReqValue(0) : Convert.ToDouble(fctValue);
+                bool bb = Controller.M2DCS.phaseControl(sVal);
+                if (bb) ucExtFactors.Factors[4].fValue = sVal;
+                if (fctName.Equals("RamanPhase")) return bb;
+            }
             // call hardware
-            Dictionary<string,object> curr = Controller.M2PLL.get_status();
-            double PLLFreq = Convert.ToDouble(curr["main_synth_freq"]);  // ?!? IS IT THE SAME AS input_frequency ?!?
-            double BeatFreqTrim = Convert.ToDouble(curr["beat_frequency_trim"]);
-            double ChirpRate = ucExtFactors.Factors[2].getReqValue(0); ucExtFactors.Factors[2].fValue = ChirpRate;
-            double ChirpDuration = ucExtFactors.Factors[3].getReqValue(0); ucExtFactors.Factors[3].fValue = ChirpDuration;
+            Dictionary<string, object> curr = Controller.M2PLL.get_status();
+            //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
+            double InputFreq = 6834.68;
+            if (ucExtFactors.Factors[0].fType == Factor.factorType.ftNone)
+            {
+                if (curr.ContainsKey("beat_freq")) InputFreq = Convert.ToDouble(curr["beat_freq"])/1e6;
+            }
+            else InputFreq = ucExtFactors.Factors[0].getReqValue(0) * 1.0e6;
 
-            CheckPhaseLock();
+            double BeatFreqTrim = (ucExtFactors.Factors[1].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[1].getReqValue(0);
+            double ChirpRate = (ucExtFactors.Factors[2].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[2].getReqValue(0) * 1.0e6; 
+            double ChirpDuration = (ucExtFactors.Factors[3].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[3].getReqValue(0); //ucExtFactors.Factors[3].fValue = ChirpDuration;
+
             switch (fctName)
             {
-                case "PLLFreq":
-                    PLLFreq = Convert.ToDouble(fctValue) * 1e6;
+                case "InputFreq":
+                    if (!Utils.isNull(fctValue)) InputFreq = Convert.ToDouble(fctValue) * 1.0e6;
                     break;
                 case "BeatFreqTrim":
                     BeatFreqTrim = Convert.ToDouble(fctValue);
                     break;
                 case "ChirpRate":
-                    ChirpRate = Convert.ToDouble(fctValue) * 1e6;
+                    ChirpRate = Convert.ToDouble(fctValue) * 1.0e6;
                     break;
                 case "ChirpDuration":
                     ChirpDuration = Convert.ToDouble(fctValue);
                     break;
             }
-            Controller.M2PLL.configure_lo_profile(true, false, "ecd", PLLFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false);
-            CheckPhaseLock();
+            
+            Controller.CheckPhaseLock();
+            if (Controller.M2PLL.configure_lo_profile(true, false, "ecd", InputFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false))
+            {
+                if (Utils.isNull(fctValue))
+                {
+                    ucExtFactors.Factors[0].fValue = InputFreq / 1.0e6; ucExtFactors.Factors[1].fValue = BeatFreqTrim;
+                    ucExtFactors.Factors[2].fValue = ChirpRate / 1.0e6; ucExtFactors.Factors[3].fValue = ChirpDuration;
+                    ucExtFactors.UpdateValues(); // ALL
+                }
+            }
+            else ErrorMng.Log("Error: in device <" + dvcName + "> update (out of range value).", Brushes.DarkRed.Color); 
+            Controller.CheckPhaseLock();
+            
             return true;
         }
         public bool OptEnabled()
@@ -110,13 +137,15 @@ namespace MOTMaster2.ExtDevices
                 }
                 if (OptEnabled())
                 {
-                    if (!Controller.M2DCS.Connected)
-                    {
-                        Controller.M2DCS.Connect(); Controller.M2DCS.StartLink();
-                    }
                     if (!Controller.M2PLL.Connected)
                     {
-                        Controller.M2PLL.Connect(); Controller.M2PLL.StartLink();
+                        Controller.M2PLL.Connect();
+                        if (Controller.M2PLL.Connected) Controller.M2PLL.StartLink();
+                    }
+                    if (!Controller.M2DCS.Connected)
+                    {
+                        Controller.M2DCS.Connect(); 
+                        if (Controller.M2DCS.Connected) Controller.M2DCS.StartLink();
                     }
                 }                
                 lastCheckHardware = Controller.M2DCS.Connected && Controller.M2PLL.Connected;
@@ -126,12 +155,13 @@ namespace MOTMaster2.ExtDevices
 
         public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts; call after creating factors
         {
-            ucExtFactors.AddFactor("PLL Freq.[MHz]", "PLLFreq");
+            ucExtFactors.AddFactor("Input Freq.[MHz]", "InputFreq");
             ucExtFactors.AddFactor("Beat Freq.Trim [Hz]", "BeatFreqTrim");
             ucExtFactors.AddFactor("Chirp [MHz/s]", "ChirpRate");
-            ucExtFactors.AddFactor("Duration [ms]", "ChirpDuration");
+            ucExtFactors.AddFactor("Chirp Duration [s]", "ChirpDuration");
+            //ucExtFactors.AddFactor("Raman Phase [rad]", "RamanPhase");
             //ucExtFactors.AddFactor(""); ucExtFactors.AddFactor("");
-            factorRow.Height = new GridLength(ucExtFactors.GetHeight());
+            factorRow.Height = new GridLength(ucExtFactors.UpdateFactors()+10);
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData); 
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);

@@ -7,7 +7,7 @@ using System.IO;
 using System.Diagnostics;
 using MOTMaster2.SequenceData;
 using Newtonsoft.Json;
-using DAQ.Analyze;
+using DAQ.Environment;
 using UtilsNS;
 using ErrorManager;
 
@@ -16,7 +16,26 @@ namespace MOTMaster2
     [Serializable,JsonObject]
     public class ExperimentData
     {
-        public int axis { get; set; } // -1 - undefined; 0 - X; 1 - Y; 2 - XY   
+        private int _axis; 
+        public int axis// -1 - undefined; 0 - X; 1 - Y; 2 - XY
+        {
+            get
+            {
+                if (Environs.Hardware.config.DoubleAxes) return _axis;
+                else return 0;
+            }
+            set { _axis = value; }
+        }
+        private bool _SwappedAxes;
+        public bool SwappedAxes
+        {
+            get 
+            {
+                if (Environs.Hardware.config.DoubleAxes) return _SwappedAxes;
+                else return false;
+            } 
+            set { _SwappedAxes = value; }
+        }
         //Flag to save raw data or average from each segment
         public bool SaveRawData { get; set; }
         //Name to identify each experiment
@@ -29,6 +48,18 @@ namespace MOTMaster2
             if (UtilsNS.Utils.isNull(grpMME)) return jm;
             if (grpMME.sender.Equals("Axel-hub"))
             {
+                bool problem = true;
+                if (grpMME.prms.ContainsKey("axis"))
+                {
+                    problem = !(
+                        ((Convert.ToString(grpMME.prms["axis"]) == "1") && (axis == 0)) || 
+                        ((Convert.ToString(grpMME.prms["axis"]) == "2") && (Math.Abs(axis) == 2)));
+                }
+                if (problem)
+                {
+                    Utils.TimedMessageBox("Axes in MotMaster2 and Axel-Hub must match!","Error Message", 3000);                   
+                    return jm;
+                }
                 if (grpMME.cmd.Equals("scan")) jm = JumboModes.scan;
                 if (grpMME.cmd.Equals("repeat")) jm = JumboModes.repeat;
             }
@@ -57,8 +88,6 @@ namespace MOTMaster2
             if (Utils.isNull(InterferometerStepName)) return rslt;
             if (InterferometerStepName.Equals("")) return rslt;
 
-
-
             if (AnalogSegments.ContainsKey(InterferometerStepName))
             {
                 long i1 = startSeqTime + Utils.sec2tick(AnalogSegments[InterferometerStepName].Item1 / SampleRate);
@@ -71,47 +100,77 @@ namespace MOTMaster2
 
         //Rise time in seconds to be excluded from data
         public double RiseTime { get; set; }
+        public Dictionary<string, int> SkimEdges { get; set; }
 
         //This depends on the number of channels and sampling rate
-        private int preTrigSamples = 32;
-        public int PreTrigSamples { get { return preTrigSamples; } set { preTrigSamples = value; } }
+        private int postTrigSamples = 32;
+        public int PostTrigSamples { get { return postTrigSamples; } set { postTrigSamples = value; } }
 
         public static double[] TransferFunc { get; set; }
 
-        public static AutoFileLogger multiScanParamLogger;
+        public static FileLogger multiScanParamLogger;
         public Stopwatch logWatch;
         private int batchNumber;
         public static Dictionary<string, object> lastData;
-        public static AutoFileLogger multiScanDataLogger;
+        public static FileLogger multiScanDataLogger;
 
         public ExperimentData()
         {
                       
         }
 
-        public Dictionary<string, double[]> SegmentShot(double[,] rawData, int idx = 1) 
+        public Dictionary<string, double[]> SegmentShot(double[,] rawData, int axis)
         {
             int riseSamples = (int)(RiseTime * SampleRate);
-            int imin;
-            int imax;
+            int imin, imax, smin, smax, axis1;
+            if (!Utils.InRange(axis, 0, 1)) throw new Exception("Wrong axis number"); 
+            axis1 = axis;
+            if (SwappedAxes)
+            {
+                if (axis1 == 0) axis1 = 1;
+                else axis1 = 0;
+            }
+
             Dictionary<string, double[]> segData = new Dictionary<string, double[]>();
             foreach (KeyValuePair<string, Tuple<int, int>> entry in AnalogSegments.OrderBy(t => t.Value.Item1))
             {
                 if (!IgnoredSegments.Contains(entry.Key))
                 {
-                    imin = entry.Value.Item1 + riseSamples/2;
-                    imax = entry.Value.Item2 - riseSamples/2;
-                    double[] data = new double[imax-imin];
-                    for (int i = imin; i < imax; i++) data[i-imin] = rawData[idx,i];
+                    switch (entry.Key)
+                    {
+                        case ("N2"):
+                        case ("B2"):
+                            smin = SkimEdges["PreSkim2"]; smax = SkimEdges["PostSkim2"];
+                            break;
+                        case ("NTot"):
+                        case ("BTot"):
+                            smin = SkimEdges["PreSkimTot"]; smax = SkimEdges["PostSkimTot"];
+                            break;
+                        default:
+                            smin = 0; smax = 0;
+                            break;
+                    }
+                    double[] data;
+                    if (entry.Key.Equals("Interferometer"))
+                    {
+                        imin = entry.Value.Item1;
+                        imax = entry.Value.Item2;
+                        data = new double[imax - imin];
+                        for (int i = imin; i < imax; i++) data[i - imin] = rawData[axis1 + 2, i];
+                    }
+                    else
+                    {
+                        imin = entry.Value.Item1 + smin;
+                        imax = entry.Value.Item2 - smax;
+                        if ((imax - imin) < 2)
+                        {
+                            Utils.TimedMessageBox("Too much skimming (Options) - No data left in <" + entry.Key + "> segment!", "Error", 3000); // ErrorMng.errorMsg
+                            return null;
+                        }
+                        data = new double[imax - imin];
+                        for (int i = imin; i < imax; i++) data[i - imin] = rawData[axis1, i];
+                    }
                     segData[entry.Key] = data;
-                }
-                else if (entry.Key == InterferometerStepName)
-                {
-                    imin = entry.Value.Item1;
-                    imax = entry.Value.Item2;
-                    double[] accelData = new double[imax-imin];
-                    for (int i = imin; i < imax; i++) accelData[i - imin] = rawData[idx, i];
-                    segData["AccV"] = accelData;
                 }
             }
             return segData;
@@ -216,9 +275,10 @@ namespace MOTMaster2
         //Generates some fake data that is normally distributed about some mean value
         public double[,] GenerateFakeData()
         {
-            double[,] fakeData = new double[2,NSamples];
-            for (int i = 0; i < 2; i++)
-                for (int j = 0; j < NSamples; j++) { double g = Gauss(0, 1); fakeData[i,j] = g; }
+            double[,] fakeData = new double[4,NSamples];
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < NSamples; j++) 
+                    fakeData[i,j] = i + 1 + 0.3 * Gauss(0, 1);
             return fakeData;
         }
 
@@ -263,7 +323,7 @@ namespace MOTMaster2
                 return false;
             }
             Directory.CreateDirectory(dir);
-            multiScanParamLogger = new AutoFileLogger(dir + "\\header.msn");
+            multiScanParamLogger = new FileLogger("", dir + "\\header.msn");
             multiScanParamLogger.Enabled = true; 
             foreach (string item in segData.Parameters.Keys)
             {
@@ -276,7 +336,7 @@ namespace MOTMaster2
             }
             multiScanParamLogger.log(ss);
             batchNumber = 1;
-            multiScanDataLogger = new AutoFileLogger(dir + "\\1.dta");
+            multiScanDataLogger = new FileLogger("", dir + "\\1.dta");
             if (Utils.isNull(logWatch)) logWatch = new Stopwatch();
             else logWatch.Reset();
             logWatch.Start();
@@ -305,8 +365,8 @@ namespace MOTMaster2
                 }
                 multiScanParamLogger.log(ss.TrimEnd('\t'));
                 multiScanDataLogger.Enabled = false; // flush
-                string dir = Path.GetDirectoryName(multiScanParamLogger.AutoSaveFileName);
-                multiScanDataLogger.AutoSaveFileName = dir + "\\" + batchNumber.ToString("000") + ".dta";                
+                string dir = Path.GetDirectoryName(multiScanParamLogger.reqFilename);
+                multiScanParamLogger = new FileLogger("", dir + "\\" + batchNumber.ToString("000") + ".dta");
                 multiScanDataLogger.Enabled = true;
                 ss = mms[mms.Count - 1].sParam + "\tTime[ms]\t" ;
                 foreach (var item in avgDict)
@@ -404,8 +464,4 @@ namespace MOTMaster2
             analogSegments = null;
         }
     }
-
-
-
-
 }

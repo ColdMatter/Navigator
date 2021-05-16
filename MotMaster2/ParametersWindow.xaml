@@ -1,7 +1,7 @@
 ﻿<Window x:Name="frmParameters" x:Class="MOTMaster2.ParametersWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Edit Sequence Parameters" Height="814" Width="512.857" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" PreviewKeyDown="frmParameters_PreviewKeyDown">
+        Title="Edit Sequence Parameters" Height="814" Width="512.857" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" PreviewKeyDown="frmParameters_PreviewKeyDown" WindowStartupLocation="Manual">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="225*"/>

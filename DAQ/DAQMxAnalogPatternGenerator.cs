@@ -6,9 +6,9 @@ using System.Diagnostics;
 
 using DAQ.Environment;
 using DAQ.HAL;
-using Data;
-using Data.Scans;
-using DAQ.Analog;
+//using Data;
+//using Data.Scans;
+//using DAQ.Analog;
 
 using NationalInstruments;
 using NationalInstruments.DAQmx;
@@ -57,7 +57,7 @@ namespace DAQ.Analog
 
         }
 
-        public void OutputPatternAndWait(double[,] pattern)
+        public long OutputPatternAndWait(double[,] pattern)
         {
             if (writer == null)
             {
@@ -65,7 +65,9 @@ namespace DAQ.Analog
                 writer = new AnalogMultiChannelWriter(analogOutputTask.Stream);
                 writer.WriteMultiSample(false, pattern);
             }
+            long ticks = DateTime.Now.Ticks;
             analogOutputTask.Start();
+            return ticks;
         }
 
         public void StopPattern()

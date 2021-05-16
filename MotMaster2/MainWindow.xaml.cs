@@ -35,8 +35,7 @@ namespace MOTMaster2
         //TODO change this so Controller can access it properly
         RemoteMessaging remoteMsg;
         Modes modes;
-        bool TheosComputer = false;
-        const string ramanPhase = "ramanPhase";
+        const string RamanPhase = "RamanPhase";
         ExtDeviceDict ExtDevices;
         ExtFactorList ExtFactors;
 
@@ -57,22 +56,20 @@ namespace MOTMaster2
             dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
 
             this.sequenceControl.ChangedAnalogChannelCell += new SequenceDataGrid.ChangedAnalogChannelCellHandler(this.sequenceData_AnalogValuesChanged);
-            this.sequenceControl.ChangedRS232Cell += new SequenceDataGrid.ChangedRS232CellHandler(this.sequenceData_RS232Changed);
             Controller.MotMasterDataEvent += OnDataCreated;
             OnStartScan += GaussImage1.StartScanEvent;
             OnNextScanVal += GaussImage1.NextScanValEvent;
 
             //   ((INotifyPropertyChanged)Controller.sequenceData.Parameters).PropertyChanged += this.InterferometerParams_Changed;
             OpenDefaultModes();
-            TheosComputer = (string)System.Environment.GetEnvironmentVariables()["COMPUTERNAME"] == "DESKTOP-U334RMA";
-            if (false && TheosComputer) // Theo's computer
+            
+            if (false && Utils.TheosComputer()) // Theo's computer
             {
                 tiImageProcess.Visibility = System.Windows.Visibility.Visible; tcVisual.SelectedIndex = 2; cbHub.SelectedIndex = 3;
             }
-            if (Utils.isSingleChannelMachine) rgChannelSelect.Visibility = Visibility.Hidden;
-            else rgChannelSelect.Visibility = Visibility.Visible;
             Utils.traceDest = (RichTextBox)tbLogger;
             InitVisuals();
+            editMode = false;
         }
 
         private void OnDataCreated(object sender, DataEventArgs e)
@@ -81,7 +78,6 @@ namespace MOTMaster2
             remoteMsg.sendCommand(data); // Axel-hub
             if (messenger != null) messenger.Send(data.Replace("\r\n",String.Empty)+"\n"); // mathematica
         }
-
         public static void DoEvents()
         {
             if (Utils.isNull(Application.Current)) return;
@@ -90,7 +86,6 @@ namespace MOTMaster2
             //Not needed for repeat run. Might be needed for scan
             // controller.WaitForRunToFinish(); 
         }
-
         public void InitVisuals()
         {           
             tcMain.SelectedIndex = 0;
@@ -107,22 +102,36 @@ namespace MOTMaster2
                 //ucMSquared.ucFactor1.ParamUpdate(Controller.sequenceData.Parameters);
              }
         }
-
         private void frmMain_Loaded(object sender, RoutedEventArgs e)
         {
+            if (!Environs.Hardware.config.DoubleAxes) groupAxes.Visibility = Visibility.Collapsed;
             ExtDevices = new ExtDeviceDict(); ExtFactors = new ExtFactorList();
-            MSquaredUC ms = new MSquaredUC("MSquared", new System.Windows.Media.SolidColorBrush(Brushes.DarkRed.Color)); 
-            ExtDevices.Add("MSquared",ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);   
-            WindFreakUC wf = new WindFreakUC("WindFreak", new System.Windows.Media.SolidColorBrush(Brushes.Navy.Color)); 
-            ExtDevices.Add("WindFreak", wf); stackExtDevices.Children.Add(wf); ExtFactors.Add(wf.ucExtFactors);                
-            if (Controller.config.PlexalMachine)
+            if (Environs.Hardware.ExtDevices.ContainsKey("MSquared"))
             {
-                FlexDDS_UC dds = new FlexDDS_UC("FlexDDS", new System.Windows.Media.SolidColorBrush(Brushes.ForestGreen.Color));
-                ExtDevices.Add("FlexDDS",dds); stackExtDevices.Children.Add(dds); ExtFactors.Add(dds.ucExtFactors);
-            } 
+                MSquaredUC ms = new MSquaredUC("MSquared", Brushes.DarkRed);
+                ExtDevices.Add("MSquared", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
+            }
+            if (Environs.Hardware.ExtDevices.ContainsKey("WindFreak"))
+            {
+                switch (Environs.Hardware.ExtDevices["WindFreak"])
+                {
+                    case ("1"):
+                        WindFreak1UC wf1 = new WindFreak1UC("WindFreak", Brushes.Navy);
+                        ExtDevices.Add("WindFreak", wf1); stackExtDevices.Children.Add(wf1); ExtFactors.Add(wf1.ucExtFactors);
+                        break;
+                    case ("2"):
+                        WindFreak2UC wf2 = new WindFreak2UC("WindFreak", Brushes.Navy);
+                        ExtDevices.Add("WindFreak", wf2); stackExtDevices.Children.Add(wf2); ExtFactors.Add(wf2.ucExtFactors);
+                        break;
+                }
+            }
+            if (Environs.Hardware.ExtDevices.ContainsKey("FlexDDS"))
+            {
+                FlexDDS_UC fd = new FlexDDS_UC("FlexDDS", Brushes.DarkGreen);
+                ExtDevices.Add("FlexDDS", fd); stackExtDevices.Children.Add(fd); ExtFactors.Add(fd.ucExtFactors);
+            }
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
         }
-
         private void OpenDefaultModes()
         {
             if (File.Exists(Utils.configPath + "Defaults.cfg"))
@@ -154,7 +163,6 @@ namespace MOTMaster2
                     lstParams.Items.Add(lbi);
                 }
         }
-
         public enum GroupRun { none, repeat, scan, multiScan };
         private GroupRun _groupRun;
         public GroupRun groupRun
@@ -173,7 +181,6 @@ namespace MOTMaster2
                 if (sequenceControl.IsReadOnly)
                     if (!Controller.genOptions.AIEnabled && remoteMsg.Connected) ErrorMng.warningMsg("Axel-Hub is connected, but analog acquisition is OFF ?!");
 
-                setPropertyBtn.IsEnabled = (value == GroupRun.none);
                 if (value == GroupRun.none) frmMain.ResizeMode = System.Windows.ResizeMode.CanResize;
                 else frmMain.ResizeMode = System.Windows.ResizeMode.NoResize;
             }
@@ -191,6 +198,9 @@ namespace MOTMaster2
                 ErrorMng.errorMsg("Failed to build sequence:" + e.Message +" IN " + e.Source, -1, false);
                 return false;
             }
+            if (Math.Abs(Controller.ExpData.axis) == 2) ExtDevices.UpdateDevices(false);
+            if (Controller.genOptions.DelayBwnShots > 0) Thread.Sleep(Controller.genOptions.DelayBwnShots);            
+
             controller.RunStart(paramDict);
             //Would like to use RunStart as this Runs in a new thread
             if (controller.IsRunning())
@@ -224,7 +234,7 @@ namespace MOTMaster2
                 return;
             }
             progBar.Minimum = 0;
-            progBar.Maximum = Iters-1;
+            progBar.Maximum = Iters - 1;
             int numInterations = Iters;
             if (Iters == -1)
             {
@@ -263,7 +273,6 @@ namespace MOTMaster2
                 if (bb) bb &= Controller.ExpData.grpMME.id.Equals(cmdId);
                 if (bb) bb &= Controller.ExpData.grpMME.mmexec.Equals("diagnostics");
                 wait4adjust = (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.repeat) && !bb;
-
                 int j = 0;
                 while ((wait4adjust) && (j < 10))
                 {
@@ -318,7 +327,7 @@ namespace MOTMaster2
                 }
             }
 
-            if (btnRun.Content.Equals("Abort Remote"))
+            if (btnRun.Content.Equals("Abort"))
             {
                 tbExperimentRun.Text = "---";
                 btnRun.Content = "Run";
@@ -367,27 +376,46 @@ namespace MOTMaster2
             if (!GaussImage1.LineMode) return;
             if (OnNextScanVal != null) OnNextScanVal(val);
         }
-
-        private void realScan(string prm, string fromScanS, string toScanS, string byScanS, bool randomize = false, string Hub = "none", int cmdId = -1)
+        private string SetScanParamExt(string site, string param) // back factor 
+        {
+            if (!Controller.sequenceData.Parameters.ContainsKey(param))
+            {
+                Controller.sequenceData.Parameters[param] = new Parameter(param, "", 0, true, false); 
+                Utils.TimedMessageBox("Parameter <"+param+"> has been added to the list of parameters.");
+                ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
+            }
+            string[] sa = site.Split(':'); if (sa.Length != 2) return "";
+            tcVisual.SelectedIndex = 1;
+            ExtFactors.SetFactor(sa[0],sa[1],param);
+            return sa[1];
+        }
+        private void realScan(string site, string prm, string fromScanS, string toScanS, string byScanS, bool randomize = false, string Hub = "none", int cmdId = -1)
         {
             string parameter = prm;
-            if (prm.Equals(ramanPhase)) // a special case for ramanPhase
+            if (prm.Equals(RamanPhase) && !site.Equals("")) // a special case for ramanPhase
             {
-                //if (!Controller.M2DCS.Connected) throw new Exception("ICE block is disconnected!");
+                if (!ExtDevices["MSquared"].GetEnabled())
+                {
+                    ErrorMng.errorMsg("ICE block is not available!", 124); return;
+                }
+                SetScanParamExt(site, prm); // set the device factor
+                Parameter paramRP = Controller.sequenceData.Parameters[prm];
+                int j = cbParamsScan.Items.IndexOf(RamanPhase);
+                if (j>-1) cbParamsScan.SelectedIndex = j;
                 MMscan scan = new MMscan(); scan.sParam = parameter;
                 scan.sFrom = Convert.ToDouble(fromScanS); scan.sTo = Convert.ToDouble(toScanS); scan.sBy = Convert.ToDouble(byScanS);                
                 double wr = scan.sFrom;
 
                 int Iters = (int)Math.Ceiling((scan.sTo - wr) / scan.sBy + 0.001);
                 controller.AutoLogging = Check4Logging();
-                if ((Iters == 0) || (Iters < 0))
+                if ((Iters == 0) || (Iters < 0)) // cancel the scan
                 {
                     ErrorMng.errorMsg("Invalid scan values.", 2, true);
                     if (!btnRun.Content.Equals("Run")) btnRun_Click(null, null);
                     return;
                 }
                 progBar.Minimum = 0;
-                progBar.Maximum = Iters-1;
+                progBar.Maximum = Iters - 1;
                 int numInterations = Iters;
                 Controller.ExpData.ClearData();
                 Controller.numInterations = numInterations; 
@@ -399,8 +427,12 @@ namespace MOTMaster2
                 }               
                 scan.groupID = Controller.ExpData.ExperimentName;
                 Controller.ScanParam = scan.Clone();
-
+                
                 Controller.StaticSequence = true;
+                if (!ExtFactors.IsScannable(prm))
+                {
+                    ErrorMng.errorMsg("MSquared dvc. <"+prm+"> is not available!", 125); return;
+                }
                 groupRun = GroupRun.scan;
                 StartScanEvent(true, true, scan); 
                 for (int i = 0; i < numInterations; i++)
@@ -411,7 +443,8 @@ namespace MOTMaster2
 
                     //Controller.M2DCS.phaseControl(wr);
                     //Console.WriteLine("#: " + wr.ToString());
-                    
+                    paramRP.Value = wr;
+                    ExtFactors.ScanIter(parameter, i);
                     if (!SingleShot()) { groupRun = GroupRun.none; }
                     progBar.Value = i;
 
@@ -420,7 +453,7 @@ namespace MOTMaster2
                     controller.WaitForRunToFinish();
                 }
                 StartScanEvent(false, true, scan);
-                controller.AutoLogging = false;
+                controller.AutoLogging = false; ExtFactors.ScanIter(parameter, -1); // reset factors
                 if (!btnScan.Content.Equals("Scan")) btnScan_Click(null, null);               
                 return;
             }
@@ -547,11 +580,10 @@ namespace MOTMaster2
             {
                 btnScan.Content = "Cancel";
                 btnScan.Background = Brushes.Coral;
-                Controller.SaveTempSequence();
                 Controller.ExpData.grpMME.Clear();
                 try
                 {
-                    realScan(cbParamsScan.Text, tbFromScan.Text, tbToScan.Text, tbByScan.Text, chkRandomize.IsChecked.Value);
+                    realScan("",cbParamsScan.Text, tbFromScan.Text, tbToScan.Text, tbByScan.Text, chkRandomize.IsChecked.Value);
                 }
                 catch (Exception ex)
                 {
@@ -591,7 +623,7 @@ namespace MOTMaster2
                 controller.StopRunning();
                 StartScanEvent(false, true, null);
                 //Send Remote Message to AxelHub
-                if (!Utils.isNull(sender))
+                //if (!Utils.isNull(sender))
                 {
                     MMexec mme = new MMexec("Axel-hub");
                     remoteMsg.sendCommand(mme.Abort("MOTMaster"));
@@ -606,16 +638,23 @@ namespace MOTMaster2
             {
                 if (paramCheck) return; // avoid recursion
                 paramCheck = true;  int gl = 110;
-                if (groupRun == GroupRun.none)
+                if (groupRun == GroupRun.none) // before start
                 {
                     _TabItemIndex = tcMain.SelectedIndex;
                 }
-                else if (tcMain.SelectedIndex != _TabItemIndex)
+                else // something is running
                 {
-                    e.Handled = true;
-                    tcMain.SelectedIndex = _TabItemIndex;
-                    paramCheck = false;
-                    return;
+                    if (tcMain.SelectedIndex == 3) ;
+                    else
+                    {
+                        if (tcMain.SelectedIndex != _TabItemIndex)
+                        {
+                            e.Handled = true;
+                            tcMain.SelectedIndex = _TabItemIndex;
+                            paramCheck = false;
+                            return;
+                        }
+                    } 
                 }
                 if (tcMain.SelectedIndex == 1) // scan
                 {
@@ -662,8 +701,8 @@ namespace MOTMaster2
             { // Configure open file dialog box
                 Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
                 dlg.FileName = ""; // Default file name
-                dlg.DefaultExt = ".csv"; // Default file extension
-                dlg.Filter = "Parameters (.csv)|*.csv,*.txt"; // Filter files by extension
+                dlg.DefaultExt = ".prm"; // Default file extension
+                dlg.Filter = "Parameters (.prm)|*.prm"; // Filter files by extension
 
                 // Show open file dialog box
                 Nullable<bool> result = dlg.ShowDialog();
@@ -691,8 +730,8 @@ namespace MOTMaster2
             { // Configure open file dialog box
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
                 dlg.FileName = ""; // Default file name
-                dlg.DefaultExt = ".csv"; // Default file extension
-                dlg.Filter = "Parameters (.csv)|*.csv,*.txt"; // Filter files by extension
+                dlg.DefaultExt = ".prm"; // Default file extension
+                dlg.Filter = "Parameters (.prm)|*.prm"; // Filter files by extension
 
                 // Show open file dialog box
                 bool? result = dlg.ShowDialog();
@@ -715,7 +754,7 @@ namespace MOTMaster2
                 dlg.FileName = ""; // Default file name
                 dlg.DefaultExt = ".sm2"; // Default file extension
                 dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
-                dlg.InitialDirectory = Utils.basePath + "\\Scripts\\";
+                //dlg.InitialDirectory = Controller.scriptListPath;
 
                 // Show open file dialog box
                 bool? result = dlg.ShowDialog();
@@ -724,6 +763,7 @@ namespace MOTMaster2
                 if (result != true) return;
                 string filename = dlg.FileName;
                 Controller.SaveSequenceToPath(filename);
+                Log("Saved Control Sequence to ..." + filename.Substring(filename.Length - 30));
             }
             else
                 ErrorMng.warningMsg("You have tried to save a Sequence before loading a script", -1, true);
@@ -734,7 +774,6 @@ namespace MOTMaster2
             dlg.FileName = ""; // Default file name
             dlg.DefaultExt = ".sm2"; // Default file extension
             dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
-            dlg.InitialDirectory = Utils.basePath + "\\Scripts\\";
 
             // Show open file dialog box
             bool? result = dlg.ShowDialog();
@@ -742,54 +781,14 @@ namespace MOTMaster2
             // Process open file dialog box results
             if (result != true) return;
             string filename = dlg.FileName;
-            //this.Title = "MOTMaster 2 - sequence loading...";
-            Controller.LoadSequenceFromPath(filename);            
-            UpdateSequenceControl();
-            //this.Title = "MOTMaster 2 - sequence: " + filename; 
-        }
-
-        private void LoadCicero_Click(object sender, RoutedEventArgs e)
-        {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Title = "Select Cicero Settings File";
-            dlg.FileName = ""; // Default file name
-            dlg.DefaultExt = ".set"; // Default file extension
-            dlg.Filter = "Cicero Settings (.set,.json)|*.json;*.set"; // Filter files by extension
-
-            // Show open file dialog box
-            bool? result = dlg.ShowDialog();
-
-            // Process open file dialog box results
-            if (result != true) return;
-            string filename = dlg.FileName;
-            controller.LoadCiceroSettingsFromPath(filename);
-
-            dlg = new Microsoft.Win32.OpenFileDialog
-            {
-                Title = "Select Cicero Sequence File",
-                FileName = "",
-                DefaultExt = ".seq",
-                Filter = "Cicero Sequence (.seq,.json)|*.json;*.seq"
-            };
-            // Show open file dialog box
-            result = dlg.ShowDialog();
-
-            // Process open file dialog box results
-            if (result != true) return;
-            filename = dlg.FileName;
-            controller.LoadCiceroSequenceFromPath(filename);
-
-            controller.ConvertCiceroSequence();
-            Log("Loaded Cicero Sequence from " + filename);
-            UpdateSequenceControl();
-        }
-
-        private void UpdateSequenceControl()
-        {
-            //Simplest way is to recreate the ViewModel. This should be called when a new sequence is loaded.
+            sequenceControl.ClearSteps();
+            Controller.LoadSequenceFromPath(filename);
             sequenceControl.UpdateSequenceData();
+            ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
+            Log("Loaded Control Sequence from ..." + filename.Substring(filename.Length - 30));
         }
-        private void SaveEnvironment_Click(object sender, RoutedEventArgs e)
+
+       private void SaveEnvironment_Click(object sender, RoutedEventArgs e)
         {
             controller.SaveEnvironment();
         }
@@ -805,87 +804,29 @@ namespace MOTMaster2
         }
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("\tMOTMaster2 v"+Utils.getRunningVersion()+"\n\n by Teodor Krastev, Jimmy Stammers, et al.\n\n for Imperial College, London, UK");
+            MessageBox.Show("\tMOTMaster2 v"+Utils.getAppFileVersion+"\n\n by Teodor Krastev, Jimmy Stammers, et al.\n\n for Imperial College, London, UK");
         }
-
-        private void UpdateButton_Click(object sender, RoutedEventArgs e)
-        {
-            string parameter = cbParamsManual.Text;
-            if (parameter.Equals(ramanPhase))
-            {
-                if (!Controller.M2DCS.Connected) throw new Exception("ICE block is disconnected!");
-                //Controller.M2DCS.phaseControl(Convert.ToDouble(tbValue.Text));
-            }
-            else
-            {
-                Parameter param = Controller.sequenceData.Parameters[parameter];
-                if (param.Value is int)
-                {
-                    param.Value = (int)tbdValue.Value;
-                }
-                else if (param.Value is double)
-                {
-                    param.Value =tbdValue.Value;
-                }
-            }
-        }
-
         private void cbParamsManual_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.OriginalSource.GetType() == typeof(ComboBox) && Controller.script != null)
-                tbdValue.Value = Convert.ToDouble(Controller.sequenceData.Parameters[cbParamsManual.SelectedItem.ToString()].Value);
+            if (e.OriginalSource.GetType() == typeof(ComboBox) && cbParamsManual.SelectedItem != null)
+            {
+                string sPrm = cbParamsManual.SelectedItem.ToString();
+                if (Controller.sequenceData.Parameters.ContainsKey(sPrm))
+                {
+                    Parameter Prm = Controller.sequenceData.Parameters[sPrm];
+                    tbdValue.Tag = 1;
+                    tbdValue.Value = Convert.ToDouble(Prm.Value);
+                    tbdValue.Tag = 0;
+                    tbdValue_ValueChanged(tbdValue, null);
+                }                   
+            }                    
         }
-
         private void cbParamsScan_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.OriginalSource.GetType() == typeof(ComboBox) && cbParamsScan.SelectedItem != null)
             {
-                if (cbParamsScan.SelectedItem.ToString().Equals(ramanPhase)) lbCurValue.Content = 0;
-                else lbCurValue.Content = Controller.sequenceData.Parameters[cbParamsScan.SelectedItem.ToString()].Value.ToString();
-            }
-                
-        }
-
-        //Creates a table of values for the selected analog parameters
-        private void CreateAnalogPropertyTable(SequenceStep selectedStep, string channelName, AnalogChannelSelector analogType)
-        {
-            // SequenceData.sequenceDataGrid.IsReadOnly = true;
-            setPropertyBtn.Visibility = System.Windows.Visibility.Visible;
-            tcLog.SelectedIndex = 1;
-            //if (noPropLabel.Visibility == System.Windows.Visibility.Visible) { noPropLabel.Visibility = Visibility.Hidden; propertyGrid.Visibility = System.Windows.Visibility.Visible; }
-            propLabel.Content = string.Format("{0}: {1} with {2}", selectedStep.Name, channelName, analogType.ToString());
-            List<AnalogArgItem> data = selectedStep.GetAnalogData(channelName, analogType);
-            propertyGrid.DataContext = data;
-        }
-
-        //TODO fix this so that it correctly creates a new table if the serial data is null
-        //Creates a table of values for the selected analog parameters
-        private void CreateSerialPropertyTable(SequenceStep selectedStep)
-        {
-            // SequenceData.sequenceDataGrid.IsReadOnly = true;
-            setPropertyBtn.Visibility = System.Windows.Visibility.Visible;
-            tcLog.SelectedIndex = 1;
-            //if (noPropLabel.Visibility == System.Windows.Visibility.Visible) { noPropLabel.Visibility = Visibility.Hidden; propertyGrid.Visibility = System.Windows.Visibility.Visible; }
-            propLabel.Content = string.Format("Edit Serial Commands for {0}", selectedStep.Name);
-            List<SerialItem> data = selectedStep.GetSerialData();
-            propertyGrid.DataContext = data;
-            ToolTip tool = new ToolTip();
-            tool.Content = "Enter commands separated by a space or comma. Frequencies in MHz, time in ms";
-            propertyGrid.ToolTip = tool;
-        }
-
-        private void sequenceData_AnalogValuesChanged(object sender, SelectionChangedEventArgs e)
-        {
-            SequenceStepViewModel model = (SequenceStepViewModel)sequenceControl.sequenceDataGrid.DataContext;
-            KeyValuePair<string, AnalogChannelSelector> analogChannel = model.SelectedAnalogChannel;
-            SequenceStep step = model.SelectedSequenceStep;
-            CreateAnalogPropertyTable(step, analogChannel.Key, analogChannel.Value);
-        }
-        private void sequenceData_RS232Changed(object sender, DataGridBeginningEditEventArgs e)
-        {
-            SequenceStepViewModel model = (SequenceStepViewModel)sequenceControl.sequenceDataGrid.DataContext;
-            SequenceStep step = model.SelectedSequenceStep;
-            CreateSerialPropertyTable(step);
+                lbCurValue.Content = Controller.sequenceData.Parameters[cbParamsScan.SelectedItem.ToString()].Value.ToString();
+            }                
         }
         private void Log(string txt, Color? clr = null)
         {
@@ -893,84 +834,154 @@ namespace MOTMaster2
             ErrorMng.Log(txt, clr);
         }
 
-        private void setProperty_Click(object sender, RoutedEventArgs e)
+        #region sequence data manipulation
+        bool editMode 
+        {
+            get { return tcLogProps.SelectedIndex.Equals(1); }
+            set 
+            { 
+                if (value) 
+                {
+                    if (!editMode) // from OFF to ON
+                    {
+                        lastCell.SelectedStep = null; lastCell.ChannelName = "";
+                        lastCell.sequenceJson = JsonConvert.SerializeObject(Controller.sequenceData, Formatting.Indented, 
+                                                                            new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                    }
+                    tcLogProps.SelectedIndex = 1; 
+                }
+                else { tcLogProps.SelectedIndex = 0; lastCell.Clear(); }
+                tcMain.IsEnabled = !editMode;
+                if (editMode) tiAnalogProps.Visibility = Visibility.Visible;
+                else tiAnalogProps.Visibility = Visibility.Collapsed;
+            }
+        }
+        struct lastCellType // the last selected cell when you go into edit mode
+        {
+            public SequenceStep SelectedStep;
+            public DataGridCell SelectedCell;
+            public string ChannelName;
+            private List<AnalogArgItem> _Data;
+            public List<AnalogArgItem> Data
+            {
+                get { return _Data; }
+                set
+                {
+                    _Data = new List<AnalogArgItem>();
+                    foreach (AnalogArgItem ai in value)
+                    {
+                        _Data.Add(new AnalogArgItem(ai.Name, ai.Value));
+                    }
+                }
+            }
+            public AnalogChannelSelector AnalogType;
+            public string sequenceJson;
+            public void Clear()
+            {
+                SelectedStep = null; SelectedCell = null; ChannelName = ""; _Data = null;  AnalogType = AnalogChannelSelector.Continue; sequenceJson = "";
+            }
+        }
+        lastCellType lastCell = new lastCellType();
+        private void sequenceData_AnalogValuesChanged(object sender, SelectionChangedEventArgs e)
+        {   
+            if (controller.IsRunning())
+            {
+                Utils.TimedMessageBox("You cannot edit while the sequence is running", "Warning !", 2500); return;
+            }
+            editMode = true;
+            SequenceStepViewModel model = (SequenceStepViewModel)sequenceControl.sequenceDataGrid.DataContext;
+            KeyValuePair<string, AnalogChannelSelector> analogChannel = model.SelectedAnalogChannel;
+            SequenceStep step = model.SelectedSequenceStep;
+            if (Utils.isNull(lastCell.SelectedStep) && lastCell.ChannelName.Equals("")) // open new edit
+            {
+                lastCell.SelectedStep = step; lastCell.SelectedCell = sequenceControl.lastSelectedCell; lastCell.ChannelName = analogChannel.Key; lastCell.AnalogType = analogChannel.Value;
+                if (lastCell.AnalogType.Equals(AnalogChannelSelector.Continue)) lastCell.Data = new List<AnalogArgItem>();
+                else lastCell.Data = step.GetAnalogData(lastCell.ChannelName, lastCell.AnalogType);
+            }
+            if (Utils.isNull(lastCell.SelectedStep) && lastCell.ChannelName.Equals("") || // open new edit
+               (object.ReferenceEquals(step, lastCell.SelectedStep) && (lastCell.ChannelName.Equals(analogChannel.Key)))) // same cell; new type
+            {
+                analogPropGrid.feedData(step, analogChannel.Key, analogChannel.Value);
+            }
+            else // move away but already editing 
+            {                
+                if (!object.ReferenceEquals(step, lastCell.SelectedStep) || !(lastCell.ChannelName.Equals(analogChannel.Key)))
+                {
+                    Utils.TimedMessageBox("You cannot change another cell before Cancel or Update the selected one.", "Warning !", 2500);
+                    if (!Utils.isNull(lastCell.SelectedCell)) lastCell.SelectedCell.Focus();
+                    btnCancelProp_Click(null, null);                   
+                }
+            }
+        }
+        private void updateProps_Click(object sender, RoutedEventArgs e)
         {
             SequenceParser sqnParser = new SequenceParser();
-            bool verified = false;
-
-            //Checks the validity of all the values, but does not assign them until the sequence is built
-            //TODO: Add a type check to make this work for AnalogItems or SerialItems
-            if (propertyGrid.DataContext == null) return;
-            if (propertyGrid.DataContext.GetType() == typeof(List<AnalogArgItem>)) verified = ParseAnalogItems(sqnParser);
-            else if (propertyGrid.DataContext.GetType() == typeof(List<SerialItem>)) verified = ParseSerialItems(sqnParser);
+            bool verified = ParseAnalogItems(analogPropGrid.getData(),sqnParser);
             if (verified)
             {
+                lastCell.Data = analogPropGrid.getData();
                 SequenceStepViewModel model = (SequenceStepViewModel)sequenceControl.sequenceDataGrid.DataContext;
-                object newArgs = propertyGrid.ItemsSource;
-                model.UpdateChannelValues(newArgs);
-                sequenceControl.sequenceDataGrid.IsReadOnly = false;
+                model.UpdateChannelValues(lastCell.Data);
             }
+            editMode = false;
         }
-
-        private bool ParseSerialItems(SequenceParser sqnParser)
+        private void btnCancelProp_Click(object sender, RoutedEventArgs e)
         {
-            foreach (SerialItem item in (List<SerialItem>)propertyGrid.DataContext)
+            //string sequenceJson = JsonConvert.SerializeObject(Controller.sequenceData, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+            if (!lastCell.sequenceJson.Equals("") && false)
             {
-                string value = item.Value;
-                try
-                {
-                    if (SequenceParser.CheckMuquans(value)) continue;
-                    else ErrorMng.errorMsg(string.Format("Incorrect format for {0} serial command", item.Name), 4);
-                }
-                catch (Exception e)
-                {
-                    ErrorMng.errorMsg("Couldn't parse serial commands. " + e.Message, 4, false);
-                    return false;
-                }
-
+                Controller.sequenceData = JsonConvert.DeserializeObject<Sequence>(lastCell.sequenceJson);
+                sequenceControl.UpdateSequenceData();                
             }
-            return true;
+            if (!Utils.isNull(lastCell.Data))
+            {
+                SequenceStepViewModel model = (SequenceStepViewModel)sequenceControl.sequenceDataGrid.DataContext;
+                if (!lastCell.ChannelName.Equals(""))
+                    model.SelectedAnalogChannel = new KeyValuePair<string, AnalogChannelSelector>(lastCell.ChannelName, lastCell.AnalogType);
+                if (!Utils.isNull(lastCell.SelectedStep))
+                    model.SelectedSequenceStep = lastCell.SelectedStep;
+                model.UpdateChannelValues(lastCell.Data);
+            }
+            editMode = false; 
         }
-        private bool ParseAnalogItems(SequenceParser sqnParser)
+
+        private bool ParseAnalogItems(List<AnalogArgItem> data, SequenceParser sqnParser)
         {
-            //TODO Fix this to ignore no start time value
-            foreach (AnalogArgItem analogItem in (List<AnalogArgItem>)propertyGrid.DataContext)
+            if (Controller.sequenceData == null) return false;
+            foreach (AnalogArgItem analogItem in data)
             {
                 double analogRawValue;
                 if (Double.TryParse(analogItem.Value, out analogRawValue)) continue;
-                if (Controller.sequenceData != null && Controller.sequenceData.Parameters.ContainsKey(analogItem.Value)) continue;
-                //Tries to parse the function string
-                if (analogItem.Name == "Function")
+                if (Controller.sequenceData.Parameters.ContainsKey(analogItem.Value)) continue;
+                switch (analogItem.Name)
                 {
-                    if (sqnParser.CheckFunction(analogItem.Value)) continue;
+                    case "X Values":
+                    case "Y Values":
+                        string[] sa = analogItem.Value.Split(',');
+                        bool bb = true;
+                        foreach (string ss in sa)
+                            bb &= Double.TryParse(ss, out analogRawValue) || Controller.sequenceData.Parameters.ContainsKey(ss);
+                        if (bb) continue;
+                        break;
+                    case "Interpolation Type":
+                        if (analogItem.Value.Equals("Piecewise Linear") || analogItem.Value.Equals("Step")) continue;
+                        break;
+                    case "Function": //Tries to parse the function string
+                        if (sqnParser.CheckFunction(analogItem.Value)) continue;
+                        break;
                 }
                 ErrorMng.errorMsg(string.Format("Incorrect Value given for {0}. Either choose a parameter name or enter a number.", analogItem.Name), 5, true);
                 return false;
-
             }
             return true;
         }
 
-        private void buildBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-            Button btn = sender as Button;
-            switch (btn.Name)
-            {
-                case ("btnUp"):
-                    break;
-                case ("btnDown"):
-                    break;
-                case ("btnBuild"):
-                    ObservableCollection<SequenceStep> steps = this.sequenceControl.sequenceDataGrid.ItemsSource as ObservableCollection<SequenceStep>;
-                    controller.BuildMOTMasterSequence(steps);
-                    break;
-            }
-        }
+        #endregion sequence data manipulation
 
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ExtDevices.Final();
+            if (Controller.sequenceData.Parameters.ContainsKey("swapAxes")) Controller.sequenceData.Parameters["swapAxes"].Value = 0;
             if (Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.ask))
             {
                 //Save the currently open sequence to a default location
@@ -1005,21 +1016,26 @@ namespace MOTMaster2
             }
             modes.Save();
         }
-
         private void EditParameters_Click(object sender, RoutedEventArgs e)
         {
             ParametersWindow paramWindow = new ParametersWindow();
             paramWindow.ShowDialog();
+            ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             dispatcherTimer.Stop();
+            if ((Controller.ExpData.jumboMode() == ExperimentData.JumboModes.none) && !Utils.isNull(remoteMsg))
+            {
+                MMexec mme = new MMexec("Axel-hub");
+                remoteMsg.sendCommand(mme.Abort("MOTMaster"));
+            }
             if (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.scan)
             {
                 MMscan mms = new MMscan();
                 mms.FromDictionary(Controller.ExpData.grpMME.prms);
-                realScan(mms.sParam, mms.sFrom.ToString(), mms.sTo.ToString(), mms.sBy.ToString(), false, Controller.ExpData.grpMME.sender, Controller.ExpData.grpMME.id);
+                realScan(mms.sSite,mms.sParam, mms.sFrom.ToString(), mms.sTo.ToString(), mms.sBy.ToString(), false, Controller.ExpData.grpMME.sender, Controller.ExpData.grpMME.id);
             }
             if (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.repeat)
             {
@@ -1052,14 +1068,15 @@ namespace MOTMaster2
                                 controller.phaseStrobes.Correction(corr);
                             }
                             else corr = Double.NaN;
-                        }                               
-                        if (Double.IsNaN(corr)) Log("<< next shot, same cond.");
+                        }  
+                        
+                        if (Double.IsNaN(corr)) Log("<< "+Convert.ToInt32(mme.prms["runID"]).ToString()+" shot, same cond.");
                         wait4adjust = false;        
                     }
                     break;
                 case ("repeat"):
                     Controller.ExpData.grpMME = mme.Clone();
-                    btnRun.Content = "Abort Remote";
+                    btnRun.Content = "Abort";
                     btnRun.Background = Brushes.LightCoral;
                     tcMain.SelectedIndex = 0; DoEvents();
                     tbExperimentRun.Text = (string)mme.prms["groupID"];
@@ -1081,7 +1098,7 @@ namespace MOTMaster2
                     break;
                 case ("scan"):
                     Controller.ExpData.grpMME = mme.Clone();
-                    btnScan.Content = "Abort Remote";
+                    btnScan.Content = "Abort";
                     btnScan.Background = Brushes.LightCoral;
                     tcMain.SelectedIndex = 1; DoEvents();
                     tbExperimentRun.Text = (string)mme.prms["groupID"];
@@ -1105,18 +1122,13 @@ namespace MOTMaster2
                     break;
                 case ("abort"):
                     //Stop running
-                    if (btnRun.Content == "Abort Remote") btnRun_Click(this, null);
-                    else if (btnScan.Content == "Abort Remote") btnScan_Click(this, null);
+                    if (Convert.ToString(btnRun.Content) == "Abort") btnRun_Click(this, null);
+                    else if (Convert.ToString(btnScan.Content) == "Abort") btnScan_Click(this, null);
                     break;
             }
             return true;
         }
-
-        private void cancelPropertyBtn_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
+       
         private void cbHub_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             controller.SaveToggle(cbHub.SelectedIndex == 1);
@@ -1199,15 +1211,18 @@ namespace MOTMaster2
                 if (remoteMsg.partnerPresent) 
                 {
                     //if (!remoteMsg.CheckConnection()) 
+                    if (cbHub.SelectedIndex == 2)
                         ErrorMng.warningMsg("The Axel-hub is opened, but hasn't been switched to remote");
                 }
                 else
                 {
-                    if (!File.Exists(Utils.configPath + "axel-hub.bat") || !forced) return;
+                    string ahApp = Directory.GetParent(Utils.basePath).Parent.FullName + "\\AxelSuite\\Axel-hub\\Axel-hub\\bin\\Axel-hub.exe";
+                    if (!File.Exists(ahApp)) ahApp = File.ReadAllText(Utils.configPath + "axel-hub.bat"); // if the default location is faulty
+                    if (!File.Exists(ahApp) || !forced) return;
                     ErrorMng.Status("Status:Axel-hub - not found! ...starting it", Brushes.DarkGreen.Color);
-                    System.Diagnostics.Process.Start(File.ReadAllText(Utils.configPath + "axel-hub.bat"), "-remote:MOTMaster2");
+                    System.Diagnostics.Process.Start(ahApp, "-remote:MOTMaster2");
                     Thread.Sleep(1000);
-                    if(remoteMsg.CheckConnection()) 
+                    if (remoteMsg.CheckConnection())
                         OnActiveComm(remoteMsg.Connected, false);
                     ErrorMng.Reset();
                 }
@@ -1225,22 +1240,13 @@ namespace MOTMaster2
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            tbLogger.Document.Blocks.Clear();
+            tbLogger.Document.Blocks.Clear();           
         }
 
         private void chkVerbatim_Checked(object sender, RoutedEventArgs e)
         {
             ErrorMng.Verbatim = chkVerbatim.IsChecked.Value;
-        }
-
-        private void nbPower1_ValueChanged(object sender, NationalInstruments.Controls.ValueChangedEventArgs<double> e)
-        {
-            Type type = typeof(NationalInstruments.Controls.NumericTextBoxDouble);
-            string laserKey = (string)type.GetProperty("Name").GetValue(sender);
-            Controller.sequenceData.Parameters[laserKey].Value = type.GetProperty("Value").GetValue(sender);
-            controller.StoreDCSParameter(laserKey, type.GetProperty("Value").GetValue(sender));
-        }
-
+        }       
         private void SetInterferometerParams(Dictionary<string, object> scanDict)
         {
             foreach (KeyValuePair<string,object> entry in scanDict)
@@ -1249,11 +1255,9 @@ namespace MOTMaster2
                 if (control == null) continue;
                 else if (Math.Abs(control.Value - (double)entry.Value) > 1e-10)
                 { //Only update them if the value has changed.
-                    control.Value = (double)entry.Value;
-                    controller.StoreDCSParameter(entry.Key, entry.Value); 
+                    control.Value = (double)entry.Value;                   
                 }
-                //TODO fix handling of warnings if ICE-BLocs are not connected
-                Controller.SetMSquaredParameters();
+                //TODO fix handling of warnings if ICE-BLocs are not connected               
             }
         }
 
@@ -1273,12 +1277,6 @@ namespace MOTMaster2
                     }
                 }
             }
-        }
-
-        private void m2updateBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Controller.SetMSquaredParameters();
-            Log("Updated MSquared laser parameters");
         }
 
         #region multi-scan
@@ -1363,7 +1361,7 @@ namespace MOTMaster2
             Controller.ExpData.ExperimentName = tbExperimentRun.Text;
             if ((String.IsNullOrEmpty(Controller.ExpData.ExperimentName) || Controller.ExpData.ExperimentName.Equals("---")))
             {
-                Controller.ExpData.ExperimentName = DateTime.Now.ToString("yy-MM-dd_H-mm-ss");
+                Controller.ExpData.ExperimentName = Utils.timeName();
                 tbExperimentRun.Text = Controller.ExpData.ExperimentName;
             }
             Dictionary<string, object> scanDict = new Dictionary<string, object>();
@@ -1380,9 +1378,18 @@ namespace MOTMaster2
             {
                 ms.Value = ms.sFrom;
             }
-            if (cbSaveAfterLoop.IsChecked.Value) 
-                Controller.ExpData.CreateMScanLogger((string)Environs.FileSystem.Paths["DataPath"] + "\\"+Controller.ExpData.ExperimentName, 
-                    Controller.sequenceData, mms);
+            bool saveLog = cbSaveAfterLoop.IsChecked.Value && cbSaveAfterLoop.IsEnabled && (Math.Abs(Controller.ExpData.axis) != 2);
+            if (saveLog) Controller.ExpData.CreateMScanLogger(Utils.dataPath + Controller.ExpData.ExperimentName,  Controller.sequenceData, mms);
+            bool scanExt = false; string scanPrm = "";
+            for (int i = 0; i < mms.Count; i++)
+            {
+                if (Controller.sequenceData.Parameters.ContainsKey(mms[i].sParam))
+                    if (Controller.sequenceData.Parameters[mms[i].sParam].IsLaser)
+                        if (ExtFactors.IsScannable(mms[i].sParam))
+                        {
+                            scanExt = true; scanPrm = mms[i].sParam;
+                        }
+            }
             do
             {
                 Thread.Sleep(10);
@@ -1395,23 +1402,26 @@ namespace MOTMaster2
                     scanDict[ms.sParam] = ms.Value;
                 }
                 SetInterferometerParams(scanDict);
-                if (!SingleShot(scanDict)) groupRun = GroupRun.none; 
+                if (scanExt) ExtFactors.ScanIter(scanPrm, Controller.BatchNumber);
+                if (!SingleShot(scanDict)) groupRun = GroupRun.none;
                 controller.WaitForRunToFinish();
                 controller.IncrementBatchNumber();
 
-                if (cbSaveAfterLoop.IsChecked.Value) 
+                if (saveLog)
                 {
                     Controller.ExpData.LogNextShot(mms);
                     //HARDCODED Sleep to allow for DCS to update !!!!
-                    if(mms[mms.Count-1].isLastValue()) Thread.Sleep(5000);
+                    if (mms[mms.Count - 1].isLastValue()) Thread.Sleep(5000);
                 }
                 if (groupRun != GroupRun.multiScan) break;
             }
             while (mms[0].Next());
+            controller.AutoLogging = false;
+            if (scanExt) ExtFactors.ScanIter(scanPrm, -1); // reset factors  
             tbExperimentRun.Text = "---";
-            Controller.ExpData.StopMScanLogger();
+            if (saveLog) Controller.ExpData.StopMScanLogger();
         }
-        
+
         private void btnPlusMScan_Click(object sender, RoutedEventArgs e)
         {
             ListBoxItem lbi = new ListBoxItem(); 
@@ -1451,10 +1461,8 @@ namespace MOTMaster2
         private void btnPulseEnable_Click(object sender, RoutedEventArgs e)
         {
             var check = sender as CheckBox;
-            string name = check.Name;
-            controller.StoreDCSParameter(name, check.IsChecked.Value);
+            string name = check.Name;           
         }
-
         protected void OnChnChange(int chn)
         {
             switch (chn)
@@ -1500,10 +1508,6 @@ namespace MOTMaster2
             {
                 SaveSequence_Click(sender, e);
             }
-            if (e.Key == Key.L && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-            {
-                LoadCicero_Click(sender, e);
-            }
             if (e.Key == Key.F4)
             {
                 EditParameters_Click(sender, e);
@@ -1514,12 +1518,7 @@ namespace MOTMaster2
         {
             if (sender.Equals(rbX)) Controller.ExpData.axis = 0;
             if (sender.Equals(rbY)) Controller.ExpData.axis = 1;
-            if (sender.Equals(rbXY))
-            {
-                if (mnXleading.IsChecked) Controller.ExpData.axis = 2;
-                else Controller.ExpData.axis = -2;
-            }
-
+            if (sender.Equals(rbXY)) Controller.ExpData.axis = 2;           
         }
 
         private void mnXleading_Click(object sender, RoutedEventArgs e)
@@ -1528,14 +1527,16 @@ namespace MOTMaster2
             {
                 mnXleading.IsChecked = true;
                 mnYleading.IsChecked = false;
-                if (rbXY.IsChecked.Value) Controller.ExpData.axis = 2;
+                if (Controller.sequenceData.Parameters.ContainsKey("swapAxes")) Controller.sequenceData.Parameters["swapAxes"].Value = 0;
+
             }
             if (sender == mnYleading)
             {
                 mnXleading.IsChecked = false;
                 mnYleading.IsChecked = true;
-                if (rbXY.IsChecked.Value) Controller.ExpData.axis = -2;
+                if (Controller.sequenceData.Parameters.ContainsKey("swapAxes")) Controller.sequenceData.Parameters["swapAxes"].Value = 1;
             }
+            Controller.ExpData.SwappedAxes = mnYleading.IsChecked;
 
         }
 
@@ -1563,6 +1564,44 @@ namespace MOTMaster2
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
         {
             About_Click(null, null);
+        }
+
+        private void tbdValue_ValueChanged(object sender, NationalInstruments.Controls.ValueChangedEventArgs<double> e)
+        {
+            if ((cbParamsManual.SelectedItem == null) || Convert.ToInt32(tbdValue.Tag) == 1) return;
+            if (sender == tbdValue)
+            {
+                tbdValue.Tag = 1;
+                tbdValue2.Value = tbdValue.Value;
+                tbdValue3.Value = tbdValue.Value;
+                tbdValue.Tag = 0;
+            }
+            if (sender == tbdValue2)
+            {
+                tbdValue.Tag = 1;
+                tbdValue.Value = tbdValue2.Value;
+                tbdValue3.Value = tbdValue2.Value;
+                tbdValue.Tag = 0;
+            }
+            if (sender == tbdValue3)
+            {
+                tbdValue.Tag = 1;
+                tbdValue.Value = tbdValue3.Value;
+                tbdValue2.Value = tbdValue3.Value;
+                tbdValue.Tag = 0;
+            }
+
+            string sPrm = cbParamsManual.SelectedItem.ToString();
+            if (!Controller.sequenceData.Parameters.ContainsKey(sPrm)) return;
+            Parameter param = Controller.sequenceData.Parameters[sPrm];
+            if (param.Value is int)
+            {
+                param.Value = (int)tbdValue.Value;
+            }
+            else if (param.Value is double)
+            {
+                param.Value = tbdValue.Value;
+            }
         }
 
     }

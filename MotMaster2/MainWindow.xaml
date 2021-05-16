@@ -1,21 +1,19 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:System="clr-namespace:System;assembly=mscorlib"
         xmlns:controls="clr-namespace:MOTMaster2"
         xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" xmlns:ExtDevices="clr-namespace:MOTMaster2.ExtDevices"
+        xmlns:SequenceData="clr-namespace:MOTMaster2.SequenceData"
         x:Class="MOTMaster2.MainWindow"
         x:Name="frmMain" 
 
-    Title="MOTMaster2" Height="875.714" Width="923.884" ResizeMode="CanResizeWithGrip" Closing="frmMain_Closing" Icon="3axis.ico" SourceInitialized="frmMain_SourceInitialized" PreviewKeyDown="frmMain_PreviewKeyDown" WindowState="Maximized" Loaded="frmMain_Loaded">
+    Title="MOTMaster2" Height="875.714" Width="923.884" ResizeMode="CanResizeWithGrip" Closing="frmMain_Closing" Icon="Properties/3axis.ico" SourceInitialized="frmMain_SourceInitialized" PreviewKeyDown="frmMain_PreviewKeyDown" WindowState="Maximized" Loaded="frmMain_Loaded">
     <Window.Resources>
         <controls:Controller x:Key="controller"/>
     </Window.Resources>
     <Grid x:Name="gridMain" Margin="0">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="435*"/>
-            <ColumnDefinition Width="302*"/>
-        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="40"/>
@@ -32,7 +30,6 @@
                         <MenuItem Header="_Open Sequence..." Click="LoadSequence_Click" InputGestureText="Ctrl+O"/>
 
                         <MenuItem Header="Save Sequence As..."  Click="SaveSequence_Click" InputGestureText="Ctrl+S"/>
-                        <MenuItem Header="Load Cicero Sequence..." Click="LoadCicero_Click" InputGestureText="Ctrl+L"/>
                         <Separator HorizontalAlignment="Left" Height="2" Width="218.285714285714"/>
                         <MenuItem x:Name="mLoadParams" Header="Load Parameters..." Click="mLoadParams_Click" />
                         <Separator HorizontalAlignment="Left" Height="2" Width="218.285714285714"/>
@@ -40,12 +37,12 @@
                     <MenuItem Header="Edit">
                         <MenuItem Header="Sequence Parameters..." Click="EditParameters_Click" InputGestureText="F4"/>
                         <MenuItem Header="Options / File System..." Click="EditOptions_Click"/>
-                        <Separator HorizontalAlignment="Left" Height="2" Width="218.285714285714"/>
-                        <MenuItem x:Name="mnXleading" Header="X leading" HorizontalAlignment="Left" Width="218.285714285714" IsChecked="True" Click="mnXleading_Click" />
-                        <MenuItem x:Name="mnYleading" Header="Y leading" HorizontalAlignment="Left" Width="218.285714285714" Click="mnXleading_Click"/>
+                        <Separator HorizontalAlignment="Left" Height="2" Width="230"/>
+                        <MenuItem x:Name="mnXleading" Header="Direct (X-X/Y-Y) axes" HorizontalAlignment="Left" Width="230" IsChecked="True" Click="mnXleading_Click" />
+                        <MenuItem x:Name="mnYleading" Header="Swapped (X-Y/Y-X) axes" HorizontalAlignment="Left" Width="230" Click="mnXleading_Click"/>
                     </MenuItem>
                     <MenuItem Header="Help">
-                        <MenuItem x:Name="mWebHelp" Header=" Web Help..." Click="mWebHelp_Click" InputGestureText="F1"/>
+                        <MenuItem x:Name="mWebHelp" Header=" Web Help..." Click="mWebHelp_Click" />
                         <MenuItem Header=" About..." Click="About_Click"/>
                     </MenuItem>
                 </Menu>
@@ -60,12 +57,11 @@
                 <ComboBoxItem Content="Local"/>
                 <ComboBoxItem Content="Axel-hub"/>
                 <ComboBoxItem Content="Image Process"/>
-                
             </ComboBox>
             <Label Content="Hub" HorizontalAlignment="Left" Margin="280,0,0,0" VerticalAlignment="Center" FontSize="13" Height="26"/>
             <Button x:Name="btnRemote" Content="Connect ?-&gt;" HorizontalAlignment="Left" Height="25" Margin="600,0,0,0" VerticalAlignment="Center" Width="130" Background="#FFBEFDD1" Click="btnRemote_Click" FontSize="13" Visibility="Hidden"/>
             <Image HorizontalAlignment="Right" Height="28" Margin="0,0,0.286,0" VerticalAlignment="Center" Width="30" Source="3axis.ico" MouseDown="Image_MouseDown"/>
-            <GroupBox x:Name="rgChannelSelect" HorizontalAlignment="Left" Margin="443,0,0,0" VerticalAlignment="Top" Width="150" Height="28">
+            <GroupBox x:Name="groupAxes" HorizontalAlignment="Left" Margin="443,0,0,0" VerticalAlignment="Top" Width="150" Height="28">
                 <Grid Margin="0">
                     <RadioButton x:Name="rbX" Content="X" HorizontalAlignment="Left" Margin="5,5,0,0" FontSize="14" FontWeight="Bold" Foreground="#FF0B9102" Checked="rbX_Checked" IsChecked="True" Height="17" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rbY" Content="Y" HorizontalAlignment="Left" Margin="45,5,0,0" FontSize="14" FontWeight="Bold" Foreground="#FF034CBB" Checked="rbX_Checked"/>
@@ -98,7 +94,7 @@
                         <Button x:Name="btnScan" Content="Scan" HorizontalAlignment="Left" Height="33" Margin="618,0,0,0" VerticalAlignment="Center" Width="85" FontWeight="Bold" Background="#FFF9E76B" Click="btnScan_Click"/>
                         <TextBox x:Name="tbToScan" HorizontalAlignment="Left" Height="26" Margin="445,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="73" Text="100" FontSize="14"/>
                         <TextBox x:Name="tbByScan" HorizontalAlignment="Left" Height="26" Margin="549,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="53" Text="1" FontSize="14"/>
-                        <Label x:Name="lbCurValue" Content="0" HorizontalAlignment="Left" Height="27" Margin="221,0,0,0" VerticalAlignment="Center" Width="100" FontWeight="Bold" FontSize="14" Foreground="#FF27836E"/>
+                        <Label x:Name="lbCurValue" Content="0" HorizontalAlignment="Left" Height="27" Margin="221,21,0,20.051" VerticalAlignment="Center" Width="88" FontWeight="Bold" FontSize="14" Foreground="#FF27836E"/>
                         <CheckBox x:Name="chkRandomize" Content="Randomize" Width="92" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </Grid>
                 </TabItem>
@@ -138,7 +134,7 @@
                 </TabItem>
                 <TabItem x:Name="tbManual" Header=" Manual  " HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="80">
                     <Grid>
-                        <ComboBox x:Name="cbParamsManual" HorizontalAlignment="Left" Height="27" Margin="87,23,0,22.312" VerticalAlignment="Center" Width="276" SelectionChanged="cbParamsManual_SelectionChanged">
+                        <ComboBox x:Name="cbParamsManual" HorizontalAlignment="Left" Height="27" Margin="80,0,0,0" VerticalAlignment="Center" Width="208" SelectionChanged="cbParamsManual_SelectionChanged">
                             <ComboBox.Background>
                                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                                     <GradientStop Color="#FFF0F0F0" Offset="0"/>
@@ -147,13 +143,12 @@
                             </ComboBox.Background>
                         </ComboBox>
                         <Label Content="Parameter:" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" VerticalAlignment="Center" Width="75"/>
-                        <Button Content="Update" HorizontalAlignment="Left" Margin="578,0,0,0" VerticalAlignment="Center" Width="87" Height="33" FontWeight="Bold" Click="UpdateButton_Click" Background="#FFC6E7FF"/>
-                        <Label Content="Value:" HorizontalAlignment="Left" Height="26" Margin="383,0,0,0" VerticalAlignment="Center" Width="43"/>
-                        <ni:NumericTextBoxDouble x:Name="tbdValue" Height="24" Width="120" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="426,0,0,0" FontWeight="Bold" Interval="0.1"/>
+                        <Label Content="Value:" HorizontalAlignment="Left" Height="26" Margin="308,0,0,0" VerticalAlignment="Center" Width="43" RenderTransformOrigin="0.867,0.545"/>
+                        <ni:NumericTextBoxDouble x:Name="tbdValue" Height="28" Width="112" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="356,0,0,0" FontWeight="Bold" Interval="1" ValueChanged="tbdValue_ValueChanged" Tag="0"/>
+                        <ni:NumericTextBoxDouble x:Name="tbdValue2" Height="28" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="473,0,0,0" Interval="0.1" ValueChanged="tbdValue_ValueChanged" Tag="0"/>
+                        <ni:NumericTextBoxDouble x:Name="tbdValue3" Height="28" Width="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="498,0,0,0" Interval="0.01" ValueChanged="tbdValue_ValueChanged" Tag="0"/>
                     </Grid>
                 </TabItem>
-
-
             </TabControl>
         </Grid>
 
@@ -162,8 +157,8 @@
                 <ColumnDefinition Width="94*"/>
                 <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
-            <TabControl x:Name="tcLog" Grid.Column="1" Margin="0,0,0,0" SelectedIndex="0">
-                <TabItem Header="Log" Width="56">
+            <TabControl x:Name="tcLogProps" Grid.Column="1" Margin="0,0,0,0" SelectedIndex="0" BorderBrush="{x:Null}">
+                <TabItem Header="Log" Width="56" Visibility="Collapsed">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="27"/>
@@ -172,34 +167,34 @@
                         <StackPanel Margin="0,0,0,0" Grid.Row="0" Orientation="Horizontal">
                             <CheckBox x:Name="chkLog" Content="Log" VerticalAlignment="Center" Margin="8,0,0,0" IsChecked="True"/>
                             <CheckBox x:Name="chkVerbatim" Content="Verbatim" VerticalAlignment="Center" Margin="8,0,0,0" Checked="chkVerbatim_Checked" Unchecked="chkVerbatim_Checked"/>
-                            <Button x:Name="btnClear" Content="Clear" Width="54" Margin="8,3,0,3" Click="btnClear_Click" Background="#FFEDEDED"/>
+                            <Button x:Name="btnClear" Content="Clear" Width="54" Margin="8,3,0,3" Click="btnClear_Click" Background="#FFEDEDED" Foreground="#FF920101" RenderTransformOrigin="0.5,0.502"/>
                         </StackPanel>
 
                         <RichTextBox x:Name="tbLogger" Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="1,0,0,0">
                             <FlowDocument>
                                 <Paragraph>
-                                    <Run x:Name="tbLog" Text="&gt; Welcome to MOTMaster                                           "/>
+                                    <Run x:Name="tbLog" Text="&gt; Welcome to MOTMaster2                                           "/>
                                 </Paragraph>
                             </FlowDocument>
                         </RichTextBox>
                     </Grid>
                 </TabItem>
-                <TabItem Header="Property" Width="80">
-                    <Grid Margin="0">
+                <TabItem x:Name="tiAnalogProps" Header=" Analog Properties " >
+                    <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="281*"/>
-                            <RowDefinition Height="44"/>
-                            <RowDefinition Height="245*"/>
+                            <RowDefinition Height="300"/>
+                            <RowDefinition Height="500*"/>
                         </Grid.RowDefinitions>
-                        <Label x:Name="propLabel" Grid.Row="0" FontSize="12" Margin="5,0,0,0" Content="Property setting"/>
-                        <DataGrid  x:Name="propertyGrid" Visibility="Visible" Margin="0" Grid.Row="1" AutoGenerateColumns="False" CanUserAddRows="False" ItemsSource="{Binding}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="propertyNames" Binding="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn x:Name="propertyValues" Binding="{Binding Value}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Button x:Name="setPropertyBtn" Content="Update" Grid.Row="2" Click="setProperty_Click" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="89" Height="30" Background="#FFD7EFE8" FontSize="13"/>
+                        <Grid Margin="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="251*"/>
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <SequenceData:ucAnalogPropGrid x:Name="analogPropGrid"  Margin="0" Grid.Row="0" />
+                            <Button x:Name="btnUpdateProp" Content="Update" Grid.Row="1" Click="updateProps_Click" Margin="0,10,10,0" HorizontalAlignment="Right" VerticalAlignment="Top" Width="89" Height="30" Background="#FFF9E7B1" FontSize="13" FontWeight="Bold"/>
+                            <Button x:Name="btnCancelProp" Content="Cancel" Grid.Row="1"  Margin="10,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="89" Height="30" Background="#FFDDF6FE" FontSize="13" Click="btnCancelProp_Click"/>
+                        </Grid>
+                        <GridSplitter x:Name="splitProps" HorizontalAlignment="Stretch" Height="5" Margin="0,0,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                     </Grid>
                 </TabItem>
             </TabControl>
@@ -208,31 +203,10 @@
                 <TabItem x:Name="tiParameters" Header="Control Sequence" Width="150" Height="25" FontSize="13">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="27"/>
+                            <RowDefinition Height="0"/>
                             <RowDefinition Height="499*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Margin="0,0,0,0" Grid.Row="0" Orientation="Horizontal">
-                            <Button x:Name="btnDown" Height="22" Width="26" Margin="7,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Click="buildBtn_Click" >
-                                <Button.ContentTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ContentControl Content="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                                            <Path VerticalAlignment="Center" Margin="1,0,0,0" Fill="Black" Data="M 0 0 L 6 6 L 12 0 Z"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </Button.ContentTemplate>
-                            </Button>
-                            <Button x:Name="btnUp" Height="22" Width="26" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >
-                                <Button.ContentTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <ContentControl Content="{Binding Content, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"/>
-                                            <Path VerticalAlignment="Center" Margin="1,0,0,0" Fill="Black" Data="M 0 6 L 6 0 L 12 6 Z"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </Button.ContentTemplate>
-                            </Button>
-                            <Button x:Name="btnBuild"  Content="Build" Height="20" Width="75" Margin="10,1,0,0" Click="buildBtn_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FFF3F4F3"/>
 
                         </StackPanel>
                         <controls:SequenceDataGrid x:Name="sequenceControl" Margin="0,0,0,0" Grid.Row="1"/>
@@ -241,19 +215,6 @@
                 </TabItem>
                 <TabItem x:Name="tiExtDevices" Header="Ext.Devices" Width="110" Height="25" FontSize="13">
                     <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="0"/>
-                            <RowDefinition Height="0"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <ni:NumericTextBoxDouble x:Name="PLLFreq" HorizontalAlignment="Left" Height="23" Margin="62,23,0,0" VerticalAlignment="Top" Width="80" ValueChanged="nbPower1_ValueChanged" Grid.Row="1" Interval="0.01" />
-                        <ni:NumericTextBoxDouble x:Name="ChirpRate" HorizontalAlignment="Left" Height="23" Margin="160,23,0,0" VerticalAlignment="Top" Width="65" ValueChanged="nbPower1_ValueChanged" Grid.Row="1" Interval="0.01"/>
-                        <ni:NumericTextBoxDouble x:Name="ChirpDuration" HorizontalAlignment="Left" Height="23" Margin="265,23,0,0" VerticalAlignment="Top" Width="65" ValueChanged="nbPower1_ValueChanged" Grid.Row="1" Interval="0.01"/>
-                        <Label Content="Freq.[MHz]" HorizontalAlignment="Left" Margin="62,10,0,0" VerticalAlignment="Top" Height="27" Width="75" />
-                        <Label Content="Chirp[MHz/s]" HorizontalAlignment="Left" Margin="160,13,0,0" VerticalAlignment="Top" Height="27" Width="90" />
-                        <Label Content="Duration[ms]" HorizontalAlignment="Left" Margin="255,13,0,0" VerticalAlignment="Top" Height="27" Width="90"/>
-                        <Button x:Name="m2updateBtn" Content="Update" Margin="371,19,0,0" Grid.Row="1" Click="m2updateBtn_Click" Background="#FFD7EFE8" HorizontalAlignment="Left" VerticalAlignment="Top" Height="31" Width="85" />
                         <StackPanel x:Name="stackExtDevices" Grid.Row="2" Orientation="Horizontal"/>
                     </Grid>
                 </TabItem>
@@ -267,11 +228,6 @@
                         <GridSplitter Grid.Column="1" Width="5" VerticalAlignment="Stretch" HorizontalAlignment="Left" Margin="0" Background="#FFE9F9E6"/>
                     </Grid>
                 </TabItem>
-
-
-
-
-
 
             </TabControl>
 

@@ -12,7 +12,7 @@ namespace DAQ.HAL
     public class RS232Instrument : Instrument
     {
         protected SerialSession serial;
-        protected string address;
+        public string address { get; protected set; }
         protected bool connected = false;
         protected int baudrate = 9600;
 
@@ -29,16 +29,21 @@ namespace DAQ.HAL
         {
             if (!Environs.Debug)
             {
-                if (!Environs.Debug)
+                try
                 {
+                    //throw new Exception("serial exception");
                     serial = new SerialSession(address);
                     serial.BaudRate = this.baudrate;
                     serial.DataBits = 8;
                     serial.StopBits = StopBitType.One;
                     serial.ReadTermination = method;
                     serial.WriteTermination = method;
+                    connected = true;
                 }
-                connected = true;
+                catch (Exception e)
+                {
+                    connected = false;
+                }               
             }
         }
 

@@ -5,7 +5,7 @@ using DAQ.Environment;
 //using NavigatorHardwareControl;
 using System.ComponentModel;
 using Newtonsoft.Json;
-using System.Windows.Media;
+using UtilsNS;
 
 namespace MOTMaster2.SequenceData
 {
@@ -36,7 +36,7 @@ namespace MOTMaster2.SequenceData
         }
 
         public TimebaseUnits Timebase { get; set; }
-        public bool RS232Commands { get; set; }
+        //public bool RS232Commands { get; set; }
         public ObservableDictionary<string, AnalogChannelSelector> AnalogValueTypes {get; set;}
         public ObservableDictionary<string, DigitalChannelSelector> DigitalValueTypes { get; set; }
         [JsonProperty]
@@ -44,9 +44,9 @@ namespace MOTMaster2.SequenceData
         [JsonProperty]
         private Dictionary<string, bool> digitalData;
         [JsonProperty]
-        private List<string> usedAnalogChannels;
-        [JsonProperty]
-        private List<SerialItem> serialCommands;
+        private List<string> usedAnalogChannels; // for some future use
+        //[JsonProperty]
+        //private List<SerialItem> serialCommands;
 
         
         public SequenceStep()
@@ -54,13 +54,13 @@ namespace MOTMaster2.SequenceData
             Name = "";
             Description = "";
             Enabled = true;
-            RS232Commands = true;//
+            //RS232Commands = true;//
             Duration = 0;
             Timebase = TimebaseUnits.ms;
             if (analogData == null) analogData = new Dictionary<string, AnalogValueArgs>();
             if (digitalData == null) digitalData = new Dictionary<string, bool>();
             if (usedAnalogChannels == null) usedAnalogChannels = new List<string>();
-            if (serialCommands == null) serialCommands = new List<SerialItem>();
+            //if (serialCommands == null) serialCommands = new List<SerialItem>();
 
             AnalogValueTypes = new ObservableDictionary<string,AnalogChannelSelector>();
             DigitalValueTypes = new ObservableDictionary<string,DigitalChannelSelector>();
@@ -112,10 +112,6 @@ namespace MOTMaster2.SequenceData
             return copy;
         }
       
-        public void SetSerialCommands(List<SerialItem> commands)
-        {
-            serialCommands = commands;
-        }
         public AnalogChannelSelector GetAnalogChannelType(string name)
         {
             return AnalogValueTypes[name];
@@ -123,8 +119,7 @@ namespace MOTMaster2.SequenceData
 
         public List<string> GetUsedAnalogChannels()
         {
-             return AnalogValueTypes.Where(t=>(t.Value != AnalogChannelSelector.Continue)).Select(t=>t.Key).ToList();
-           
+             return AnalogValueTypes.Where(t=>(t.Value != AnalogChannelSelector.Continue)).Select(t=>t.Key).ToList();          
         }
 
         public List<string> GetUsedDigitalChannels(SequenceStep previousStep)
@@ -192,7 +187,9 @@ namespace MOTMaster2.SequenceData
         public double GetAnalogDuration(string name)
         {
             AnalogValueArgs analogArgs = analogData[name];
-            return analogArgs.GetDuration();
+            double d = analogArgs.GetDuration(); double ed = evalDuration();
+            if (Utils.InRange(d, 1e-6, ed)) return d;
+            return ed;
         }
 
         public double GetAnalogValue(string name)
@@ -226,17 +223,6 @@ namespace MOTMaster2.SequenceData
         #endregion
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal List<SerialItem> GetSerialData()
-        {
-            //TODO Create SerialItems based on hardware channels
-            if (serialCommands.Count == 0 || serialCommands[0].Value == "")
-            {
-                serialCommands = new List<SerialItem>();
-                foreach (string inst in Environs.Hardware.Instruments.Keys)
-                { if (Environs.Hardware.Instruments[inst] is DAQ.HAL.RS232Instrument) serialCommands.Add(new SerialItem(inst, "")); }
-            }
-            return serialCommands;
-        }
     }
 
     //Enumerates units of time relative to milliseconds
@@ -280,7 +266,7 @@ namespace MOTMaster2.SequenceData
     public class AnalogValueArgs
     {
         [JsonIgnore]
-        public List<AnalogArgItem> Value {get; set;}
+        public List<AnalogArgItem> SingleValue {get; set;}
         [JsonIgnore]
         public List<AnalogArgItem> LinearRamp { get; set; }
         [JsonIgnore]
@@ -299,7 +285,7 @@ namespace MOTMaster2.SequenceData
 
         public void CreateArgs()
         {
-            Value = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Value", "") };
+            SingleValue = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Value", "") };
             LinearRamp = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Duration", ""), new AnalogArgItem("Final Value", "") };
             Pulse = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Duration", ""), new AnalogArgItem("Value", ""), new AnalogArgItem("Final Value", "") };
             Function = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Duration", ""), new AnalogArgItem("Function", "") };
@@ -314,36 +300,43 @@ namespace MOTMaster2.SequenceData
 
         }
 
+        protected string GetProp(string propName)
+        {
+            foreach (AnalogArgItem si in _selectedItem)
+            {
+                if (si.Name.Equals(propName)) return si.Value;
+            }
+            return "";
+        }
         public double GetStartTime()
         {
-            if (_selectedItem[0].Name != "X Values") return SequenceParser.ParseOrGetParameter(_selectedItem[0].Value);
-            else return SequenceParser.ParseOrGetParameter(_selectedItem[0].Value.Split(',')[0]);
-            
+            if (!GetProp("Start Time").Equals("")) return SequenceParser.ParseOrGetParameter(GetProp("Start Time"));
+            if (!GetProp("X Values").Equals("")) return SequenceParser.ParseOrGetParameter(GetProp("X Values").Split(',')[0]);
+            return 0;
         }
-
         public double GetDuration()
         {
-            if (_selectedItem == null) return 0.0;
-            if (_selectedItem == Value) throw new Exception("Channel arguments do not have a Duration");
-            return SequenceParser.ParseOrGetParameter(_selectedItem[1].Value);
+            if (_selectedItem == null) return 0;
+            if (!GetProp("Duration").Equals("")) return SequenceParser.ParseOrGetParameter(GetProp("Duration"));
+            return 0;         
         }
 
         public double GetValue()
         {
-            if (_selectedItem.Count == 2) return SequenceParser.ParseOrGetParameter(_selectedItem[1].Value);
-            else return SequenceParser.ParseOrGetParameter(_selectedItem[2].Value);
+            if (!GetProp("Value").Equals("")) return SequenceParser.ParseOrGetParameter(GetProp("Value"));
+            else throw new Exception("Channel arguments do not have a Value string");
         }
 
         public string GetFunction()
         {
-            if (_selectedItem[2].Name != "Function") { throw new Exception("Channel arguments do not have a function string"); }
-            return _selectedItem[2].Value;
+            if (!GetProp("Function").Equals("")) return GetProp("Function");
+            else throw new Exception("Channel arguments do not have a Function string");
         }
 
         public double GetFinalValue()
         {
-            if (_selectedItem != Pulse) throw new Exception("Channel arguments do not have a final value.");
-            else return SequenceParser.ParseOrGetParameter(_selectedItem[3].Value);
+            if (!GetProp("Final Value").Equals("")) return SequenceParser.ParseOrGetParameter(GetProp("Final Value"));
+            else throw new Exception("Channel arguments do not have a Final Value string");
         }
         public List<double[]> GetXYPairs()
         {
@@ -379,8 +372,8 @@ namespace MOTMaster2.SequenceData
                     break;
                 case AnalogChannelSelector.SingleValue:
                     if (data == null) data = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Value", "") };
-                    Value = data;
-                    _selectedItem = Value;
+                    SingleValue = data;
+                    _selectedItem = SingleValue;
                     break;
                 case AnalogChannelSelector.LinearRamp:
                     if (data == null) data = new List<AnalogArgItem> { new AnalogArgItem("Start Time", ""), new AnalogArgItem("Duration", ""), new AnalogArgItem("Final Value", "") };
@@ -411,11 +404,10 @@ namespace MOTMaster2.SequenceData
         {
             List<AnalogArgItem> data;
             //When deserialised, only _selectedItem is not null. This ensures the correct argument type is returned
-            if (Value == null && LinearRamp == null && Pulse == null && Function == null && XYPairs == null)
+            if (SingleValue == null && LinearRamp == null && Pulse == null && Function == null && XYPairs == null)
             {
                 CreateArgs();
                 SetArgType(channelType);
-
             }
 
             switch (channelType)
@@ -423,8 +415,8 @@ namespace MOTMaster2.SequenceData
                 case AnalogChannelSelector.Continue:
                     break;
                 case AnalogChannelSelector.SingleValue:
-                    data = Value;
-                    _selectedItem = Value;
+                    data = SingleValue;
+                    _selectedItem = SingleValue;
                     break;
                 case AnalogChannelSelector.LinearRamp:
                     data = LinearRamp;
@@ -456,7 +448,6 @@ namespace MOTMaster2.SequenceData
         {
             return _selectedItem;
         }
-
     }
 
     //This is a simple class to represent each analog argument. Perhaps it is worth restructuring this so a single class can represent each type of analog command (pulse, value, ramp, arbitrary function)

@@ -25,8 +25,8 @@ namespace DAQ.HAL
         TcpClient socket;
         NetworkStream stream;
         bool logFlag = true;
-        protected string my_ip_address = "192.168.1.101";
-        protected byte[] my_byte_ip_address = { 192, 168, 1, 101 };
+        protected string my_ip_address = "192.168.1.100";
+        protected byte[] my_byte_ip_address = { 192, 168, 1, 100 };
         public string M2_ip_address {get; set;}
         public int M2_ip_port { get; set; }
         string lastMessage = "";
@@ -63,12 +63,12 @@ namespace DAQ.HAL
         }
 
         public void Send(string msg)
-        {
+        {         
             try
             {
                 // Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);
-
+                if (Utils.isNull(stream)) throw new SocketException();
                 // Send the message to the connected TcpServer. 
                 stream.Write(data, 0, data.Length);
                 if (logFlag) Console.WriteLine(">> " + msg);
@@ -84,12 +84,12 @@ namespace DAQ.HAL
         }
 
         public string Receive()
-        {
+        {           
             try
             {
                 // Receive the TcpServer.response.
                 // Buffer to store the response bytes.
-                Byte[] data = new Byte[256];
+                Byte[] data = new Byte[1024];
 
                 // Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
@@ -112,22 +112,31 @@ namespace DAQ.HAL
         public void Connect()
         {
             //Creates a TCPClient using a local end point.
-            IPAddress ipAddress = new IPAddress(my_byte_ip_address);
-            //IPAddress[] ipAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
-            IPEndPoint ipLocalEndPoint = new IPEndPoint(ipAddress, M2_ip_port);
-            socket = new TcpClient(ipLocalEndPoint);
+            try
+            {
+                IPAddress ipAddress = new IPAddress(my_byte_ip_address);
+                //IPAddress[] ipAddress = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+                IPEndPoint ipLocalEndPoint = new IPEndPoint(ipAddress, M2_ip_port);
+                socket = new TcpClient(ipLocalEndPoint); //;ipAddress.ToString(), M2_ip_port
             
-            //socket = new TcpClient();
-            socket.Connect(M2_ip_address, M2_ip_port);
-            if (socket.Connected)
-                if (logFlag) Console.WriteLine("Connected to PL IceBloc");
-            stream = socket.GetStream();
-        }
+                //socket = new TcpClient();
+                socket.Connect(M2_ip_address, M2_ip_port);
+                if (socket.Connected)
+                    if (logFlag) Console.WriteLine("Connected to PLL IceBloc");
+                stream = socket.GetStream();
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Error: " + e.StackTrace);
+                Console.WriteLine(e.Message + ". Error Code: " + e.ErrorCode.ToString());
+            }
+         }
 
         public void Disconnect()
         {
-            stream.Close();
-            socket.Close();
+            if (!Utils.isNull(stream)) stream.Close();
+            if (!Utils.isNull(socket)) socket.Close();
             if (logFlag) Console.WriteLine("close connection");
         }
 
@@ -189,7 +198,7 @@ namespace DAQ.HAL
 
         }
 
-        private Dictionary<string, object> ConvertMessageToDictionary(string command, string msgIn)
+        protected Dictionary<string, object> ConvertMessageToDictionary(string command, string msgIn)
         {
             Dictionary<string, object> rslt = null;
             try
@@ -218,7 +227,7 @@ namespace DAQ.HAL
             {
                 if (final[key].GetType().Name == "JArray")
                 {
-                    JArray value = (JArray)final[key];
+                    JArray value = (JArray)final[key]; string nm = value.First.GetType().Name;
                     if (value.First.GetType() == typeof(Int32))
                     {
                         finalCopy[key] = (int)value.First;
@@ -231,7 +240,7 @@ namespace DAQ.HAL
                     {
                         //TODO: Fix this so that it casts the JToken into the expected type. For status codes they should all be integers
                         JToken v = value.First;
-                        finalCopy[key] = v.ToObject<int>();
+                        finalCopy[key] = v.ToObject<long>();
                     }
 
                 }
@@ -269,6 +278,13 @@ namespace DAQ.HAL
                 {
                    // iArr[0] = (int)prms[key];
                     prmsCopy[key] = new int[1] {(int)prms[key]};
+                    continue;
+                }
+
+                if (prms[key].GetType().Name == "Int64")
+                {
+                    // iArr[0] = (int)prms[key];
+                    prmsCopy[key] = new long[1] { (long)prms[key] };
                     continue;
                 }
 

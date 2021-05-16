@@ -1,56 +1,79 @@
 using System;
 using System.Collections;
+using System.Windows.Media;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using NationalInstruments.DAQmx;
+using UtilsNS;
 
 namespace DAQ.HAL
 {
-	/// <summary>
-	/// This class represents the hardware that can be used for experiments. The idea of the HAL
-	/// is this: in the hardware interface, members correspond to the union of the capabilites of
-	/// the edm and decelerator experiments. The members are usually interface types. Particular
-	/// instances that implement the hardware interface will supply concrete classes for each of
-	/// generic hardware capabilities. This means as long as code is written to the hardware in this
-	/// interface, it should be trivial to port to new setups. That's the idea, anyway.
-	/// </summary>
-	public class Hardware
-	{
+    /// <summary>
+    /// This class represents the hardware that can be used for experiments. The idea of the HAL
+    /// is this: in the hardware interface, members correspond to the union of the capabilites of
+    /// the edm and decelerator experiments. The members are usually interface types. Particular
+    /// instances that implement the hardware interface will supply concrete classes for each of
+    /// generic hardware capabilities. This means as long as code is written to the hardware in this
+    /// interface, it should be trivial to port to new setups. That's the idea, anyway.
+    /// </summary>
+    public class Hardware
+    {
+        public Hardware()
+        {
+            analogOrder = new List<string>();
+            analogColors = new Dictionary<string, SolidColorBrush>();
+            digitalOrder = new List<string>();
+            digitalColors = new Dictionary<string, SolidColorBrush>();
+            ExtDevices = new Dictionary<string, string>();
+        }
+        public bool isDevicePresent(string dev)
+        {
+            bool rslt = false;
+            foreach (string dv in DaqSystem.Local.Devices)
+            {
+                rslt |= dev.Equals(dv);
+                if (rslt) break;
+            }
+            return rslt;
+        }
 
-		private Hashtable boards = new Hashtable();
-		public Hashtable Boards
-		{
-			get {return boards;}
-		}
+        public MMConfig config { get; set; }
 
-		private Hashtable digitalOutputChannels = new Hashtable();
-		public Hashtable DigitalOutputChannels
-		{
-			get {return digitalOutputChannels;}
-		}
+        private Hashtable boards = new Hashtable();
+        public Hashtable Boards
+        {
+            get { return boards; }
+        }
+
+        private Hashtable digitalOutputChannels = new Hashtable();
+        public Hashtable DigitalOutputChannels
+        {
+            get { return digitalOutputChannels; }
+        }
 
         private Hashtable digitalInputChannels = new Hashtable();
         public Hashtable DigitalInputChannels
         {
-            get {return digitalInputChannels;}
+            get { return digitalInputChannels; }
         }
 
-		private Hashtable analogInputChannels = new Hashtable();
-		public Hashtable AnalogInputChannels
-		{
-			get {return analogInputChannels;}
-		}
-		
-		private Hashtable analogOutputChannels = new Hashtable();
-		public Hashtable AnalogOutputChannels
-		{
-			get {return analogOutputChannels;}
-		}
+        private OrderedDictionary analogInputChannels = new OrderedDictionary();
+        public OrderedDictionary AnalogInputChannels
+        {
+            get { return analogInputChannels; }
+        }
 
-		private Hashtable counterChannels = new Hashtable();
-		public Hashtable CounterChannels
-		{
-			get {return counterChannels;}
-		}
+        private Hashtable analogOutputChannels = new Hashtable();
+        public Hashtable AnalogOutputChannels
+        {
+            get { return analogOutputChannels; }
+        }
+
+        private Hashtable counterChannels = new Hashtable();
+        public Hashtable CounterChannels
+        {
+            get { return counterChannels; }
+        }
 
         public string showDigitalName(String name)
         {
@@ -126,7 +149,7 @@ namespace DAQ.HAL
             return res;
         }
 
-        public string nameFromAnalogShowAs(String showAs) 
+        public string nameFromAnalogShowAs(String showAs)
         {
             string res = "";
             foreach (AnalogOutputChannel chn in analogOutputChannels.Values)
@@ -150,7 +173,7 @@ namespace DAQ.HAL
             return res;
         }
 
-        public string showCounterName(String name) 
+        public string showCounterName(String name)
         {
             string res = "";
             foreach (CounterChannel chn in counterChannels.Values)
@@ -178,13 +201,18 @@ namespace DAQ.HAL
             }
             return res;
         }
-        		
-		private Hashtable instruments = new Hashtable();
-		public Hashtable Instruments
-		{
-			get {return instruments;}
-		}
 
+        public List<string> analogOrder { get; private set; }
+        public Dictionary<string, SolidColorBrush> analogColors { get; private set; }
+        public List<string> digitalOrder { get; private set; }
+        public Dictionary<string, SolidColorBrush> digitalColors { get; private set; }
+
+        private Hashtable instruments = new Hashtable();
+        public Hashtable Instruments
+        {
+            get { return instruments; }
+        }
+        public Dictionary<string, string> ExtDevices;
         private Hashtable calibrations = new Hashtable();
         public Hashtable Calibrations
         {
@@ -207,14 +235,14 @@ namespace DAQ.HAL
                 return false;
         }
 
-		protected void AddAnalogInputChannel(
-			String name,
-			String physicalChannel,
-			AITerminalConfiguration terminalConfig
-			)
-		{
-			analogInputChannels.Add(name.Split('/')[0], new AnalogInputChannel(name, physicalChannel, terminalConfig));
-		}
+        protected void AddAnalogInputChannel(
+            String name,
+            String physicalChannel,
+            AITerminalConfiguration terminalConfig
+            )
+        {
+            analogInputChannels.Add(name.Split('/')[0], new AnalogInputChannel(name, physicalChannel, terminalConfig));
+        }
 
         protected void AddAnalogInputChannel(
             String name,
@@ -237,31 +265,40 @@ namespace DAQ.HAL
         }
 
 
-		protected void AddAnalogOutputChannel(String name, String physicalChannel)
-		{
-			analogOutputChannels.Add(name.Split('/')[0], new AnalogOutputChannel(name, physicalChannel));
-		}
+        protected void AddAnalogOutputChannel(String name, String physicalChannel)
+        {
+            analogOutputChannels.Add(name.Split('/')[0], new AnalogOutputChannel(name, physicalChannel));
+        }
 
         protected void AddAnalogOutputChannel(String name, String physicalChannel,
-                                                    double rangeLow, double rangeHigh)
+                                                    double rangeLow, double rangeHigh, SolidColorBrush clr = null)
+
         {
-            analogOutputChannels.Add(name.Split('/')[0], new AnalogOutputChannel(name, physicalChannel, rangeLow, rangeHigh));
+            string ownName = name.Split('/')[0];
+            if (Utils.isNull(clr)) analogColors[ownName] = Brushes.Black;
+            else analogColors[ownName] = clr;
+            analogOutputChannels.Add(ownName, new AnalogOutputChannel(name, physicalChannel, rangeLow, rangeHigh));
+            analogOrder.Add(ownName);
         }
-        
-        protected void AddDigitalOutputChannel(String name, string device, int port, int line)
-		{
-			digitalOutputChannels.Add(name.Split('/')[0], new DigitalOutputChannel(name, device, port, line));
-		}
+
+        protected void AddDigitalOutputChannel(String name, string device, int port, int line, SolidColorBrush clr = null)
+        {
+            string ownName = name.Split('/')[0];
+            if (Utils.isNull(clr)) digitalColors[ownName] = Brushes.Black;
+            else digitalColors[ownName] = clr;
+            digitalOutputChannels.Add(ownName, new DigitalOutputChannel(name, device, port, line));
+            digitalOrder.Add(ownName);
+        }
 
         protected void AddDigitalInputChannel(String name, string device, int port, int line)
         {
             digitalInputChannels.Add(name.Split('/')[0], new DigitalInputChannel(name, device, port, line));
         }
 
-		protected void AddCounterChannel(String name, string physicalChannel)
-		{
-			counterChannels.Add(name.Split('/')[0], new CounterChannel(name, physicalChannel));
-		}
+        protected void AddCounterChannel(String name, string physicalChannel)
+        {
+            counterChannels.Add(name.Split('/')[0], new CounterChannel(name, physicalChannel));
+        }
 
         protected void AddCalibration(String channelName, Calibration calibration)
         {
@@ -272,6 +309,6 @@ namespace DAQ.HAL
             // default is - do nothing
         }
 
-	}
+    }
 
 }

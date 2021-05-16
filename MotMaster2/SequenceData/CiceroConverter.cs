@@ -138,7 +138,7 @@ namespace MOTMaster2.SequenceData
             else throw new Exception("Incorrect Cicero TimeStep units");
 
             
-            mmStep.RS232Commands = (step.rs232Group != null);
+            //mmStep.RS232Commands = (step.rs232Group != null);
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace MOTMaster2.SequenceData
                     SerialItem serialData = new SerialItem(serial.Name, valuestring);
                     serialList.Add(serialData);
                 }
-                mmStep.SetSerialCommands(serialList);
+                //mmStep.SetSerialCommands(serialList);
             }
         }
         // Overrides the ConvertTo method of TypeConverter.

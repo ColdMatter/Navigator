@@ -12,7 +12,7 @@ namespace DAQ.HAL
         public ICEBlocPLL(): base()
         {
             M2_ip_address = "192.168.1.228"; //  "echo.websocket.org/"
-          M2_ip_port = 1025;
+            M2_ip_port = 1025;
         }
   
         // Following the manual ....
@@ -146,18 +146,19 @@ namespace DAQ.HAL
             if (aux_synth) prms.Add("aux_synth", "enable");
             else prms.Add("aux_synth", "disable");
             prms.Add("aux_detector_mode", aux_detector_mode);
-            prms.Add("input_frequency", input_frequency);
+            long long_input_frequency = (long)input_frequency;
+            prms.Add("input_frequency", long_input_frequency);
             prms.Add("beat_frequency_trim", beat_frequency_trim);
-            prms.Add("chirp_rate", chirp_rate);
+            prms.Add("chirp_rate", (long)chirp_rate);
             prms.Add("chirp_duration", chirp_duration);
             if (report) prms.Add("report", "finished");
 
-            Dictionary<string, object> rslt = GenericCommand("configure_lo_profile", prms, report);
+            Dictionary<string, object> rslt = GenericCommand(@"configure_lo_profile", prms, report);
 
             //if (report) AdjustReport(ref rslt);
             if (rslt.Count == 0) return false;
-            if (report) return ((int)rslt["report"] == 0);
-            else return ((int)rslt["status"] == 0);
+            if (report) return (Convert.ToInt32(rslt["report"]) == 0);
+            else return (Convert.ToInt32(rslt["status"]) == 0);
         }
 
         // 3.10. Configure AOM
@@ -264,7 +265,7 @@ namespace DAQ.HAL
         // 3.16. System Status
         public Dictionary<string, object> get_status()
         {
-            Dictionary<string, object> rslt = GenericCommand("get_status", null);
+            Dictionary<string, object> rslt = GenericCommand("get_status", new Dictionary<string, object>());
             return rslt;
         }
 

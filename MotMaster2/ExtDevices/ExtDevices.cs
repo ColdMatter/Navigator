@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MOTMaster2;
 using MOTMaster2.SequenceData;
+using ErrorManager;
+using UtilsNS;
 
 namespace MOTMaster2.ExtDevices
 {
     public interface IExtDevice // everything not factor specific 
     {       
-        //string dvcName { get; }
+        string dvcName { get; }
         bool GetEnabled(bool ignoreHardware = false); // ready to operate
         bool Talk2Dvc(string fctName, object fctValue);
 
@@ -29,17 +32,21 @@ namespace MOTMaster2.ExtDevices
     }
     public interface IFactors // everything factor specific 
     {
+        string dvcName { get; set; }
         bool genOpt_Enabled { get; }
+        bool groupUpdate { get; set; }
         bool HW_Enabled { get; }
         bool UpdateEnabled(bool _genOpt_Enabled, bool _HW_Enabled);
         Sequence seqData { get; set; }
         void UpdateFromSequence(ref Sequence _sequenceData); 
         bool IsScannable(string prm);
         bool ScanIter(string prm, int grpIdx); // 0 - start; -1 - final
+        bool SetFactor(string factor, string param);
     }
     
     public class ExtDeviceDict : ObservableDictionary<string, IExtDevice>
     {
+
         public ExtDeviceDict()
         {
 
@@ -65,7 +72,8 @@ namespace MOTMaster2.ExtDevices
             bool rslt = true;
             foreach (IExtDevice dvc in this.Values)
             {
-                if (dvc.GetEnabled()) dvc.UpdateFromOptions(ref _genOptions);
+                dvc.UpdateFromOptions(ref _genOptions); //if (dvc.GetEnabled()) 
+                if (dvc.OptEnabled() && !dvc.CheckHardware()) ErrorMng.Log("<" + dvc.dvcName + "> is not operational.", Brushes.Coral.Color);
             }
             return rslt;
         }
@@ -81,7 +89,7 @@ namespace MOTMaster2.ExtDevices
         }
     }
 
-    public class ExtFactorList : List<IFactors> // list of factor groups (one for each ext.device)
+    public class ExtFactorList : List<IFactors> // list of factor groups (one list for each ext.device)
     {
         public ExtFactorList()
         {
@@ -112,14 +120,22 @@ namespace MOTMaster2.ExtDevices
             }
             return rslt;
         }
-    }
-        /*
-          ExtDeviceDict ed = new ExtDeviceDict();
-          MSquare ms = new MSquare("MSquare")
-          WindFreak wf = new WindFreak("WindFreak")
-          ed.Add("MSquare",ms) dvcStack.Children.Add(ms)
-          ed.Add("WindFreak",wf) dvcStack.Children.Add(wf)
+        public bool SetFactor(string dvc, string factor, string param)
+        {
+            bool rslt = false; 
+            foreach (IFactors dvcItr in this)
+            {
+                if (dvcItr.dvcName.Equals(dvc))
+                {
+                    rslt = (dvcItr.genOpt_Enabled && dvcItr.HW_Enabled);
+                    if (!rslt) Utils.TimedMessageBox("The requested device for scan is not active");
+                    else rslt = dvcItr.SetFactor(factor, param);
+                    break;
+                }                    
+            }
+            if (!rslt) return false;
 
-         * +events !
-        */
+            return rslt;
+        }
     }
+}

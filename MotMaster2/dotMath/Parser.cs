@@ -64,13 +64,13 @@ namespace dotMath
 		/// </summary>
 		public class Token
 		{
-            private string m_sToken;
+			private string m_sToken;
 			private CharType m_chType;
 
-            public override int GetHashCode()
-            {
-                return 1;
-            }
+			public override int GetHashCode()
+			{
+				return 1;
+			}
 
 			/// <summary>
 			/// Equals(Object): Tests for equality with another token.  Also
@@ -78,12 +78,12 @@ namespace dotMath
 			/// </summary>
 			/// <param name="sValue">string value representing the token being evaluated against.</param>
 			/// <returns>bool where true means both objects are equal.</returns>
-			public override bool Equals( Object sValue )
+			public override bool Equals(Object sValue)
 			{
-				if (sValue == null )
+				if (sValue == null)
 					return m_sToken == null;
-				 
-				if( (string)sValue == m_sToken )
+
+				if ((string)sValue == m_sToken)
 					return true;
 				else
 					return false;
@@ -95,19 +95,19 @@ namespace dotMath
 			/// <param name="sToken">Token - actual token object</param>
 			/// <param name="sValue">string - token value to test against token object value</param>
 			/// <returns></returns>
-			public static bool operator == (Token sToken, string sValue)
+			public static bool operator ==(Token sToken, string sValue)
 			{
 				// the following tests are order dependent.  If both are null, eq is true.  
 				// if only one is null the eq is false.
 
 
-				if( (object)sToken == null  &&  sValue == null )
-						return true;
+				if ((object)sToken == null && sValue == null)
+					return true;
 
-				if( (object)sToken == null || sValue == null )
+				if ((object)sToken == null || sValue == null)
 					return false;
 
-				if( sToken.m_sToken == sValue )
+				if (sToken.m_sToken == sValue)
 					return true;
 				else
 					return false;
@@ -120,12 +120,12 @@ namespace dotMath
 			/// <param name="sToken">Token object being test</param>
 			/// <param name="sValue">string that is being compared with the Token object's string value</param>
 			/// <returns>bool indicating true for inequality</returns>
-			public static bool operator != (Token sToken, string sValue)
+			public static bool operator !=(Token sToken, string sValue)
 			{
 				if (sToken == null || sValue == null)
 					return !(sToken == null && sValue == null);
 
-				if( sToken.m_sToken != sValue )
+				if (sToken.m_sToken != sValue)
 					return true;
 				else
 					return false;
@@ -205,7 +205,7 @@ namespace dotMath
 			m_sFunction = sFunction;
 
 			m_sWhitespace = " \t";
-			m_sDelimiters = "+-*/^()<>=&|!,";
+			m_sDelimiters = "+-*/^%()<>=&|!,";
 			m_sNumbers = ".0123456789";
 			m_sLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz%_";
 			m_sBrackets = "[]";
@@ -234,38 +234,38 @@ namespace dotMath
 			Token nextToken1 = null;
 			Token nextToken2 = null;
 
-			if( iEnum.MoveNext() )
+			if (iEnum.MoveNext())
 				nextToken1 = (Token)iEnum.Current;
 
-			if( iEnum.MoveNext() )
+			if (iEnum.MoveNext())
 				nextToken2 = (Token)iEnum.Current;
 
 			//bool bCombined;
-			while( nextToken1 != null )
+			while (nextToken1 != null)
 			{
-				
-				if( nextToken1.TokenType == CharType.CT_DELIM )
-				{
-					if( nextToken2 != null && nextToken2.TokenType ==CharType.CT_DELIM )
-					{
-						string s1 = nextToken1.ToString()+ nextToken2.ToString();
 
-						if( s1 == "&&" || 
+				if (nextToken1.TokenType == CharType.CT_DELIM)
+				{
+					if (nextToken2 != null && nextToken2.TokenType == CharType.CT_DELIM)
+					{
+						string s1 = nextToken1.ToString() + nextToken2.ToString();
+
+						if (s1 == "&&" ||
 							s1 == "||" ||
 							s1 == "<=" ||
 							s1 == ">=" ||
 							s1 == "!=" ||
 							s1 == "<>" ||
-							s1 == "==" )
+							s1 == "==")
 						{
-							
 
-							nextToken1 = new Token(s1, CharType.CT_DELIM );
+
+							nextToken1 = new Token(s1, CharType.CT_DELIM);
 							//alTokens.Add(nextToken1 );
 
-							if( iEnum.MoveNext() )
+							if (iEnum.MoveNext())
 								nextToken2 = (Token)iEnum.Current;
-							
+
 						}
 					}
 				}
@@ -274,9 +274,9 @@ namespace dotMath
 
 				nextToken1 = nextToken2;
 
-				if( nextToken2 != null)
+				if (nextToken2 != null)
 				{
-					if( iEnum.MoveNext() )
+					if (iEnum.MoveNext())
 						nextToken2 = (Token)iEnum.Current;
 					else
 						nextToken2 = null;
@@ -294,82 +294,82 @@ namespace dotMath
 		private void Parse()
 		{
 			m_alTokens = new ArrayList();
-			CharType chType= CharType.CT_UNDEF;
+			CharType chType = CharType.CT_UNDEF;
 
 
 			string sToken = "";
 
 			CharEnumerator chEnum = m_sFunction.GetEnumerator();
 
-			while( chEnum.MoveNext() )
+			while (chEnum.MoveNext())
 			{
-				if( m_sWhitespace.IndexOf(chEnum.Current) > -1 )
+				if (m_sWhitespace.IndexOf(chEnum.Current) > -1)
 				{
-					if( sToken.Length > 0 )
+					if (sToken.Length > 0)
 						m_alTokens.Add(new Token(sToken, chType));
 					sToken = "";
 
 					continue;
 				}
 
-				if( m_sDelimiters.IndexOf(chEnum.Current) > -1)
+				if (m_sDelimiters.IndexOf(chEnum.Current) > -1)
 				{
-					if( sToken.Length > 0 )
-						m_alTokens.Add( new Token(sToken, chType ));
+					if (sToken.Length > 0)
+						m_alTokens.Add(new Token(sToken, chType));
 
-					m_alTokens.Add( new Token(chEnum.Current, CharType.CT_DELIM));
+					m_alTokens.Add(new Token(chEnum.Current, CharType.CT_DELIM));
 
 					sToken = "";
 					chType = CharType.CT_UNDEF;
 					continue;
 				}
 
-				if( m_sBrackets.IndexOf( chEnum.Current) > -1 )
+				if (m_sBrackets.IndexOf(chEnum.Current) > -1)
 				{
-					if( sToken.Length > 0 )
-						m_alTokens.Add( new Token( sToken, chType ));
+					if (sToken.Length > 0)
+						m_alTokens.Add(new Token(sToken, chType));
 
-					m_alTokens.Add( new Token( chEnum.Current, CharType.CT_BRACKETS ));
+					m_alTokens.Add(new Token(chEnum.Current, CharType.CT_BRACKETS));
 
 					sToken = "";
 					chType = CharType.CT_UNDEF;
 					continue;
 				}
 
-				if( m_sNumbers.IndexOf( chEnum.Current ) > -1 )
+				if (m_sNumbers.IndexOf(chEnum.Current) > -1)
 				{
-					if( sToken.Length == 0 )
+					if (sToken.Length == 0)
 						chType = CharType.CT_NUMBER;
 
 					sToken += chEnum.Current;
 					continue;
 				}
 
-				if( m_sLetters.IndexOf( chEnum.Current ) > -1 )
+				if (m_sLetters.IndexOf(chEnum.Current) > -1)
 				{
-					if( sToken.Length == 0 )
+					if (sToken.Length == 0)
 						chType = CharType.CT_LETTER;
 					else
 					{
-						if( chType != CharType.CT_LETTER )
+						if (chType != CharType.CT_LETTER)
 							chType = CharType.CT_UNDEF;
 					}
 					sToken += chEnum.Current;
 					continue;
 				}
 
-				if( sToken.Length > 0 )
-					m_alTokens.Add( new Token(sToken, chType ));
+				if (sToken.Length > 0)
+					m_alTokens.Add(new Token(sToken, chType));
 
 				sToken = "";
 				chType = CharType.CT_UNDEF;
-				
+
 			}
 
-			if( sToken.Length > 0 )
-				m_alTokens.Add( new Token( sToken, chType ));
+			if (sToken.Length > 0)
+				m_alTokens.Add(new Token(sToken, chType));
 
-		
+
 			CheckMultiCharOps();
 		}
 	}

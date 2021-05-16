@@ -44,8 +44,8 @@ namespace AOMmaster
                 ["3DMOT-1"] = SemiAxisUC8,
                 ["3DMOT-2"] = SemiAxisUC9,
                 ["2DMOT-1"] = SemiAxisUC10,
-                ["2DMOT-2"] = SemiAxisUC11
-
+                ["2DMOT-2"] = SemiAxisUC11,
+                ["Detection"] = SemiAxisUC12
             };
         }
         Dictionary<string, Dictionary<string, string>> semiValues
@@ -144,14 +144,15 @@ namespace AOMmaster
                     case 7:
                         clr = Brushes.Blue.Color;
                         break;
-                }               
+                }                             
                 semi.Value.Config(semi.Key, i, vco, vca, clr);
-                i++;
+                if (i.Equals(7)) break;
+                i++;               
             }
             // custion semis
             vco.title = "3DMOTCoil"; vco.chnNumb = 18;
             vca.title = "xbias3DCoil"; vca.chnNumb = 15;
-            semis["3DMOT-1"].Config("3DMOT-1", "Det_TTL", 21, vco, vca, Brushes.Goldenrod.Color);
+            semis["3DMOT-1"].Config("3DMOT-1", "DetTTL", 21, vco, vca, Brushes.Goldenrod.Color);
 
             vco.title = "ybias3DCoil"; vco.chnNumb = 16;
             vca.title = "zbias3DCoil"; vca.chnNumb = 17;
@@ -164,6 +165,10 @@ namespace AOMmaster
             vco.title = "ybias2DCoil"; vco.chnNumb = 14;
             vca.title = ""; vca.chnNumb = -1;
             semis["2DMOT-2"].Config("2DMOT-2", "", -1, vco, vca, Brushes.Teal.Color);
+
+            vco.title = "VCO"; vco.chnNumb = 0;
+            vca.title = "VCA"; vca.chnNumb = 1;
+            semis["Detection"].Config("Detection", "Enabled", 26, vco, vca, Brushes.Coral.Color);
 
             foreach (KeyValuePair<string, SemiAxisUC> semi in semis)
             { 

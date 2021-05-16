@@ -13,7 +13,7 @@
             <RowDefinition />
             <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
-        <DataGrid x:Name="dgCalibr" Margin="0" Grid.Row="2" CellEditEnding="dgCalibr_CellEditEnding"/>
+        <DataGrid x:Name="dgCalibr" Margin="0,0.797,-0.329,0.127" Grid.Row="2" CellEditEnding="dgCalibr_CellEditEnding"/>
         <StackPanel Margin="0,1.722,-0.329,0.203" Grid.Row="1" Orientation="Horizontal">
             <Button x:Name="btnInsertVal" Content=" Insert Val. " FontSize="13" Margin="5,6,0,6" Foreground="#FF820902" ToolTip="Insert line of value" ></Button>
             <Button x:Name="btnOpen" Content=" Open " FontSize="13" Margin="12,6,0,6" Foreground="#FF004F42" Click="btnOpen_Click" ToolTip="Open calibration file"  ></Button>

@@ -19,6 +19,7 @@ namespace DAQ
             TranslationStageUsed = translation;
             ReporterUsed = reporter;
             Debug = dbg;
+            doubleAxes = false;
             DigitalPatternClockFrequency = 100000; //default value
             AnalogPatternClockFrequency = 100000; //default value
             ExternalFilePattern = null;
@@ -27,6 +28,7 @@ namespace DAQ
             useMuquans = false;//
             useMMScripts = true;
             useMSquared = false;
+
         }
 
         private bool debug;
@@ -36,7 +38,12 @@ namespace DAQ
             set { debug = value; }
         }
 
-        public bool PlexalMachine { get { return (Debug || ((string)System.Environment.GetEnvironmentVariables()["COMPUTERNAME"] == "DESKTOP-IHEEQUU")); } }
+        private bool doubleAxes;
+        public bool DoubleAxes
+        {
+            get { return doubleAxes; }
+            set { doubleAxes = value; }
+        }
 
         private bool cameraUsed;
         public bool CameraUsed

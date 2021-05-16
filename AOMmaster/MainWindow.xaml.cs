@@ -32,7 +32,7 @@ namespace AOMmaster
         Dictionary<string, double> config = null;
         private void frmMain_Loaded(object sender, RoutedEventArgs e)
         {
-            Title = " AOMmaster  v" + Utils.getRunningVersion();
+            Title = " AOMmaster  v" + Utils.getAppFileVersion;
             if (File.Exists(configFile))
             {
                 string json = System.IO.File.ReadAllText(configFile);

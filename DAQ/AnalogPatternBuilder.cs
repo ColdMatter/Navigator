@@ -175,13 +175,9 @@ namespace DAQ.Analog
                         d[events[i] + j] = dval;
                     }
                 }
-
             }
-
             return d;
         }
-
-
         public void BuildPattern()
         {
             Pattern = new double[AnalogPatterns.Count, PatternLength];
@@ -196,9 +192,7 @@ namespace DAQ.Analog
                 }
                 i++;
             }
-
         }
-
         public void Clear()
         {
             Pattern = null;
@@ -215,7 +209,6 @@ namespace DAQ.Analog
                 AddAnalogValue(key, PatternLength - 1, 0.0);
             }
         }
-
         public class ConflictInPatternException : ApplicationException { }
         public class InsufficientPatternLengthException : ApplicationException { }
         public class PatternBuildException : ApplicationException

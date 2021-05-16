@@ -28,6 +28,7 @@ namespace DAQ.HAL
             public static String Trigger { get { return "w"; } }
             public static String Channel { get { return "C"; } }
             public static String RFPower { get { return "h"; } }
+            public static String PhaseStep { get { return "~"; } }
         }
 
         public enum TriggerTypes
@@ -124,7 +125,10 @@ namespace DAQ.HAL
                     rfOn = value;
                 }
             }
-
+            public void phaseShift(double phase)
+            {
+                Write(CommandTypes.PhaseStep + phase.ToString("F3"));
+            }
             public void ResetOutput(bool output)
             {
                 Write(CommandTypes.RFPower + Convert.ToInt32(output).ToString());

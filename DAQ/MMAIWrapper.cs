@@ -7,9 +7,9 @@ using NationalInstruments.DAQmx;
 
 using DAQ.Environment;
 using DAQ.HAL;
-using Data;
-using Data.Scans;
-using DAQ.Analog;
+//using Data;
+//using Data.Scans;
+//using DAQ.Analog;
 
 using UtilsNS;
 
@@ -44,7 +44,7 @@ namespace DAQ.Analog
             foreach (string keys in aiConfig.AIChannels.Keys)
             {
                 AddToAnalogInputTask(AITask, keys, aiConfig.AIChannels[keys].AIRangeLow,aiConfig.AIChannels[keys].AIRangeHigh);
-            };
+            }
             AIConfig.AIData = new double[AIConfig.AIChannels.Count, samples];
         //For the timiming - for now just derive the ai sample clock from the PCI card, but this isn't synchronised with the PXI Card, so in future will
         //need to create a counting task on the AICard and count an exported timiming signal from the PXI or something similar.
@@ -64,7 +64,6 @@ namespace DAQ.Analog
             AITask.Control(TaskAction.Verify);
             AITask.Control(TaskAction.Commit);            
         }
-
         #region private methods for creating timed Tasks/channels
 
         private void AddToAnalogInputTask(Task task, string channel, double RangeLow, double RangeHigh)
@@ -88,28 +87,35 @@ namespace DAQ.Analog
             if (asyncRun) { runningTask = AITask; AIDataReader.BeginReadMultiSample(AIConfig.Samples, new AsyncCallback(OnAnalogDataReady), null); }
             else { /*AITask.Stop();*/ AITask.Start(); }
         }
-
         public void ReadAnalogDataFromBuffer()
         {           
             try
-            {
-                Utils.Trace("read buff AI");
+            {                
                 if (AITask.IsDone) return;
+                Utils.Trace("read buff AI");
                 AIDataReader = new AnalogMultiChannelReader(AITask.Stream);
                 AIConfig.AIData = AIDataReader.ReadMultiSample(samples);
+                Utils.Trace("read buff AI-2");
             }
-              catch (System.ObjectDisposedException e)
-              {
-                  Console.WriteLine("AI problem: "+e.Message);
-              }
+            catch (System.ObjectDisposedException e)
+            {
+                Console.WriteLine("AI problem: "+e.Message);
+            }
             finally
             {
                 AIDataReader = null;
             }            
         }
-
-        public double[,] GetAnalogData()
+        public double[,] GetAnalogData(bool pseudoDoubleChn = true) // EMERGENCY CHANGE, IT MUST false IN NORMAL CONDITIONS !!!
         {
+            if (Environs.Hardware.config.DoubleAxes && AIConfig.AIData.GetLength(0).Equals(4))
+            {
+                int c1 = AIConfig.AIData.GetLength(1);
+                if (pseudoDoubleChn)
+                {
+                    for (int i = 0; i < c1; i++) AIConfig.AIData[0, i] = AIConfig.AIData[1, i]; // both channels are taken from Y-PD
+                }
+             }            
             return AIConfig.AIData;
         }
         public double[] GetAnalogDataSingleArray()

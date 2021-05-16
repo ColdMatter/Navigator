@@ -31,7 +31,7 @@ namespace MOTMaster2
             foreach (Parameter p in Controller.sequenceData.Parameters.Values)
             {
                 //if (!p.IsHidden) _sequenceParameters.Add(p.Copy());
-                p.Read_Only = (p.Name.Equals("runID") || (p.Name.Equals("aChn")));
+                p.Read_Only = p.Name.Equals("runID") || p.Name.Equals("aChn") || p.Name.Equals("swapAxes");
                 _sequenceParameters.Add(p.Copy());
             }
             parameterGrid.ItemsSource = _sequenceParameters;

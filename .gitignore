@@ -38,4 +38,3 @@ packages/*
 *.tmp_proj
 
 .vscode/*
-/TESTS

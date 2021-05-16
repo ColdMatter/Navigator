@@ -67,8 +67,8 @@ namespace DAQ.HAL
 
         public ICEBlocDCS()
         {
-            my_ip_address = "192.168.1.101";
-            my_byte_ip_address[3] = 101;
+            my_ip_address = "192.168.1.100";
+            my_byte_ip_address[3] = 100;
             M2_ip_address = "192.168.1.236";
             M2_ip_port = 1024;
             _timeBlockNames = new Dictionary<string, string>();
@@ -176,6 +176,21 @@ namespace DAQ.HAL
         //        throw new Exception(string.Format("Parameter {0} not found or Value {1} is not the correct type", param,
         //            value));
         //}
+        public bool blockControl(int timeBlock, int ano, double value)
+        {
+            string msg = @"{""message"":{""transmission_id"":[888],""op"":""update_sequence_parameters"",""parameters"":{""time_block_" + timeBlock.ToString() +
+                @""":{""ano_" + ano.ToString() + @""":{""phase"":[" + value.ToString("G6") + "]}}}}}";
+            Send(msg);
+            string rly = Receive();
+            Dictionary<string, object> dct = ConvertMessageToDictionary("update_sequence_parameters", rly);
+            int i = Convert.ToInt32(dct["status"]);
+            return i.Equals(1);
+        }
+
+        public bool phaseControl(double phase)
+        {
+            return blockControl(29, 8, phase) && blockControl(31, 8, phase);
+        }
 
         public string set_dig_param(bool value)
         {
@@ -191,16 +206,9 @@ namespace DAQ.HAL
             return rly;
         }
 
-
-
         public string axisControl(int axis, bool xy)
         {
-           // set_dig_param(19, 19, axis == 0);
-
-           // set_dig_param(axis == 0);
-
-         //   
-            string a2 = axis.ToString();
+             string a2 = axis.ToString();
 
             if (xy)
             {
@@ -208,16 +216,9 @@ namespace DAQ.HAL
                 else a2 = "0";
             }           
             string msg4 = @"{""message"":{""transmission_id"":[889],""op"":""switch_axis"",""parameters"":{""mode"":[" + a2 + "]}}}";
-            //  string msg = @"{""message"":{""transmission_id"":[888],""op"":""update_sequence_parameters"",""parameters"":{""time_block_29"":{""dio_21"":{""status"":[1]}}}}}";
-
-            //"dio_1":{		"state":[1]			} ,
-
             Send(msg4);
             string rly = Receive();
-            //Thread.Sleep(650);
-          //  Thread.Sleep(100);
             return rly;
-           // 
 
         }
         

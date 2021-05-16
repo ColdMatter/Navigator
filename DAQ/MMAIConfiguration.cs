@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using NationalInstruments.DAQmx;
 using DAQ.Environment;
 using DAQ.HAL;
-using Data;
-using Data.Scans;
+//using Data;
+//using Data.Scans;
 using DAQ.Analog;
 
 namespace DAQ.Analog
