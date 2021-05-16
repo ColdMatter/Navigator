@@ -137,5 +137,22 @@ namespace MOTMaster2.ExtDevices
 
             return rslt;
         }
+        public bool SetFactor(string dvc, string factor, string param)
+        {
+            bool rslt = false; 
+            foreach (IFactors dvcItr in this)
+            {
+                if (dvcItr.dvcName.Equals(dvc))
+                {
+                    rslt = (dvcItr.genOpt_Enabled && dvcItr.HW_Enabled);
+                    if (!rslt) Utils.TimedMessageBox("The requested device for scan is not active");
+                    else rslt = dvcItr.SetFactor(factor, param);
+                    break;
+                }                    
+            }
+            if (!rslt) return false;
+
+            return rslt;
+        }
     }
 }

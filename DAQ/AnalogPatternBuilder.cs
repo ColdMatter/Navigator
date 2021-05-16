@@ -110,7 +110,7 @@ namespace DAQ.Analog
             {
                 double startValue = GetValue(channel, startTime);
                 double stepSize = (finalValue - startValue) / steps;
-                for (int i = 0; i < steps; i++)
+                for (int i = 1; i < steps; i++)
                 {
                     if (AnalogPatterns[channel].ContainsKey(startTime + i) == false)
                     {
