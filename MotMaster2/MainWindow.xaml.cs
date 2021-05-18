@@ -615,7 +615,7 @@ namespace MOTMaster2
                 }
             }
 
-            if (btnScan.Content.Equals("Abort Remote"))
+            if (btnScan.Content.Equals("Abort"))
             {
                 tbExperimentRun.Text = "---";
                 btnScan.Content = "Scan";
@@ -764,7 +764,7 @@ namespace MOTMaster2
                 if (result != true) return;
                 string filename = dlg.FileName;
                 Controller.SaveSequenceToPath(filename);
-                Log("Saved Control Sequence to ..." + filename.Substring(filename.Length - 30));
+                Log("Saved Sequence to ..." + filename.Substring(filename.Length - 50));
             }
             else
                 ErrorMng.warningMsg("You have tried to save a Sequence before loading a script", -1, true);
@@ -786,7 +786,7 @@ namespace MOTMaster2
             Controller.LoadSequenceFromPath(filename);
             sequenceControl.UpdateSequenceData();
             ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
-            Log("Loaded Control Sequence from ..." + filename.Substring(filename.Length - 30));
+            Log("Loaded Sequence from ..." + filename.Substring(filename.Length - 50));
         }
 
        private void SaveEnvironment_Click(object sender, RoutedEventArgs e)
@@ -1022,24 +1022,28 @@ namespace MOTMaster2
             ParametersWindow paramWindow = new ParametersWindow();
             paramWindow.ShowDialog();
             ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
+            
         }
 
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             dispatcherTimer.Stop();
-            if ((Controller.ExpData.jumboMode() == ExperimentData.JumboModes.none) && !Utils.isNull(remoteMsg))
-            {
-                MMexec mme = new MMexec("Axel-hub");
-                remoteMsg.sendCommand(mme.Abort("MOTMaster"));
-            }
+            if (!Utils.isNull(remoteMsg)) 
+                if (remoteMsg.lastRcvMsg.Contains("abort"))
+                {
+                    ErrorMng.Log("Abort Jumbo", Brushes.Red.Color);
+                    return;
+                }
             if (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.scan)
             {
+                ErrorMng.Log("Start Jumbo-Scan", Brushes.Blue.Color);
                 MMscan mms = new MMscan();
                 mms.FromDictionary(Controller.ExpData.grpMME.prms);
                 realScan(mms.sSite,mms.sParam, mms.sFrom.ToString(), mms.sTo.ToString(), mms.sBy.ToString(), false, Controller.ExpData.grpMME.sender, Controller.ExpData.grpMME.id);
             }
             if (Controller.ExpData.jumboMode() == ExperimentData.JumboModes.repeat)
             {
+                ErrorMng.Log("Start Jumbo-Repeat", Brushes.Blue.Color);
                 string jumboGroupID = (string)Controller.ExpData.grpMME.prms["groupID"];
                 int jumboCycles = Convert.ToInt32(Controller.ExpData.grpMME.prms["cycles"]);
                 realRun(jumboCycles, Controller.ExpData.grpMME.sender, Controller.ExpData.grpMME.id);
@@ -1125,6 +1129,7 @@ namespace MOTMaster2
                     //Stop running
                     if (Convert.ToString(btnRun.Content) == "Abort") btnRun_Click(this, null);
                     else if (Convert.ToString(btnScan.Content) == "Abort") btnScan_Click(this, null);
+                    dispatcherTimer.Start();
                     break;
             }
             return true;
