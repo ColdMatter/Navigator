@@ -198,7 +198,8 @@ namespace MOTMaster2
                 ErrorMng.errorMsg("Failed to build sequence:" + e.Message +" IN " + e.Source, -1, false);
                 return false;
             }
-            if (Math.Abs(Controller.ExpData.axis) == 2) ExtDevices.UpdateDevices(false);
+            //if (Math.Abs(Controller.ExpData.axis) == 2) 
+                ExtDevices.UpdateDevices(false);
             if (Controller.genOptions.DelayBwnShots > 0) Thread.Sleep(Controller.genOptions.DelayBwnShots);            
 
             controller.RunStart(paramDict);
