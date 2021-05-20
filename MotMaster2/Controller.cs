@@ -586,9 +586,16 @@ namespace MOTMaster2
         }
 
         private static void axisControl(int chn, bool xy)
-        {       
-            M2DCS.axisControl(chn,xy);
-            if (xy) ChnChangeEvent(chn);
+        {
+            int chn0 = chn;
+            if (sequenceData.Parameters.ContainsKey("swapAxes"))
+                if (Convert.ToDouble(sequenceData.Parameters["swapAxes"].Value) > 0.5) 
+                {
+                    if (chn == 0) chn0 = 1;
+                    else chn0 = 0;
+                }
+            M2DCS.axisControl(chn0,xy);
+            if (xy) ChnChangeEvent(chn0);
             else ChnChangeEvent(2); 
             
          /*   double PLLFreq = (double)sequenceData.Parameters["PLLFreq"].Value;
@@ -621,7 +628,17 @@ namespace MOTMaster2
             { 
                 _BatchNumber = value;
                 if (sequenceData.Parameters.ContainsKey("runID")) sequenceData.Parameters["runID"].Value = (double)value;
-                if (sequenceData.Parameters.ContainsKey("aChn")) sequenceData.Parameters["aChn"].Value = (double)actChannel(value);              
+                if (sequenceData.Parameters.ContainsKey("aChn") && sequenceData.Parameters.ContainsKey("swapAxes"))
+                {
+                    if (Convert.ToDouble(sequenceData.Parameters["swapAxes"].Value) < 0.5)
+                        sequenceData.Parameters["aChn"].Value = (double)actChannel(value);
+                    else
+                    {
+                        if (actChannel(value) == 0) sequenceData.Parameters["aChn"].Value = 1.0;
+                        else sequenceData.Parameters["aChn"].Value = 0.0;
+                    }
+                }    
+                                 
                 if (!config.Debug && config.UseMSquared && genOptions.m2Enabled)
                 {
                     if (Math.Abs(ExpData.axis).Equals(2)) axisControl(actChannel(value), true);
