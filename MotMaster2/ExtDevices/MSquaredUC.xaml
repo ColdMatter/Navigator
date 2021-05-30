@@ -6,6 +6,12 @@
              xmlns:local="clr-namespace:MOTMaster2.ExtDevices"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="301.229" Width="300">
+    <UserControl.Resources>
+        <ContextMenu x:Key="cmTripleBars">
+            <MenuItem x:Name="miCheckHw" Header="Check the device" Click="miCheckHw_Click" />
+        </ContextMenu>
+    </UserControl.Resources>
+
     <Grid>
         <GroupBox x:Name="grpBox" Header="GroupBox" Margin="0" Background="White">
             <Grid  Margin="0">
@@ -14,6 +20,7 @@
                     <RowDefinition x:Name="factorRow" Height="247"/>
                     <RowDefinition Height="155*"/>
                 </Grid.RowDefinitions>
+                <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarRusty.bmp" HorizontalAlignment="Left" Margin="6,3,0,0" MouseUp="imgTripleBars_MouseUp"/>
                 <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
             </Grid>
         </GroupBox>

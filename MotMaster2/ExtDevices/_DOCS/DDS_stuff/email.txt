@@ -1,0 +1,41 @@
+Hi Theo,
+
+Hope all is well with you.
+
+Here is some initial information on the DDS, apologies it has taken me so long to get around to doing this!
+
+I have made an example sequence using the Labview software that my colleagues at M Squared and myself have made. Attached below is an image showing the user interface, and a labelled oscilloscope trace showing the output of one the DDS cards (DDS3). The sequence is triggered using a function generator (the trigger signal is also shown on the scope)
+
+The current version of the software is designed to enable the user to configure long sequences of DDS output on 8 channels (4 DDS cards with 2 channels per card). The sequence can, in principle, be configured using two methods:
+
+1) The pulse parameters are programmed manually by the user
+2) The pulse parameters are read in from a MotMaster sequence file.
+
+
+Method 1
+
+Let’s focus on the first of these for now. Four interfaces are tiled on the same image in the attachment, showing the settings for each time block. In the current version of the software, only the frequency and amplitude columns actually do anything. The original version of the software was designed to enable frequency and amplitude ramps also, but I removed these from the software as using this functionality made the system very buggy. On our side, we will have to fix this at some point quite soon.
+
+On the right hand side of the user interface, you can see the text code that is actually sent to the DDS for the programmed pulse sequence. This only shows the code sent to the 4th DDS card (DDS3). But hopefully this is enough for you to see how the programmed pulse sequence corresponds to the code that is sent to the DDS. The DDS is supplied with LabView VI’s that are used to convert the requested DDS parameters (power, amplitude etc) into the code that is sent to the DDS. Unfortunately, there isn’t really any documentation for these drivers. Indeed, the only thing we have to go on is the manual: https://www.wieserlabs.com/products/radio-frequency/flexdds-ng/FlexDDS-NG_Manual.pdf. I found this quite hard to understand, but working through the examples, it is more or less possible to work out what commands should be sent to the DDS to implement a certain pulse sequence. 
+
+Here is a link to the LabView project if you want to have a look at it (still a work in progress): 
+
+https://www.dropbox.com/sh/yx5bxqczn4k2a5s/AADe5LAHjcEnJucZl6EtMGWha?dl=0
+
+If you load DDSControlGuiv2, that is the same VI that is used in the screenshots. If you flick through the various sub-VIs, you should be able to get a feeling for how the supplied LabView VIs are used to implement the desired pulse sequence. 
+
+In summary for the first method (user programmed pulse sequence), the VI seems to work well, as long as we don’t need any ramps in frequency or amplitude (although I intend to fix that later)
+
+Method 2
+
+Now coming on to the second method, where the pulse parameters are meant to be read in from a MotMaster sequence file. One of our software engineers had a go at getting this to work, although in my testing it seems that the parameters are only partially read in. Therefore, we need to do some more work on this also.
+
+ For testing, we named some of the analogue output channels things like DDS0-1-Amp, DDS0-1-Frq etc and tried to encode the desired DDS sequence parameters on those channels (I attach an example sequence here also). I think we should be able to get this to work in principle, although obviously doing this means that those analogue channels are tied up and can’t be used for anything else. Therefore, what we would like to do is to have some ‘virtual’ channels in the MotMaster sequence, that can be given parameter values throughout the sequence but are not actually linked to any physical output of the PXI machine. Do you think you would be able to help us with that? If so, I can explain in more detail.
+
+There is lots more to discuss here obviously, but maybe I will leave it there for now. If you like, I can give you a guided tour of the software over TeamViewer. The scope trace attached below is taken using a web based oscilloscope that is connected to the PXI machine, so you could also play with the VI and watch the DDS output change for yourself.
+
+I hope this is useful information. Perhaps we can discuss further on our next catch up call with Henry.
+
+Best wishes,
+
+Joseph

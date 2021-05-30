@@ -70,6 +70,11 @@ namespace DAQ.HAL
             ExtDevices["MSquared"] = "1";
             Instruments.Add("MSquaredDCS", new ICEBlocDCS());
             Instruments.Add("MSquaredPLL", new ICEBlocPLL());
+
+            if (Environment.Environs.Debug)
+            {
+                ExtDevices["FlexDDS"] = "1";
+            }
           
             // map of all analog, digital and counter channels 
             // complex names (name/showAs): 

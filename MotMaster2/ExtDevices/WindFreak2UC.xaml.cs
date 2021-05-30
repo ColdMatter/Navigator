@@ -40,9 +40,11 @@ namespace MOTMaster2.ExtDevices
         }
         protected string _dvcName;
         public string dvcName { get { return _dvcName; } }
-        public bool GetEnabled(bool ignoreHardware = false) // ready to operate
+        public bool CheckEnabled(bool ignoreHardware = false) // ready to operate
         {
-            return OptEnabled() && ignoreHardware ? true : CheckHardware();
+            bool bb = OptEnabled() && (ignoreHardware ? true : CheckHardware());
+            ucExtFactors.btnUpdate.IsEnabled = bb;
+            return bb;
         }
         public GeneralOptions genOpt { get; set; }       
         public bool OptEnabled()
@@ -83,7 +85,7 @@ namespace MOTMaster2.ExtDevices
                 ErrorMng.Log("Error: the device <"+ dvcName+"> is not available!", Brushes.Red.Color);
                 return false;
             }
-            if (!GetEnabled(true)) return false;
+            if (!CheckEnabled(true)) return false;
             string[] fns = fctName.Split(':');
             if (fns.Length == 1) // common commands (non-channel specific)
             {
@@ -133,6 +135,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
+            ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
             // load config file
             Dictionary<string, string> cfg = Utils.readDict(Utils.configPath + dvcName + ".CFG");
             ucExtFactors.factorsState = cfg;
@@ -189,6 +192,17 @@ namespace MOTMaster2.ExtDevices
             char chnName = Convert.ToChar((sender as ArrowButton).Content);
             if (chns.Count.Equals(0)) Utils.TimedMessageBox("No active devices found");
             chns[chnName].phaseShift(2*ps);
+        }
+
+        private void imgTripleBars_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmTripleBars") as ContextMenu;
+            cm.PlacementTarget = sender as Image;
+            cm.IsOpen = true;
+        }
+        private void miCheckHw_Click(object sender, RoutedEventArgs e)
+        {
+            ucExtFactors.UpdateEnabled(genOpt.WindFreakEnabled, CheckHardware(), CheckEnabled(false));
         }
     }
 }

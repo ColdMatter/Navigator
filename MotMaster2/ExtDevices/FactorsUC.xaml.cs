@@ -35,9 +35,25 @@ namespace MOTMaster2.ExtDevices
         public bool genOpt_Enabled { get { return _genOpt_Enabled; } }
         public bool groupUpdate { get; set; }
 
+        public delegate bool CheckHwHandler();
+        public event CheckHwHandler OnCheckHw;
+        protected bool CheckHw()
+        {
+            if (OnCheckHw != null) return OnCheckHw();
+            else return false;
+        }
+
+        public delegate bool CheckMainHandler(bool ignoreHardware = false);
+        public event CheckMainHandler OnCheckMain;
+        protected bool CheckMain(bool ignoreHardware = false)
+        {
+            if (OnCheckMain != null) return OnCheckMain(ignoreHardware);
+            else return true;
+        }
+
         private bool _HW_Enabled;
         public bool HW_Enabled { get { return _HW_Enabled; } } 
-        public bool UpdateEnabled(bool __genOpt_Enabled, bool __HW_Enabled)
+        public bool UpdateEnabled(bool __genOpt_Enabled, bool __HW_Enabled, bool mainEnabled = true)
         {
             _genOpt_Enabled = __genOpt_Enabled;
             _HW_Enabled = __HW_Enabled || Controller.config.Debug; 
@@ -48,14 +64,20 @@ namespace MOTMaster2.ExtDevices
             if (genOpt_Enabled) ss += "(ON)";
             else ss += "(off)";
             lbStatus.Content = ss;
-            if (genOpt_Enabled && HW_Enabled) lbStatus.Foreground = Brushes.DarkGreen;
+            bool bb = genOpt_Enabled && HW_Enabled;
+            if (bb) lbStatus.Foreground = Brushes.DarkGreen;
             else lbStatus.Foreground = Brushes.Maroon;
-            return genOpt_Enabled && HW_Enabled;           
+            btnUpdate.IsEnabled = (bool)mainEnabled && bb; 
+            return btnUpdate.IsEnabled;               
         }
         public Sequence seqData { get; set; }
         public void UpdateFromSequence(ref Sequence _sequenceData)
         {
             seqData = _sequenceData;
+            UpdateFromSequence();
+        }
+        public void UpdateFromSequence()
+        {
             foreach (Factor factor in Factors)
             {
                 factor.ParamUpdate(Parameters);
@@ -68,12 +90,12 @@ namespace MOTMaster2.ExtDevices
             Factor fc = new Factor(fName, extName, groupUpdate);
             Factors.Add(fc); stackFactors.Children.Add(fc);
         }
-        public int IdxFromName(string nm)
+        public int IdxFromName(string nm, bool extNm = false)
         {
             int idx = -1; 
             for (int i = 0; i < Factors.Count; i++)
-            {
-                if (Factors[i].fName.Equals(nm))
+            {               
+                if ((!extNm && Factors[i].fName.Equals(nm)) || (extNm && Factors[i].extName.Equals(nm)))
                 {
                     idx = i; break; 
                 }
@@ -133,14 +155,13 @@ namespace MOTMaster2.ExtDevices
             stackFactors.Children.Clear(); double h = 0;  
             foreach (Factor factor in Factors)
             {
+                if (!factor.Enabled) continue;
                 stackFactors.Children.Add(factor);
-                h += Math.Max(factor.ActualHeight,63);
+                h += factor.Height; 
             }
             factorRow.Height = new GridLength(h);
-            lastRow.Height = new GridLength(35);
-            Height = h + firstRow.Height.Value+lastRow.Height.Value;
+            Height = firstRow.Height.Value + h + lastRow.Height.Value;
             return Height;
-            //btnUpdate.Margin = new Thickness(0, stackFactors.Height+20, 0, 0);
         }
         public void UpdateValues()
         {

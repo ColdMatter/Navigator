@@ -96,10 +96,10 @@ namespace AOMmaster
         {
             if (txt.Substring(0, 5) == "Error")
             {
-                Utils.log(tbLogger, txt, Brushes.Red.Color); return;
+                Utils.log(tbLogger, txt, Brushes.Red); return;
             }
             if (!chkLog.IsChecked.Value) return;
-            Color clr = detail ? Brushes.DarkGreen.Color : Brushes.Navy.Color;
+            SolidColorBrush clr = detail ? Brushes.DarkGreen : Brushes.Navy;
             if (detail)
             {
                 if (chkDetailed.IsChecked.Value) Utils.log(tbLogger, txt, clr);

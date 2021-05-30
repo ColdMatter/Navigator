@@ -1,0 +1,24 @@
+FlexDDS script template help
+
+The template file is loaded from Config dir and has two sections:
+[script] section is the actual template where the factors are encoded as $factor$
+The factor's names must be unique and must be present in the [factors] sctoion.
+
+At sending the script to FlexDDS all the factors in the script template will be replaced by the values taken from factors fields.
+
+Additional two "select" (switchable) factors are available: 
+- select-bnc.trigger -> for selecting the trigger mode
+- select-bool.1 -> for boolean value
+The select factors will be simply replaced by selected from combobox text.
+
+[factors] section is a set of pairs <description-with-units>=<factor-name>
+with exception of the select factors 
+
+The converion from face value to the number (hex or decimal) in the script depends on the units of the factor. 
+The available units are:
+- for frequency: [Hz], [kHz] and [MHz]
+- for phase: [deg]
+- for amplitude: [dBm]
+- for time: [ns] and [us]
+
+Comments are annotated by # and ignored (whole line or inline) in the script generation. It is a good practice to richly comment your template.

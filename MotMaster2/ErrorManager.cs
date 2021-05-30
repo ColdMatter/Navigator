@@ -23,7 +23,7 @@ namespace ErrorManager
         private static RichTextBox rtbLog;
 
         private static string ErrorPath;
-        public static bool AutoSave = true;
+        public static bool AutoSave = false;
         public static bool Verbatim = false;
        
         private static System.IO.StreamWriter ErrorFile;

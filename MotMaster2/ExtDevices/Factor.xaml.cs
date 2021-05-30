@@ -33,7 +33,6 @@ namespace MOTMaster2.ExtDevices
             RequireValue = _RequireValue;
             VisUpdate();
         }
-
         public bool isVisible
         {
             get { return Visibility == Visibility.Visible; }
@@ -55,7 +54,6 @@ namespace MOTMaster2.ExtDevices
         {
             ftNone, ftValue, ftParam
         }
-
         public string fName { get; private set; } // visual name
         public string extName { get; private set; } // name in the hardware
 
@@ -72,7 +70,7 @@ namespace MOTMaster2.ExtDevices
             return handlers.Length > 0;
         }
 
-        public double getReqValue(double dfl = Double.NaN) // required value with defualt if no value
+        public double getReqValue(double dfl = Double.NaN) // required value with default if no value
         {
             switch (fType)
             {
@@ -109,7 +107,6 @@ namespace MOTMaster2.ExtDevices
                 return rslt;
             } 
         }
-
         public bool Valid
         {
             get 
@@ -126,17 +123,23 @@ namespace MOTMaster2.ExtDevices
             if (OnSend2Dvc != null) return OnSend2Dvc(fctName, fctValue);
             else return false;
         }
-
         public void VisUpdate() // 
         {
-            if (Double.IsNaN(fValue)) lbFactor.Content = fName;
-            else lbFactor.Content = fName + " -> " + fValue.ToString("G7");
+            if (Double.IsNaN(fValue))
+            {
+                lbFactor.Content = fName; 
+            }
+            else lbFactor.Content = fName + " -> " + fValue.ToString("G8");
+            lbExtName.Content = extName;
         }
 
         public string Text
         {
             get { return cbFactor.Text; }
-            set { cbFactor.Text = value; }
+            set 
+            { 
+                cbFactor.Text = (value == "Text") ? "- - -": value; 
+            }
         }
 
         public bool SendValue()

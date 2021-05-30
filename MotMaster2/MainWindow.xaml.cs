@@ -395,7 +395,7 @@ namespace MOTMaster2
             string parameter = prm;
             if (prm.Equals(RamanPhase) && !site.Equals("")) // a special case for ramanPhase
             {
-                if (!ExtDevices["MSquared"].GetEnabled())
+                if (!ExtDevices["MSquared"].CheckEnabled())
                 {
                     ErrorMng.errorMsg("ICE block is not available!", 124); return;
                 }
@@ -805,7 +805,7 @@ namespace MOTMaster2
         }
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("\tMOTMaster2 v"+Utils.getAppFileVersion+"\n\n by Teodor Krastev, Jimmy Stammers, et al.\n\n for Imperial College, London, UK");
+            MessageBox.Show("\tMOTMaster2 v"+Utils.getAppFileVersion+"\n\n by Teodor Krastev, et al.\n\n for Imperial College, London, UK");
         }
         private void cbParamsManual_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
