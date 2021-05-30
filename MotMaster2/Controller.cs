@@ -854,7 +854,11 @@ namespace MOTMaster2
             if (!Utils.isNull(paramLogger))
             paramLogger.log("{\"MMExec\":" + initJson + "},");
             var jm = ExpData.jumboMode();
-            if (SendDataRemotely && ((jm == ExperimentData.JumboModes.none) || (jm == ExperimentData.JumboModes.repeat)))
+            if (jm == ExperimentData.JumboModes.repeat)
+            {
+
+            }
+            if (SendDataRemotely && ((jm == ExperimentData.JumboModes.none))) 
             {
                 MotMasterDataEvent(sender, new DataEventArgs(initJson));
                 ExpData.grpMME = mme.Clone();
