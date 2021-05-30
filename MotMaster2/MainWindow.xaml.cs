@@ -1113,6 +1113,11 @@ namespace MOTMaster2
                     tbByScan.Text = Convert.ToDouble(mme.prms["by"]).ToString();
                     dispatcherTimer.Start();
                     break;
+                case ("status"):
+                    MMexec mme0 = Controller.InitialCommand(Controller.ScanParam);
+                    mme0.cmd = "status"; 
+                    remoteMsg.sendCommand(JsonConvert.SerializeObject(mme0, Formatting.Indented));
+                    break;
                 case ("set"):
                     foreach (var prm in mme.prms)
                     {
@@ -1127,8 +1132,8 @@ namespace MOTMaster2
                     break;
                 case ("abort"):
                     //Stop running
-                    if (Convert.ToString(btnRun.Content) == "Abort") btnRun_Click(this, null);
-                    else if (Convert.ToString(btnScan.Content) == "Abort") btnScan_Click(this, null);
+                    if (Convert.ToString(btnRun.Content) == "Abort") btnRun_Click(null, null);
+                    else if (Convert.ToString(btnScan.Content) == "Abort") btnScan_Click(null, null);
                     dispatcherTimer.Start();
                     break;
             }

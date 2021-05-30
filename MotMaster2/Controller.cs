@@ -853,7 +853,12 @@ namespace MOTMaster2
             string initJson = JsonConvert.SerializeObject(mme, Formatting.Indented);
             if (!Utils.isNull(paramLogger))
             paramLogger.log("{\"MMExec\":" + initJson + "},");
-            if (SendDataRemotely && (ExpData.jumboMode() == ExperimentData.JumboModes.none))
+            var jm = ExpData.jumboMode();
+            if (jm == ExperimentData.JumboModes.repeat)
+            {
+
+            }
+            if (SendDataRemotely && ((jm == ExperimentData.JumboModes.none))) 
             {
                 MotMasterDataEvent(sender, new DataEventArgs(initJson));
                 ExpData.grpMME = mme.Clone();
