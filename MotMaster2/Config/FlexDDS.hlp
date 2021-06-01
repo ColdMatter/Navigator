@@ -2,7 +2,12 @@ FlexDDS script template help
 
 The template file is loaded from Config dir and has two sections:
 [script] section is the actual template where the factors are encoded as $factor$
-The factor's names must be unique and must be present in the [factors] sctoion.
+The factor's names must be unique and must be present in the [factors] section.
+
+Two formats for a factor are acceptable:
+factor-variable -> <name>=<description-incl-unit>
+factor-constant -> <name>=<description-incl-unit>=value
+Only factor-variables are set to the front to be used as ext.device factors.
 
 At sending the script to FlexDDS all the factors in the script template will be replaced by the values taken from factors fields.
 

@@ -1021,10 +1021,8 @@ namespace MOTMaster2
         {
             ParametersWindow paramWindow = new ParametersWindow();
             paramWindow.ShowDialog();
-            ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
-            
+            ExtFactors.UpdateFromSequence(ref Controller.sequenceData);            
         }
-
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             dispatcherTimer.Stop();
@@ -1049,7 +1047,6 @@ namespace MOTMaster2
                 realRun(jumboCycles, Controller.ExpData.grpMME.sender, Controller.ExpData.grpMME.id);
             }
         }
-
         public bool Interpreter(string json) // deal with incomming commands
         {
             //if (messenger != null) messenger.Send("<" + json + ">");
@@ -1114,8 +1111,7 @@ namespace MOTMaster2
                     dispatcherTimer.Start();
                     break;
                 case ("status"):
-                    MMexec mme0 = Controller.InitialCommand(Controller.ScanParam);
-                    mme0.cmd = "status"; 
+                    MMexec mme0 = Controller.InitialCommand(null);  mme0.cmd = "status"; 
                     remoteMsg.sendCommand(JsonConvert.SerializeObject(mme0, Formatting.Indented));
                     break;
                 case ("set"):
@@ -1251,7 +1247,8 @@ namespace MOTMaster2
 
         private void btnClear_Click(object sender, RoutedEventArgs e)
         {
-            tbLogger.Document.Blocks.Clear();           
+            tbLogger.Document.Blocks.Clear();  
+            //Log(ExtDevices["FlexDDS"].)
         }
 
         private void chkVerbatim_Checked(object sender, RoutedEventArgs e)

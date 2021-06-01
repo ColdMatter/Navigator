@@ -134,7 +134,6 @@ namespace MOTMaster2.ExtDevices
                 }                    
             }
             if (!rslt) return false;
-
             return rslt;
         }
     }

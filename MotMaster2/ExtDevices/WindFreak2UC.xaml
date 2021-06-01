@@ -38,15 +38,15 @@
                         <RowDefinition Height="63"/>
                         <RowDefinition Height="92*"/>
                     </Grid.RowDefinitions>
-                    <Label Content="Phase shift" Grid.ColumnSpan="2" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" ></Label>
+                    <Label Content="Phase shift" Grid.ColumnSpan="2" Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="13"></Label>
                     <ni:NumericTextBoxDouble x:Name="numA" HorizontalAlignment="Left" Height="24" Margin="13,31,0,0"  VerticalAlignment="Top" Width="70" Range="0, 360, System.Double"  RenderTransformOrigin="0.494,1.373" Value="1"/>
-                    <ni:ArrowButton x:Name="btnA" Content="A" HorizontalAlignment="Left" Height="23" Margin="88,31,0,0" VerticalAlignment="Top" Width="35" FontWeight="Bold" Click="btnA_Click"/>
+                    <ni:ArrowButton x:Name="btnA" Content="A" HorizontalAlignment="Left" Height="23" Margin="88,31,0,0" VerticalAlignment="Top" Width="35" Click="btnA_Click" FontSize="13"/>
                     <ni:NumericTextBoxDouble x:Name="numB" HorizontalAlignment="Left" Height="24" Margin="13,31,0,0" Grid.Column="1" VerticalAlignment="Top" Width="70" Range="0, 360, System.Double" RenderTransformOrigin="0.494,1.373" Value="1"/>
-                    <ni:ArrowButton x:Name="btnB" Content="B" HorizontalAlignment="Left" Height="23" Margin="88,31,0,0" Grid.Column="1" VerticalAlignment="Top" Width="35" FontWeight="Bold" Click="btnA_Click"/>
+                    <ni:ArrowButton x:Name="btnB" Content="B" HorizontalAlignment="Left" Height="23" Margin="88,31,0,0" Grid.Column="1" VerticalAlignment="Top" Width="35" Click="btnA_Click" FontSize="13"/>
                     <ni:NumericTextBoxDouble x:Name="numC" HorizontalAlignment="Left" Height="24" Margin="13,10,0,0" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Width="70" Range="0, 360, System.Double" RenderTransformOrigin="0.494,1.373" Value="1"/>
-                    <ni:ArrowButton x:Name="btnC" Content="C" HorizontalAlignment="Left" Height="23" Margin="88,10,0,0" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Width="35" FontWeight="Bold" Click="btnA_Click"/>
+                    <ni:ArrowButton x:Name="btnC" Content="C" HorizontalAlignment="Left" Height="23" Margin="88,10,0,0" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Width="35" Click="btnA_Click" FontSize="13"/>
                     <ni:NumericTextBoxDouble x:Name="numD" HorizontalAlignment="Left" Height="24" Margin="13,10,0,0" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Width="70" Range="0, 360, System.Double"  RenderTransformOrigin="0.494,1.373" Value="1"/>
-                    <ni:ArrowButton x:Name="btnD" Content="D" HorizontalAlignment="Left" Height="23" Margin="88,10,0,0" Grid.Column="1" Grid.Row="1"  VerticalAlignment="Top" Width="35" FontWeight="Bold" Click="btnA_Click"/>
+                    <ni:ArrowButton x:Name="btnD" Content="D" HorizontalAlignment="Left" Height="23" Margin="88,10,0,0" Grid.Column="1" Grid.Row="1"  VerticalAlignment="Top" Width="35" Click="btnA_Click" FontSize="13"/>
                 </Grid>
             </Grid>
         </GroupBox>

@@ -69,7 +69,7 @@ namespace MOTMaster2.ExtDevices
             EstimateHandler[] handlers = (EstimateHandler[])OnEstimate.GetInvocationList();
             return handlers.Length > 0;
         }
-
+        public SolidColorBrush defaultBG = Brushes.Transparent;
         public double getReqValue(double dfl = Double.NaN) // required value with default if no value
         {
             switch (fType)
@@ -191,7 +191,7 @@ namespace MOTMaster2.ExtDevices
             bool sc = false;
             if (fType == factorType.ftParam) sc = Text.Equals(scanPrm); // && (!cbFactor.Text.Equals("- - -"));
             if (sc) gridCanvas.Background = Brushes.LightYellow;
-            else gridCanvas.Background = Brushes.Transparent;
+            else gridCanvas.Background = defaultBG;
             return sc;
         }
     }

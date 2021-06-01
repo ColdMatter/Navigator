@@ -222,16 +222,16 @@ namespace MOTMaster2.ExtDevices
         private void SetFactors(List<string> fcts) // list from script section
         {
             ucExtFactors.Factors.Clear();
-            OrderedDictionary odict = script.factorsSection;
+            DDS_factors ddsFcts = script.factorsSection;
             var ffs = new Dictionary<string, bool>(); // script ones with flags
             foreach (string ss in fcts)
             {
-                if (odict.Contains(ss)) ucExtFactors.AddFactor(Convert.ToString(odict[ss]), ss);
-                else
-                {
-                    ucExtFactors.AddFactor(ss, ss);
-                    ErrorMng.errorMsg("Missing declaration of factor <"+ss+">", 143);
-                }
+                int j = ddsFcts.IdxFromExtName(ss);
+                if (j == -1) 
+                {                   
+                    ErrorMng.errorMsg("Missing declaration of factor <"+ss+">", 143); continue;
+                }                  
+                if (ddsFcts[j].Item3.Equals("")) ucExtFactors.AddFactor(ddsFcts[j].Item2, ddsFcts[j].Item1);
             }
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
         }

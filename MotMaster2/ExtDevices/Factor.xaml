@@ -13,6 +13,6 @@
 
         <Label x:Name="lbFactor" Content="Name" Margin="0,0,0,0" VerticalAlignment="Top" FontSize="13" Foreground="Navy" HorizontalAlignment="Left"/>
         <Label x:Name="lbExtName" Content="ExtName" Margin="0,0,3,0" VerticalAlignment="Top" FontSize="13" Foreground="DarkGray" HorizontalAlignment="Right"/>
-        <ComboBox x:Name="cbFactor" Margin="5,0,5,3" VerticalAlignment="Bottom" Background="{x:Null}" FontSize="13" IsEditable="True" Text="Text" Grid.Row="1"/>
+        <ComboBox x:Name="cbFactor" Margin="5,0" VerticalAlignment="Center" Background="{x:Null}" FontSize="13" IsEditable="True" Text="Text" Grid.Row="1"/>
     </Grid>
 </UserControl>

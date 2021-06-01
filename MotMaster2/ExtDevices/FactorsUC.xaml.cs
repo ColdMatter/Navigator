@@ -88,6 +88,11 @@ namespace MOTMaster2.ExtDevices
         public void AddFactor(string fName, string extName = "")
         {
             Factor fc = new Factor(fName, extName, groupUpdate);
+            if ((Factors.Count%2) == 1)
+            {
+                fc.defaultBG = Utils.ToSolidColorBrush("#FFFAFAFA");
+                fc.gridCanvas.Background = fc.defaultBG;
+            }
             Factors.Add(fc); stackFactors.Children.Add(fc);
         }
         public int IdxFromName(string nm, bool extNm = false)
