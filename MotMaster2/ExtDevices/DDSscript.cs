@@ -88,15 +88,107 @@ namespace MOTMaster2.ExtDevices
             }
         }
     }
+    public class DDS_units : List<Tuple<string, double, int>> // 0 size -> no size restrictions
+    {
+        const double freqStep = 232.83064E-3; // [Hz] -> frequency step
+        const double usStep = 1.024; // microsec step
+        const double nsStep = 0.125; // nanosec step (high-res mode)
+        const double degreeSemiTurn = 32767; // 180 [deg]
+        const double amplFull_dBm = -2; // full amplitude [dBm]
+        const double amplFull_ampl = 16383; // full amplitude [ampl]
+        public DDS_units()
+        {
+            // time
+            AddUnit("ms", 1000 / usStep, 0);
+            AddUnit("us", 1 / usStep, 0);
+            AddUnit("ns", 1 / nsStep, 0);
+            // frequency
+            AddUnit("Hz", 1 / freqStep, 8);
+            AddUnit("kHz", 1E3 / freqStep, 8);
+            AddUnit("MHz", 1E6 / freqStep, 8);
+            // amplitude [%] 0-100
+            AddUnit("ampl", amplFull_ampl / 100, 4);
+            // phase degree 0-360
+            AddUnit("deg", degreeSemiTurn / 180, 4);
+            // non-coeff conversion
+            
+            AddUnit("dBm", Double.NaN, 4);
+
+        }
+        public int AddUnit(string unit, double coeff, int size)
+        {
+            this.Add(new Tuple<string, double, int>(unit, coeff, size));
+            return this.Count;
+        }
+        public int IdxFromUnit(string unit)
+        {
+            int j = -1;
+            for (int i = 0; i < Count; i++)
+            {
+                if ((this[i].Item1).Equals(unit)) { j = i; break; }
+            }
+            return j;
+        }
+
+        public string replaceValueByUnit(string unit, double vl)
+        {
+            int j = IdxFromUnit(unit);
+            if (j < 0)
+            {
+                ErrorMng.errorMsg("Undefined unit -> " + unit, 122); return "";
+            }
+            double fct = Double.NaN;
+            if (Double.IsNaN(this[j].Item2)) 
+            {
+                switch (unit) // non-coeff units
+                {
+                     case "dBm":
+                        double up = (vl - amplFull_dBm) / 20;
+                        fct = Math.Pow(10, up) * (Math.Pow(2, 14) - 1);
+                        break;
+                }
+            }
+            else // coeff conversion
+            {
+                switch (unit) // time is decimal
+                {
+                    case "ms":                        
+                    case "us":
+                        return Convert.ToInt32(vl * this[j].Item2).ToString();
+                    case "ns":
+                        return Convert.ToInt32(vl * this[j].Item2).ToString() + "h";
+                }
+                fct = vl * this[j].Item2;
+            }
+            if (Double.IsNaN(fct))
+            {
+                ErrorMng.errorMsg("Wrong unit -> " + unit, 123); return "";
+            }
+            string sval = Convert.ToString(Convert.ToInt32(fct), 16);
+            if (this[j].Item3 > 0) // if size-restricted
+                if (sval.Length > this[j].Item3)
+                {
+                    ErrorMng.errorMsg("Hexadecimal too long -> " + sval, 121); return "";
+                }
+            return new String('0', this[j].Item3 - sval.Length) + sval;
+        }
+    }
     public class DDS_script
     {
+        DDS_units units;
+        private void SetUnits()
+        {
+            units = new DDS_units();
+        }
         public DDS_script(string[] _template)
         {
             AsList = new List<string>(_template);
+            SetUnits();
         }
         public DDS_script(string __filename)
         {
             Open(__filename);
+            SetUnits();
         }
         // data core source
         protected void UpadeFromScript()
@@ -104,7 +196,6 @@ namespace MOTMaster2.ExtDevices
             _scriptSection = Utils.readStructList(_AsList)["script"];
             var ls = Utils.skimRem(Utils.readStructList(_AsList)["factors"]);
             _factorsSection = new DDS_factors(ls);
-
         }
         public List<string> _AsList;
         public List<string> AsList 
@@ -154,6 +245,7 @@ namespace MOTMaster2.ExtDevices
                         break;
                     }
                     string fct = ss.Substring(i + 1, j - i - 1);
+                    if (rslt.IndexOf(fct) > -1) continue;
                     if (fct.IndexOf("select-") == 0)
                     {
                         if (select) rslt.Add(fct);
@@ -205,12 +297,6 @@ namespace MOTMaster2.ExtDevices
             }
             File.WriteAllLines(filename, AsArray);
         }
-        const double freqStep = 232.83064E-3; // [Hz] -> frequency step
-        const double degreeStep = 5.4933317E-3; // [deg]
-        const int degreeOffset = 1073676288;
-        const double amplFull = -2; // full amplitude [dBm]
-        const double usStep = 1.024; // microsec step
-        const double nsStep = 0.125; // nanosec step (high-res mode)
 
         public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors) 
         {
@@ -235,53 +321,15 @@ namespace MOTMaster2.ExtDevices
                 {
                     ErrorMng.errorMsg("Missing value of factor <" + key + "> ", 119); continue;
                 }
-                string units = Utils.betweenStrings(pr.Item2, "[", "]");
-                if (units.Equals(""))
+                string unit = Utils.betweenStrings(pr.Item2, "[", "]");
+                if (unit.Equals(""))
                 {
                     ErrorMng.errorMsg("No units in " + pr.Item2, 120); continue;
                 }
-                // rescale from user units to internal units                                              
-                if ((units == "us") || (units == "ns"))  // time is decimal
-                {
-                    switch (units)
-                    {
-                        case "us":
-                            fct = fct / usStep;
-                            repl[key] = ((int)Math.Round(fct)).ToString();
-                            break;
-                        case "ns":
-                            fct = fct / nsStep;
-                            repl[key] = ((int)Math.Round(fct)).ToString() + "h";
-                            break;
-                    }
-                    continue;
-                }
-                switch (units) // rescale to internal units
-                {
-                    case "Hz":
-                        fct = fct / freqStep;
-                        break;
-                    case "kHz":
-                        fct = 1E3 * fct / freqStep;
-                        break;
-                    case "MHz":
-                        fct = 1E6 * fct / freqStep;
-                        break;
-                    case "deg":
-                        fct = degreeOffset + fct / degreeStep;
-                        break;
-                    case "dBm":
-                        double up = (fct - amplFull) / 20;
-                        fct = Math.Pow(10, up) * (Math.Pow(2, 14) - 1);
-                        break;
-                }
-                string sval = Convert.ToString(Convert.ToInt32(fct), 16);
-                if (sval.Length > 8)
-                {
-                    ErrorMng.errorMsg("Hexadecimal too long -> " + sval, 121); continue;
-                }
-                string tval = new String('0', 8 - sval.Length);
-                repl[key] = tval + sval; // all values must be of length 8
+                // rescale from user units to internal units
+                string ss = units.replaceValueByUnit(unit, fct);
+                if (ss.Equals("")) continue;
+                repl[key] = ss;             
             }
             return repl;
         }

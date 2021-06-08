@@ -4,7 +4,7 @@ dcp 0 spi:CFR2=0x$fct1$
 dcp 0 spi:STP0=0x$fct2$
 dcp 0 wait::$select-bnc.trigger$
 dcp 0 update:u
-dcp 0 spi:STP0=0x3fff0000$fct3$
+dcp 0 spi:STP0=0x$fct13$$fct14$$fct3$
 dcp 0 wait:$fct4$:
 dcp 0 update:u
 
@@ -41,8 +41,11 @@ fct9=Factor 9 [ns]
 fct10=Factor 10 [MHz]
 fct11=Factor 11 [ns]
 fct12=Factor 12 [ns]
-fct13=Factor 13 [unit]
-fct14=Factor 14 [unit]
+fct13=Factor 13 [ampl]
+fct14=Factor 14 [deg]
+
+
+
 
 
 

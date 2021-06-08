@@ -1,29 +1,29 @@
-FlexDDS script template help
-
-The template file is loaded from Config dir and has two sections:
+  FlexDDS script template help
+=-=-=-=-=-=-=-=-=-=-=-=-=-=
+A template file (*.dds) is loaded from Config dir and has two sections:
 [script] section is the actual template where the factors are encoded as $factor$
 The factor's names must be unique and must be present in the [factors] section.
 
-Two formats for a factor are acceptable:
+[script] section contains the tempalte which defines the required generated pattern. 
+The pattern is parameterized using factors. At sending the script to FlexDDS all the factors in the script template will be replaced by the values taken from factors fields.
+
+[factors] section 
+Two formats for a factor in factor section are acceptable:
 factor-variable -> <name>=<description-incl-unit>
 factor-constant -> <name>=<description-incl-unit>=value
 Only factor-variables are set to the front to be used as ext.device factors.
-
-At sending the script to FlexDDS all the factors in the script template will be replaced by the values taken from factors fields.
 
 Additional two "select" (switchable) factors are available: 
 - select-bnc.trigger -> for selecting the trigger mode
 - select-bool.1 -> for boolean value
 The select factors will be simply replaced by selected from combobox text.
-
-[factors] section is a set of pairs <description-with-units>=<factor-name>
-with exception of the select factors 
+No need to list select factors in factor section, just use them in the script section
 
 The converion from face value to the number (hex or decimal) in the script depends on the units of the factor. 
 The available units are:
 - for frequency: [Hz], [kHz] and [MHz]
 - for phase: [deg]
-- for amplitude: [dBm]
-- for time: [ns] and [us]
+- for amplitude: [dBm] and [ampl](in %)
+- for time: [ms], [ns] and [us]
 
 Comments are annotated by # and ignored (whole line or inline) in the script generation. It is a good practice to richly comment your template.
