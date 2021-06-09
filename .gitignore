@@ -31,8 +31,6 @@ iamjoe.sh
 
 MotMaster2/Data/*
 
-MotMaster2/Config/*
-
 *.sm2
 
 MotMaster2/Scripts/*.sm2
