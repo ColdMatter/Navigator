@@ -15,7 +15,7 @@ namespace MOTMaster2.ExtDevices
     public interface IExtDevice // everything not factor specific 
     {       
         string dvcName { get; }
-        bool GetEnabled(bool ignoreHardware = false); // ready to operate
+        bool CheckEnabled(bool ignoreHardware = false); // ready to operate
         bool Talk2Dvc(string fctName, object fctValue);
 
         bool OptEnabled();
@@ -36,7 +36,7 @@ namespace MOTMaster2.ExtDevices
         bool genOpt_Enabled { get; }
         bool groupUpdate { get; set; }
         bool HW_Enabled { get; }
-        bool UpdateEnabled(bool _genOpt_Enabled, bool _HW_Enabled);
+        bool UpdateEnabled(bool _genOpt_Enabled, bool _HW_Enabled, bool mainEnabled = true);
         Sequence seqData { get; set; }
         void UpdateFromSequence(ref Sequence _sequenceData); 
         bool IsScannable(string prm);
@@ -83,7 +83,7 @@ namespace MOTMaster2.ExtDevices
             bool rslt = true;
             foreach (IExtDevice dvc in this.Values)
             {
-                if (dvc.GetEnabled()) rslt &= dvc.UpdateDevice(false);
+                if (dvc.CheckEnabled()) rslt &= dvc.UpdateDevice(false);
             }
             return rslt;
         }
@@ -134,7 +134,6 @@ namespace MOTMaster2.ExtDevices
                 }                    
             }
             if (!rslt) return false;
-
             return rslt;
         }
     }

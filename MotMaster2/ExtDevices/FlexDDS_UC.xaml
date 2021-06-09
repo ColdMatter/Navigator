@@ -5,71 +5,89 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MOTMaster2.ExtDevices"
              mc:Ignorable="d" 
-             d:DesignHeight="450" Width="284.759">
-    <Grid>
-        <GroupBox x:Name="grpBox" Header="GroupBox" Margin="0" Background="White">
-            <Grid>
-                <TabControl x:Name="tabControl" Background="White" BorderBrush="{x:Null}">
-                    <TabItem x:Name="tiMain" Height="20">
-                        <Grid  Margin="0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="29"/>
-                                <RowDefinition x:Name="factorRow" Height="247"/>
-                                <RowDefinition Height="155*"/>
-                            </Grid.RowDefinitions>
-                            <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="0,0,40,0" Width="35" Click="btnEdit_Click"></Button>
-                            <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Test" Margin="0" Width="35" Click="btnTest_Click"></Button>
-                            <ComboBox x:Name="cbTemplates" HorizontalAlignment="Left" Margin="0,3,0.481,4.165"  Width="182" Background="#FFF4F4F4" DropDownOpened="cbTemplates_DropDownOpened" DropDownClosed="cbTemplates_DropDownClosed" VerticalAlignment="Center"/>
-                            <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
-                            <StackPanel x:Name="spSelectFactors" Grid.Row="2" Margin="5,0,5,0">
-                                <GroupBox x:Name="gbTrigger" Header="select-bnc.trigger" >
-                                    <ComboBox x:Name="cbTrigger" Background="#FFF2F2F2" Margin="0,5,0,0" SelectedIndex="1">
-                                        <ComboBoxItem Content="NONE"/>
-                                        <ComboBoxItem Content="BNC_IN_A_RISING"/>
-                                        <ComboBoxItem Content="BNC_IN_A_FALLING"/>
-                                        <ComboBoxItem Content="BNC_IN_A_LEVEL"/>
+             d:DesignHeight="450" Width="330">
+    <UserControl.Resources>
+        <ContextMenu x:Key="cmTripleBars">
+            <MenuItem x:Name="miCheckHw" Header="Check the device" Click="miCheckHw_Click" />
+        </ContextMenu>
+    </UserControl.Resources>
+
+    <ScrollViewer x:Name="scrollPanel">
+        <Grid>
+            <GroupBox x:Name="grpBox" Header="GroupBox" Margin="0" Background="White">
+                <Grid>
+                    <TabControl x:Name="tabControl" Background="White" BorderBrush="{x:Null}">
+                        <TabItem x:Name="tiMain" Height="20">
+                            <Grid  Margin="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition x:Name="factorRow" Height="247"/>
+                                    <RowDefinition Height="155*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
+                                    <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarGreen.bmp" HorizontalAlignment="Left" MouseUp="imgTripleBars_MouseUp"/>
+                                    <ComboBox x:Name="cbTemplates" HorizontalAlignment="Left" Margin="3,2,00,0"  Width="165" DropDownOpened="cbTemplates_DropDownOpened" DropDownClosed="cbTemplates_DropDownClosed" VerticalAlignment="Center" Background="{x:Null}">
+                                        <ComboBoxItem Content="some text"/>
                                     </ComboBox>
-                                </GroupBox>
-                                <GroupBox x:Name="gbBoolean" Header="select-bool.1" >
-                                    <ComboBox x:Name="cbBoolean" Background="#FFF2F2F2" Margin="0,5,0,0" SelectedIndex="0">
-                                        <ComboBoxItem Content="FALSE"/>
-                                        <ComboBoxItem Content="TRUE"/>
-                                    </ComboBox>
-                                </GroupBox>
-                            </StackPanel>
-                        </Grid>
-                    </TabItem>
-                    <TabItem x:Name="tiEdit" Height="20">
-                        <Grid >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="28"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal">
-                                <Button x:Name="btnCancel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Cancel" Margin="5,3,0,2.949" Width="50" Click="btnCancel_Click"/>
-                                <Button x:Name="btnAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Accept" Margin="15,3,0,2.949" Width="51" Click="btnAccept_Click"></Button>
-                                <Button x:Name="btnSaveAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Save 'n Accept" Margin="5,3,0,2.949" Width="95" Click="btnAccept_Click"/>
-                            </StackPanel>
-                            <TextBox x:Name="tbTemplate" Grid.Row="1" Text=""/>
-                        </Grid>
-                    </TabItem>
-                    <TabItem x:Name="tiTest" Height="20">
-                        <Grid >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="28"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal">
-                                <Button x:Name="btnClose" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Close" Margin="5,0,0,0" Width="45" Click="btnCancel_Click"/>
-                            </StackPanel>
-                            <TextBox x:Name="tbTest" Grid.Row="1" Text="" IsReadOnly="True"/>
-                        </Grid>
-
-                    </TabItem>
-
-                </TabControl>
-            </Grid>
-        </GroupBox>
-
-    </Grid>
+                                     <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="3,0,0,0" Width="35" Click="btnEdit_Click" Foreground="Navy"></Button>
+                                    <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Test" Margin="3,0,0,0" Width="35" Click="btnTest_Click" Foreground="DarkGreen"></Button>
+                                </StackPanel>
+                                <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
+                                <StackPanel x:Name="spSelectFactors" Grid.Row="2" Margin="5,0,5,0">
+                                    <GroupBox x:Name="gbTrigger" Header="select-bnc.trigger" >
+                                        <ComboBox x:Name="cbTrigger" Background="#FFF2F2F2" Margin="0,5,0,0" SelectedIndex="1">
+                                            <ComboBoxItem Content="NONE"/>
+                                            <ComboBoxItem Content="BNC_IN_A_RISING"/>
+                                            <ComboBoxItem Content="BNC_IN_A_FALLING"/>
+                                            <ComboBoxItem Content="BNC_IN_A_LEVEL"/>
+                                        </ComboBox>
+                                    </GroupBox>
+                                    <GroupBox x:Name="gbBoolean" Header="select-bool.1" >
+                                        <ComboBox x:Name="cbBoolean" Background="#FFF2F2F2" Margin="0,5,0,0" SelectedIndex="0">
+                                            <ComboBoxItem Content="FALSE"/>
+                                            <ComboBoxItem Content="TRUE"/>
+                                        </ComboBox>
+                                    </GroupBox>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tiEdit" Height="20">
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="28"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="btnCancel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Cancel" Margin="2,3,0,2.949" Width="50" Click="btnCancel_Click"/>
+                                    <Button x:Name="btnAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Accept" Margin="7,3,0,2.949" Width="51" Click="btnAccept_Click" IsEnabled="False"></Button>
+                                    <Button x:Name="btnSaveAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Save 'n Accept" Margin="5,3,0,2.949" Width="95" Click="btnAccept_Click" IsEnabled="False"/>
+                                    <ToggleButton x:Name="btnHelp" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Help" Margin="5,3,0,2.949" Width="41" Click="btnHelp_Click" />
+                                </StackPanel>
+                                <TabControl x:Name="tcEdit" Grid.Row="1">
+                                    <TabItem Visibility="Hidden">
+                                        <TextBox x:Name="tbTemplate" Text="" TextChanged="tbTemplate_TextChanged" AcceptsReturn="True" Foreground="Navy"/>
+                                    </TabItem>
+                                    <TabItem Visibility="Hidden">
+                                        <TextBox x:Name="tbHelp" Text="" TextWrapping="Wrap" />
+                                    </TabItem>
+                                </TabControl>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="tiTest" Height="20">
+                            <Grid >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="28"></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="btnClose" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Close" Margin="5,0,0,0" Width="45" Click="btnCancel_Click"/>
+                                </StackPanel>
+                                <TextBox x:Name="tbTest" Grid.Row="1" Text="" IsReadOnly="True" Foreground="DarkGreen"/>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -6,18 +6,26 @@
              xmlns:local="clr-namespace:MOTMaster2.ExtDevices"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="294.357" Width="300">
+    <UserControl.Resources>
+        <ContextMenu x:Key="cmTripleBars">
+            <MenuItem x:Name="miCheckHw" Header="Check the device" Click="miCheckHw_Click" />
+        </ContextMenu>
+    </UserControl.Resources>
+
     <Grid>
         <GroupBox x:Name="grpBox" Header="GroupBox" Margin="0" Background="White">
             <Grid  Margin="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="31"/>
                     <RowDefinition x:Name="factorRow" Height="247"/>
                     <RowDefinition Height="155*"/>
                 </Grid.RowDefinitions>
-                <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
+                <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarBlue.bmp" HorizontalAlignment="Left" Margin="6,1,0,0" MouseUp="imgTripleBars_MouseUp"/>
+
                 <Label Content="RFPower" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,75,0"></Label>
                 <CheckBox x:Name="chkRFPowerA" Content="A" HorizontalAlignment="Right" Margin="10,0,45,0" VerticalAlignment="Center" FontWeight="Bold"/>
                 <CheckBox x:Name="chkRFPowerB" Content="B" HorizontalAlignment="Right" Margin="10,0,10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
             </Grid>
         </GroupBox>
 

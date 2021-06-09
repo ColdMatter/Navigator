@@ -35,9 +35,11 @@ namespace MOTMaster2.ExtDevices
         protected string _dvcName;
         public string dvcName { get { return _dvcName; } }
 
-        public bool GetEnabled(bool ignoreHardware = false) // ready to operate
+        public bool CheckEnabled(bool ignoreHardware = false) // ready to operate
         {
-            return OptEnabled() && (ignoreHardware ? true : CheckHardware());
+            bool bb = OptEnabled() && (ignoreHardware ? true : CheckHardware());
+            ucExtFactors.btnUpdate.IsEnabled = bb;
+            return bb;
         }
         
         private bool CheckPhaseLock()
@@ -66,7 +68,7 @@ namespace MOTMaster2.ExtDevices
                 ErrorMng.Log("Error: the device <" + dvcName + "> is not available!", Brushes.Red.Color);
                 return false;
             }
-            if (!GetEnabled(true)) return false;
+            if (!CheckEnabled(true)) return false;
             bool bAll = fctName.Equals("<ALL>");
             if ((fctName.Equals("RamanPhase") || bAll) && false)
             {
@@ -165,6 +167,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData); 
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
+            ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
             ucExtFactors.factorsState = Utils.readDict(Utils.configPath + dvcName + ".CFG");
         }
         public void Final() // closing stuff and save state 
@@ -192,5 +195,15 @@ namespace MOTMaster2.ExtDevices
             return ucExtFactors.UpdateDevice(ignoreMutable) && UpdateOthers(ignoreMutable);
         }
 
+        private void imgTripleBars_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmTripleBars") as ContextMenu;
+            cm.PlacementTarget = sender as Image;
+            cm.IsOpen = true;
+        }
+        private void miCheckHw_Click(object sender, RoutedEventArgs e)
+        {
+            ucExtFactors.UpdateEnabled(genOpt.m2Enabled, CheckHardware(), CheckEnabled(false));
+        }
     }
 }

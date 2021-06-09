@@ -1,0 +1,13 @@
+Factor 1 [dBm]=3
+Factor 2 [MHz]=2.3
+Factor 13 [ampl]=100
+Factor 14 [deg]=180
+Factor 3 [MHz]=3.1
+Factor 4 [ns]=5
+Factor 5 [MHz]=22
+Factor 6 [Hz]=66
+Factor 7 [Hz]=77
+Factor 12 [ns]=12
+Factor 10 [MHz]=7
+Factor 11 [ns]=9
+Mutable=True
