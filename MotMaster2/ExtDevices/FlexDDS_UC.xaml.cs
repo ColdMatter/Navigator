@@ -50,7 +50,7 @@ namespace MOTMaster2.ExtDevices
             _dvcName = __dvcName;
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
-            flexDDS_HW = new FlexDDS_HW("102.0.45.87");
+            flexDDS_HW = new FlexDDS_HW("ASRL04::INSTR");
             ucExtFactors.groupUpdate = true;
             tiMain.Visibility = Visibility.Collapsed; tiEdit.Visibility = Visibility.Collapsed; tiTest.Visibility = Visibility.Collapsed;
             SelectFactors = new List<GroupBox>(); SelectFactors.Add(gbTrigger); SelectFactors.Add(gbBoolean);
@@ -87,14 +87,14 @@ namespace MOTMaster2.ExtDevices
         }
         public bool Talk2Dvc(string fctName, object fctValue) // hardware update
         {
-            if (!fctName.Equals("_block_")) // only block command is allowed
+           /* if (!fctName.Equals("_block_")) // only block command is allowed
             {
                 ErrorMng.errorMsg("The device <" + dvcName + "> accepts only block commands!", 101); return false;
-            }
+            }*/
             if (fctName.Equals("_others_")) return UpdateOthers(Convert.ToBoolean(fctValue)); // recursive           
             if (!OptEnabled())
             {
-                ErrorMng.errorMsg("Tthe device <" + dvcName + "> is not Enabled (options)!", 102); return false;
+                ErrorMng.errorMsg("The device <" + dvcName + "> is not Enabled (options)!", 102); return false;
             }
             if (Controller.config.Debug) return true;
             if (!CheckHardware())
@@ -109,6 +109,7 @@ namespace MOTMaster2.ExtDevices
             {
                 ErrorMng.errorMsg("No script available!", 104); return false;
             }
+            scr = scr.Replace("\r", "\r\n");
             flexDDS_HW.Send2HW(scr);
             return true;
         }
@@ -121,16 +122,23 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
             ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
             // load config file            
-            Dictionary<string, string> cfg =  Utils.readDict(Utils.configPath + dvcName + ".CFG");
+            Dictionary<string, string> cfg = Utils.readDict(Utils.configPath + dvcName + ".CFG");
+            /*if (!cfg.ContainsKey("Address"))
+            {
+                ErrorMng.errorMsg("Address is missing from " + Utils.configPath + dvcName + ".CFG -> set to default #12", -436);
+                flexDDS_HW = new FlexDDS_HW("ASRL12::INSTR");
+            }
+            else flexDDS_HW = new FlexDDS_HW(cfg["Address"]);*/
+
             if (!cfg.ContainsKey("LastScript"))
             {
-                ErrorMng.errorMsg("LastScript is missing from " + Utils.configPath + dvcName + ".CFG", -437); return; 
+                ErrorMng.errorMsg("LastScript is missing from " + Utils.configPath + dvcName + ".CFG", -437); return;
             }
             cbTemplates_DropDownOpened(null, null);
             int j = -1;
             for (int i = 0; i < cbTemplates.Items.Count; i++)
             {
-                string ss = ((ComboBoxItem)cbTemplates.Items[i]).Content.ToString(); 
+                string ss = ((ComboBoxItem)cbTemplates.Items[i]).Content.ToString();
                 if (ss.Equals(cfg["LastScript"])) { j = i; break; }
             }
             if (j == -1)
@@ -150,13 +158,13 @@ namespace MOTMaster2.ExtDevices
             if (cbTemplates.SelectedIndex > -1) lastScript = cbTemplates.Text;
             else lastScript = System.IO.Path.GetFileName(script.filename);
             cfg["LastScript"] = lastScript;
-            Utils.writeDict(Utils.configPath + dvcName + ".CFG", cfg);
-            cfg = ucExtFactors.factorsState;
-            if (cfg.ContainsKey("Mutable")) cfg.Remove("Mutable");
-            Utils.writeDict(Utils.configPath + System.IO.Path.ChangeExtension(lastScript,".ds0"), cfg);
-            // Disconnect
+            Utils.writeDict(Utils.configPath + System.IO.Path.ChangeExtension(lastScript, ".ds0"), ucExtFactors.factorsState);
             if (!Utils.isNull(flexDDS_HW))
+            {
+                cfg["Address"] = flexDDS_HW.address;
                 if (flexDDS_HW.Connected) flexDDS_HW.Disconnect();
+            }
+            Utils.writeDict(Utils.configPath + dvcName + ".CFG", cfg);
         }
         protected Dictionary<string, string> OtherFactors()
         {
@@ -288,15 +296,33 @@ namespace MOTMaster2.ExtDevices
             cm.PlacementTarget = sender as Image;
             cm.IsOpen = true;
         }
-        private void miCheckHw_Click(object sender, RoutedEventArgs e)
-        {
-            ucExtFactors.UpdateEnabled(genOpt.FlexDDSEnabled, CheckHardware(), CheckEnabled(false));
-        }
         private void btnHelp_Click(object sender, RoutedEventArgs e)
         {
             if (btnHelp.IsChecked.Value) tcEdit.SelectedIndex = 1;
             else tcEdit.SelectedIndex = 0;
             if (tbHelp.Text.Length == 0) tbHelp.Text = File.ReadAllText(Utils.configPath + "FlexDDS.hlp");
+        }
+        private void miCheckHw_Click(object sender, RoutedEventArgs e)
+        {
+            ucExtFactors.UpdateEnabled(genOpt.FlexDDSEnabled, CheckHardware(), CheckEnabled(false));
+        }
+        private void miTestHw_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.InitialDirectory = Utils.dataPath;
+            dlg.FileName = ""; // Default file name
+            dlg.DefaultExt = ".dcp"; // Default file extension
+            dlg.Filter = "FlexDDS commands (.dcp)|*.dcp"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
+            {
+                string ss = File.ReadAllText(dlg.FileName);
+                flexDDS_HW.Send2HW(ss); 
+            }
         }
     }
 }

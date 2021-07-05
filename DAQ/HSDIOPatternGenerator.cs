@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using UtilsNS;
 
 using NationalInstruments.ModularInstruments.Interop;
 
@@ -62,8 +63,6 @@ namespace DAQ.HAL
             /*** Write configuration to board ****/
             hsTask.CommitDynamic();
         }
-
-
        
         public void OutputPattern(uint[] pattern, int[] loopTimes)
         {

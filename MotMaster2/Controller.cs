@@ -709,13 +709,13 @@ namespace MOTMaster2
             status = RunningState.running;
 
             runThread.Start(paramDict);
-            Console.WriteLine("Thread Starting");
+            //Console.WriteLine("Thread Starting");
         }
         public void WaitForRunToFinish()
         {
             if (runThread != null) { runThread.Join(); }
             if (IsRunning()) hardwareError = CheckForRunErrors();
-            Console.WriteLine("Thread Waiting");
+            // Console.WriteLine("Thread Waiting");
         }
         /*
         public void Run()
@@ -759,10 +759,11 @@ namespace MOTMaster2
             }
 
             if (config.CameraUsed) waitUntilCameraIsReadyForAcquisition();
-
+            Utils.Trace("shot");
             watch.Start();
             ExpData.startSeqTime = DateTime.Now.Ticks; // move to 277 or 299 ??
             //TODO Try WaitForRunToFinish here and nowhere else
+
             if (!config.Debug)
             {
                 if (BatchNumber == 0 || !StaticSequence) runPattern(sequence);

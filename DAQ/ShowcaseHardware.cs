@@ -115,6 +115,7 @@ namespace DAQ.HAL
             AddAnalogOutputChannel("aomZMAtt", aoBoard + "/ao27", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("DetAttn", aoBoard + "/ao1", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("chirpFreq", aoBoard + "/ao28", -10, 10);
+            AddAnalogOutputChannel("phaseCtrl", aoBoard + "/ao29", -10, 10);
             AddAnalogOutputChannel("3DMOTCoil/spareCoil", aoBoard + "/ao12", -10, 10);
             //map the analog input channels
             AddAnalogInputChannel("photodiode", aiBoard + "/ai0", AITerminalConfiguration.Pseudodifferential, -10, 10);

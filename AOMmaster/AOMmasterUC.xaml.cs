@@ -26,7 +26,7 @@ namespace AOMmaster
     /// </summary>
     public partial class AOMmasterUC : UserControl
     {
-        Dictionary<string, SemiAxisUC> semis;
+        Dictionary<string, SemiAxisUC> semis; //MW-TTL dev3 pin24
         Hardware hardware;
         public AOMmasterUC()
         {
@@ -164,7 +164,7 @@ namespace AOMmaster
 
             vco.title = "ybias2DCoil"; vco.chnNumb = 14;
             vca.title = ""; vca.chnNumb = -1;
-            semis["2DMOT-2"].Config("2DMOT-2", "", -1, vco, vca, Brushes.Teal.Color);
+            semis["2DMOT-2"].Config("2DMOT-2", "MWTTL", 24, vco, vca, Brushes.Teal.Color);
 
             vco.title = "VCO"; vco.chnNumb = 0;
             vca.title = "VCA"; vca.chnNumb = 1;

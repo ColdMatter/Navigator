@@ -39,3 +39,36 @@ I hope this is useful information. Perhaps we can discuss further on our next ca
 Best wishes,
 
 Joseph
+=============================================================================================================================================
+Hi Theo,
+
+I have set up the DDS as discussed with the Picoscope.
+
+I have left the system with the following configuration:
+
+1 DDS card is connected with USB to the PXI machine on COM4
+Ch0 output of the DDS card is on ChB of the PicoScope
+CH1 output of the DDS card is on ChC of the PicoScope
+DIO6 of the PXI machine (named DDS-Reset in the current MotMaster sequence) is connected to ‘Reset' on the front panel of the DDS. If you think the DDS stops responding to commands at some point, send a TTL high on DIO6 from MotMaster to reset the DDS (you will have to wait ~20 s for the reset to happen)
+DIO2 (named HG_TTL  in the loaded MotMaster Sequence) is connected to ChA on the PicoScope for triggering 
+DIO0 (named DDS-Trigger) is connected to BNC A on the DDS card. This can be used to trigger the DDS if you want to test this functionality.
+
+
+I have left a LabView VI called ‘DDSSequence’ open. You can use this to generate examples if you wish. Currently, the VI is set up to send commands to both channels on the DDS card (COM4). There are 6 time blocks. The six blocks under ‘Laser Cooling’ dictate the output of DDS CH0, and similarly the time blocks under ‘Repumper’ dictate the output on DDS Ch1. If you want less active time blocks, you can reduce this using the ’No of active time blocks’ control. The controls under ‘Fibre AOM’ and ‘DDS4’ do nothing.
+
+With the control ‘Event 1’ set to BNC_IN_A_RISING’, the sequence is executes on a rising edge from DIO0. With the control set to ’None’, the sequence will execute immediately when the VI is played.
+
+As it is now, if you play the DDSSequence.vi once, then one loop of MotMaster, you will see the two DDS sequences on the Picoscope trace.
+
+The TeamViewer details are:
+ID: 1 109 793 461
+Password: Accelerometer2020 
+
+DESKTOP-U9GFG8U
+
+Let me know if you have any questions.
+
+Thanks,
+
+Joseph
+==========================================================================================================================================

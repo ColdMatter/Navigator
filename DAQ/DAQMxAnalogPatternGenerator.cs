@@ -54,7 +54,6 @@ namespace DAQ.Analog
                     (string)Environs.Hardware.GetInfo("AOPatternTrigger"), DigitalEdgeStartTriggerEdge.Rising);
                        
             analogOutputTask.Control(TaskAction.Verify);
-
         }
 
         public long OutputPatternAndWait(double[,] pattern)

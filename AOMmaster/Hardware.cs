@@ -49,7 +49,7 @@ namespace AOMmaster
         {            
             // Digital In/Out
             dvcDIO = _dvcDIO;
-            string ChannelList = "0,1,2,3,4,5,6,7,20,21,25,26";  
+            string ChannelList = "0,1,2,3,4,5,6,7,20,21,24,25,26";  
             analogMin = _analogMin; analogMax = _analogMax;          
             if ((dvcDIO == "") || Utils.TheosComputer()) return false;
             hsTaskIn = null; hsTaskOut = null;

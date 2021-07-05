@@ -107,7 +107,6 @@ namespace MOTMaster2.SequenceData
             Steps = new ObservableCollection<SequenceStep>();
             Parameters = new ObservableDictionary<string,Parameter>();
         }
-
     }
     
     public class DictionaryConverter : JsonConverter

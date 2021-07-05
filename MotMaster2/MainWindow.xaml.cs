@@ -67,7 +67,7 @@ namespace MOTMaster2
             {
                 tiImageProcess.Visibility = System.Windows.Visibility.Visible; tcVisual.SelectedIndex = 2; cbHub.SelectedIndex = 3;
             }
-            Utils.traceDest = (RichTextBox)tbLogger;
+            //Utils.traceDest = tbLogger;
             InitVisuals();
             editMode = false;
         }
@@ -225,7 +225,7 @@ namespace MOTMaster2
         bool wait4adjust = false;
         private void realRun(int Iters, string Hub = "none", int cmdId = -1)
         {
-            Utils.traceDest = (RichTextBox)tbLogger;
+            Utils.traceDest = new FileLogger(); //tbLogger;
 
             controller.AutoLogging = Check4Logging();
             if ((Iters == 0) || (Iters < -1))
@@ -1058,23 +1058,29 @@ namespace MOTMaster2
             if (mme.id == 0) mme.id = -1;
             switch (mme.cmd)
             {
-                case ("phaseAdjust"):
-                    {
-                        if (Controller.ExpData.jumboMode() != ExperimentData.JumboModes.repeat) throw new Exception("Not active Jumbo repeat group command!");
-                        double corr = Double.NaN;
-                        if (mme.prms.ContainsKey("phaseCorrection"))
-                        {                           
-                            if (Double.TryParse((string)mme.prms["phaseCorrection"], out corr))
-                            {
-                                Log("<< phaseAdjust to " + corr.ToString("G6"));
-                                controller.phaseStrobes.Correction(corr);
-                            }
-                            else corr = Double.NaN;
-                        }  
-                        
-                        if (Double.IsNaN(corr)) Log("<< "+Convert.ToInt32(mme.prms["runID"]).ToString()+" shot, same cond.");
-                        wait4adjust = false;        
-                    }
+                case ("phaseAdjust"):                   
+                    if (Controller.ExpData.jumboMode() != ExperimentData.JumboModes.repeat) throw new Exception("Not active Jumbo repeat group command!");
+                    double corr = Double.NaN;
+                    if (mme.prms.ContainsKey("phaseCorrection"))
+                    {                           
+                        if (Double.TryParse((string)mme.prms["phaseCorrection"], out corr))
+                        {
+                            Log("<< phaseAdjust to " + corr.ToString("G6"));
+                            controller.phaseStrobes.Correction(corr);
+                        }
+                        else corr = Double.NaN;
+                    }                         
+                    if (Double.IsNaN(corr)) Log("<< "+Convert.ToInt32(mme.prms["runID"]).ToString()+" shot, same cond.");
+                    wait4adjust = false;                           
+                    break;
+                case ("shoot"): // jumbo-repeat in single shots
+                    Controller.genOptions.ForceSeqCharge = true;
+                    if (Controller.ExpData.jumboMode() != ExperimentData.JumboModes.repeat) throw new Exception("Not active Jumbo repeat group command!");                    
+                    if (mme.prms.Count == 0) ErrorMng.errorMsg("No param to set in Jumbo repeat group command!",4577);
+                    string pn = mme.prms.Keys.ToList()[0];
+                    if (!Controller.sequenceData.Parameters.ContainsKey(pn)) ErrorMng.errorMsg("No such parameter <" + pn + ">", 4578);
+                    Controller.sequenceData.Parameters[pn].Value = mme.prms[pn];                                       
+                    wait4adjust = false;
                     break;
                 case ("repeat"):
                     Controller.ExpData.grpMME = mme.Clone();

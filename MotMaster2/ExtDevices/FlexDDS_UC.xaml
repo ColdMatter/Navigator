@@ -9,6 +9,7 @@
     <UserControl.Resources>
         <ContextMenu x:Key="cmTripleBars">
             <MenuItem x:Name="miCheckHw" Header="Check the device" Click="miCheckHw_Click" />
+            <MenuItem x:Name="miTestHw" Header="Test the device" Click="miTestHw_Click" />
         </ContextMenu>
     </UserControl.Resources>
 
