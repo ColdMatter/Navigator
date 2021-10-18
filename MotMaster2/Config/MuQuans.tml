@@ -1,0 +1,32 @@
+[script]
+slave:set_dds ddsq; set_freq slave0 $freq0$; 
+slave:set_freq slave1 $freq1$; set_freq slave2 $freq2$; 
+@delay $dly1$
+slave:set_dds ddsq; set_freq slave0 $freq3$; 
+slave:set_freq slave1 $freq4$; set_freq slave2 $freq5$; 
+@delay $dly2$
+slave:set_dds ddsq; set_freq slave0 $freq6$; 
+slave:set_freq slave1 $freq7$; set_freq slave2 $freq8$; 
+
+[factors]
+freq0=Frequency 0
+freq1=Frequency 1
+freq2=Frequency 2
+dly1=Delay 1
+freq3=Frequency 3
+freq4=Frequency 4
+freq5=Frequency 5
+dly2=Delay 2
+freq6=Frequency 6
+freq7=Frequency 7
+freq8=Frequency 8
+
+
+
+
+
+
+
+
+
+

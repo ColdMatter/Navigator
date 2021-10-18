@@ -57,11 +57,13 @@ namespace MOTMaster2.ExtDevices
         }
         protected string _dvcName;
         public string dvcName { get { return _dvcName; } }
+
+        public string dvcPath { get { return Utils.configPath + dvcName + "\\"; } }
         public bool CheckEnabled(bool ignoreHardware = false) // ready to operate
         {
             bool bb = OptEnabled() && (ignoreHardware ? true : CheckHardware());
-            bool bc = bb && (cbTemplates.SelectedIndex > -1);
-            btnEdit.IsEnabled = bc; btnTest.IsEnabled = bc; ucExtFactors.btnUpdate.IsEnabled = bc;
+            bool bc = bb && (cbTemplates.SelectedIndex > -1);            
+            ucExtFactors.btnUpdate.IsEnabled = bc; //btnEdit.IsEnabled = bc; btnTest.IsEnabled = bc; 
             return bc;
         }
         public GeneralOptions genOpt { get; set; }
@@ -87,16 +89,16 @@ namespace MOTMaster2.ExtDevices
         }
         public bool Talk2Dvc(string fctName, object fctValue) // hardware update
         {
-           /* if (!fctName.Equals("_block_")) // only block command is allowed
-            {
-                ErrorMng.errorMsg("The device <" + dvcName + "> accepts only block commands!", 101); return false;
-            }*/
-            if (fctName.Equals("_others_")) return UpdateOthers(Convert.ToBoolean(fctValue)); // recursive           
+            /* if (!fctName.Equals("_block_")) // only block command is allowed
+             {
+                 ErrorMng.errorMsg("The device <" + dvcName + "> accepts only block commands!", 101); return false;
+             }*/
+            if (Convert.ToString(fctValue).Equals("_others_")) return true; // ? UpdateOthers ?        
             if (!OptEnabled())
             {
                 ErrorMng.errorMsg("The device <" + dvcName + "> is not Enabled (options)!", 102); return false;
             }
-            if (Controller.config.Debug) return true;
+            //if (Controller.config.Debug) return true;
             if (!CheckHardware())
             {
                 ErrorMng.errorMsg("The device <" + dvcName + "> is not accesable!", 103); return false;
@@ -110,10 +112,11 @@ namespace MOTMaster2.ExtDevices
                 ErrorMng.errorMsg("No script available!", 104); return false;
             }
             scr = scr.Replace("\r", "\r\n");
-            flexDDS_HW.Send2HW(scr);
+            ucExtFactors.UpdateValues();
+            if (Controller.config.Debug) ErrorMng.Log(scr);
+            else flexDDS_HW.Send2HW(scr);
             return true;
         }
-
         public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts
         {
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
@@ -122,7 +125,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
             ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
             // load config file            
-            Dictionary<string, string> cfg = Utils.readDict(Utils.configPath + dvcName + ".CFG");
+            Dictionary<string, string> cfg = Utils.readDict(dvcPath+"FlexDDS.CFG");
             /*if (!cfg.ContainsKey("Address"))
             {
                 ErrorMng.errorMsg("Address is missing from " + Utils.configPath + dvcName + ".CFG -> set to default #12", -436);
@@ -132,7 +135,7 @@ namespace MOTMaster2.ExtDevices
 
             if (!cfg.ContainsKey("LastScript"))
             {
-                ErrorMng.errorMsg("LastScript is missing from " + Utils.configPath + dvcName + ".CFG", -437); return;
+                ErrorMng.errorMsg("LastScript is missing from " + dvcPath + ".CFG", -437); return;
             }
             cbTemplates_DropDownOpened(null, null);
             int j = -1;
@@ -158,13 +161,13 @@ namespace MOTMaster2.ExtDevices
             if (cbTemplates.SelectedIndex > -1) lastScript = cbTemplates.Text;
             else lastScript = System.IO.Path.GetFileName(script.filename);
             cfg["LastScript"] = lastScript;
-            Utils.writeDict(Utils.configPath + System.IO.Path.ChangeExtension(lastScript, ".ds0"), ucExtFactors.factorsState);
+            Utils.writeDict(dvcPath + System.IO.Path.ChangeExtension(lastScript, ".ds0"), ucExtFactors.factorsState);
             if (!Utils.isNull(flexDDS_HW))
             {
                 cfg["Address"] = flexDDS_HW.address;
                 if (flexDDS_HW.Connected) flexDDS_HW.Disconnect();
             }
-            Utils.writeDict(Utils.configPath + dvcName + ".CFG", cfg);
+            Utils.writeDict(dvcPath + "FlexDDS.CFG", cfg);
         }
         protected Dictionary<string, string> OtherFactors()
         {
@@ -178,23 +181,29 @@ namespace MOTMaster2.ExtDevices
             genOpt = _genOptions;
             ucExtFactors.UpdateEnabled(genOpt.FlexDDSEnabled, CheckHardware(), CheckEnabled());
         }
-        public bool UpdateOthers(bool ignoreMutable = false) // update all non-factors (others)
+        public bool UpdateOthers(bool ignoreMutable = false) // update all non-factors (others) ???
         {
             if (!ignoreMutable && !ucExtFactors.chkMutable.IsChecked.Value) return false;
             bool bb = true;
             return bb;
         }
+        public void SequenceEvent(string EventName)
+        {
+
+        }
         public bool UpdateDevice(bool ignoreMutable = false)
         {
             return ucExtFactors.UpdateDevice(ignoreMutable) && UpdateOthers(ignoreMutable);
         }
+        private int lastSelectedIndex = -1;
         private void cbTemplates_DropDownOpened(object sender, EventArgs e)
         {
-            if (cbTemplates.SelectedIndex > -1) // save the previous tempalte values
+            if (cbTemplates.SelectedIndex > -1) // save the previous template values
             {
                 Utils.writeDict(System.IO.Path.ChangeExtension(script.filename, ".ds0"), ucExtFactors.factorsState);
+                lastSelectedIndex = cbTemplates.SelectedIndex;
             }
-            string[] files = Directory.GetFiles(Utils.configPath, "*.dds");
+            string[] files = Directory.GetFiles(dvcPath, "*.dds");
             cbTemplates.Items.Clear();
             foreach (string file in files)
             {
@@ -206,9 +215,14 @@ namespace MOTMaster2.ExtDevices
         {
             if (cbTemplates.SelectedIndex.Equals(-1))
             {
-                ErrorMng.errorMsg("No template selected.", 121); return;
+                ErrorMng.errorMsg("No template selected.", 121);
+                if (lastSelectedIndex > -1)
+                {
+                    ErrorMng.warningMsg("Trying to recover the last active one."); cbTemplates.SelectedIndex = lastSelectedIndex;
+                }
+                else return;
             }
-            string fn = Utils.configPath + ((ComboBoxItem)cbTemplates.SelectedItem).Content.ToString();
+            string fn = dvcPath + ((ComboBoxItem)cbTemplates.SelectedItem).Content.ToString();
             if (!File.Exists(fn))
             {
                 ErrorMng.errorMsg("No such file: "+fn, 122); return;
@@ -242,6 +256,7 @@ namespace MOTMaster2.ExtDevices
                 if (ddsFcts[j].Item3.Equals("")) ucExtFactors.AddFactor(ddsFcts[j].Item2, ddsFcts[j].Item1);
             }
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
+            ucExtFactors.Init();
         }
         private void SetSelectFactors(List<string> fcts)
         {
@@ -260,6 +275,8 @@ namespace MOTMaster2.ExtDevices
             tabControl.SelectedIndex = 1;
             script.SetToTextBox(tbTemplate);
             btnAccept.IsEnabled = false; btnSaveAccept.IsEnabled = false;
+
+            btnHelp.IsChecked = false; btnHelp_Click(sender, null);
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -290,12 +307,6 @@ namespace MOTMaster2.ExtDevices
         {
             btnAccept.IsEnabled = true; btnSaveAccept.IsEnabled = true;
         }
-        private void imgTripleBars_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            ContextMenu cm = this.FindResource("cmTripleBars") as ContextMenu;
-            cm.PlacementTarget = sender as Image;
-            cm.IsOpen = true;
-        }
         private void btnHelp_Click(object sender, RoutedEventArgs e)
         {
             if (btnHelp.IsChecked.Value) tcEdit.SelectedIndex = 1;
@@ -323,6 +334,12 @@ namespace MOTMaster2.ExtDevices
                 string ss = File.ReadAllText(dlg.FileName);
                 flexDDS_HW.Send2HW(ss); 
             }
+        }
+        private void imgTripleBars_MouseUp_1(object sender, MouseButtonEventArgs e)
+        {
+            ContextMenu cm = this.FindResource("cmTripleBars") as ContextMenu;
+            cm.PlacementTarget = sender as Image;
+            cm.IsOpen = true;
         }
     }
 }

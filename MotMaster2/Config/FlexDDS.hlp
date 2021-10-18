@@ -8,10 +8,11 @@ The factor's names must be unique and must be present in the [factors] section.
 The pattern is parameterized using factors. At sending the script to FlexDDS all the factors in the script template will be replaced by the values taken from factors fields.
 
 [factors] section 
-Two formats for a factor in factor section are acceptable:
-factor-variable -> <name>=<description-incl-unit>
-factor-constant -> <name>=<description-incl-unit>=value
-Only factor-variables are set to the front to be used as ext.device factors.
+Three formats for a factor in factor section are acceptable:
+open factor -> <name>=<description-incl-unit>
+fixed factor -> <name>=<description-incl-unit>=value
+linked factor -> <name>=<description-incl-unit>=factor
+Only open factors are set to the front to be used as ext.device factors.
 
 Additional two "select" (switchable) factors are available: 
 - select-bnc.trigger -> for selecting the trigger mode

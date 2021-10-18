@@ -23,6 +23,7 @@ namespace DAQ.HAL
             config.UseMMScripts = false;
             config.UseMSquared = false;
             config.UseMuquans = false;
+            config.Platform = MMConfig.platformType.plexal;
             Info.Add("MotMasterConfiguration", config);
             //add the boards - perhaps these values can be derived from a settings file
             Boards.Add("multiDAQ", "/Dev1");  // NI PXIe-6341
@@ -138,7 +139,7 @@ namespace DAQ.HAL
             AddDigitalOutputChannel("digit.28", hsdioBoard, 0, 28);
             AddDigitalOutputChannel("digit.29", hsdioBoard, 0, 29);
             AddDigitalOutputChannel("digit.30", hsdioBoard, 0, 30); 
-            if (config.UseMuquans) AddDigitalOutputChannel("serialPreTrigger", hsdioBoard, 0, 31);
+            //if (config.UseMuquans) AddDigitalOutputChannel("serialPreTrigger", hsdioBoard, 0, 31);
 
           
 

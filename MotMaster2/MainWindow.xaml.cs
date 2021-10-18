@@ -43,6 +43,7 @@ namespace MOTMaster2
         {
             controller = new Controller();
             controller.StartApplication();
+
             Controller.OnRunStatus += new Controller.RunStatusHandler(OnRunStatus);
             //Controller.Onb4Acquire += new Controller.b4AcquireHandler(Onb4Acquire);
             Controller.OnChnChange += new Controller.ChnChangeHandler(OnChnChange);
@@ -70,6 +71,15 @@ namespace MOTMaster2
             //Utils.traceDest = tbLogger;
             InitVisuals();
             editMode = false;
+            if (Controller.sequenceData.Parameters.ContainsKey("swapAxes"))
+            {
+                bool sa = Convert.ToDouble(Controller.sequenceData.Parameters["swapAxes"].Value) < 0.5;
+                mnXleading.IsChecked = sa; mnYleading.IsChecked = !sa;
+            }
+            if (!Environs.Hardware.config.DoubleAxes)
+            {
+                mnXleading.Visibility = Visibility.Collapsed; mnYleading.Visibility = Visibility.Collapsed;
+            }           
         }
 
         private void OnDataCreated(object sender, DataEventArgs e)
@@ -92,24 +102,27 @@ namespace MOTMaster2
             if (!Utils.isNull(Controller.sequenceData))
             {
                 SetInterferometerParams(Controller.sequenceData.Parameters);
-            /*    foreach (MMscan mms in Controller.GetMultiScanParameters())
-                {
-                    ListBoxItem lbi = new ListBoxItem();
-                    lbi.Content = mms.AsString;
-                    lstParams.Items.Add(lbi);
-                }*/
-                //ucMSquared.Init(ref Controller.sequenceData, ref Controller.genOptions);
-                //ucMSquared.ucFactor1.ParamUpdate(Controller.sequenceData.Parameters);
-             }
+            }
         }
         private void frmMain_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!Environs.Hardware.config.DoubleAxes) groupAxes.Visibility = Visibility.Collapsed;
+            if (!Environs.Hardware.config.DoubleAxes)
+            {
+                groupAxes.Visibility = Visibility.Collapsed;
+            }
             ExtDevices = new ExtDeviceDict(); ExtFactors = new ExtFactorList();
             if (Environs.Hardware.ExtDevices.ContainsKey("MSquared"))
             {
-                MSquaredUC ms = new MSquaredUC("MSquared", Brushes.DarkRed);
-                ExtDevices.Add("MSquared", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
+                if (Environs.Hardware.config.UseMSquared)
+                {
+                    MSquaredUC ms = new MSquaredUC("MSquared", Brushes.DarkRed);
+                    ExtDevices.Add("MSquared", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
+                }
+                if (Environs.Hardware.config.UseMuquans)
+                {
+                    MuQuansUC ms = new MuQuansUC("MuQuans", Brushes.DarkRed);
+                    ExtDevices.Add("MuQuans", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
+                }
             }
             if (Environs.Hardware.ExtDevices.ContainsKey("WindFreak"))
             {
@@ -127,10 +140,16 @@ namespace MOTMaster2
             }
             if (Environs.Hardware.ExtDevices.ContainsKey("FlexDDS"))
             {
-                FlexDDS_UC fd = new FlexDDS_UC("FlexDDS", Brushes.DarkGreen);
-                ExtDevices.Add("FlexDDS", fd); stackExtDevices.Children.Add(fd); ExtFactors.Add(fd.ucExtFactors);
+                int fCount = Convert.ToInt32(Environs.Hardware.ExtDevices["FlexDDS"]);
+                for (int i = 0; i < fCount; i++)
+                {
+                    string edn = "FlexDDS-" + Convert.ToChar(65 + i);
+                    FlexDDS_UC fd = new FlexDDS_UC(edn, Brushes.DarkGreen);
+                    ExtDevices.Add(edn, fd); stackExtDevices.Children.Add(fd); ExtFactors.Add(fd.ucExtFactors);
+                }
             }
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
+            ExtDevices.UpdateFromOptions(ref Controller.genOptions);
         }
         private void OpenDefaultModes()
         {
@@ -200,8 +219,8 @@ namespace MOTMaster2
             }
             //if (Math.Abs(Controller.ExpData.axis) == 2) 
                 ExtDevices.UpdateDevices(false);
-            if (Controller.genOptions.DelayBwnShots > 0) Thread.Sleep(Controller.genOptions.DelayBwnShots);            
-
+            if (Controller.genOptions.DelayBwnShots > 0) Thread.Sleep(Controller.genOptions.DelayBwnShots);
+            ExtDevices.SequenceEvent("start");
             controller.RunStart(paramDict);
             //Would like to use RunStart as this Runs in a new thread
             if (controller.IsRunning())
@@ -432,7 +451,7 @@ namespace MOTMaster2
                 Controller.StaticSequence = true;
                 if (!ExtFactors.IsScannable(prm))
                 {
-                    ErrorMng.errorMsg("MSquared dvc. <"+prm+"> is not available!", 125); return;
+                    ErrorMng.errorMsg("Param of dvc. <"+prm+"> is not available!", 125); return;
                 }
                 groupRun = GroupRun.scan;
                 StartScanEvent(true, true, scan); 
@@ -787,6 +806,11 @@ namespace MOTMaster2
             sequenceControl.UpdateSequenceData();
             ExtFactors.UpdateFromSequence(ref Controller.sequenceData);
             Log("Loaded Sequence from ..." + filename.Substring(filename.Length - 50));
+            if (Controller.sequenceData.Parameters.ContainsKey("swapAxes"))
+            {
+                bool sa = Convert.ToDouble(Controller.sequenceData.Parameters["swapAxes"].Value) < 0.5;
+                mnXleading.IsChecked = sa; mnYleading.IsChecked = !sa;
+            }                          
         }
 
        private void SaveEnvironment_Click(object sender, RoutedEventArgs e)
@@ -1551,7 +1575,6 @@ namespace MOTMaster2
                 if (Controller.sequenceData.Parameters.ContainsKey("swapAxes")) Controller.sequenceData.Parameters["swapAxes"].Value = 1;
             }
             Controller.ExpData.SwappedAxes = mnYleading.IsChecked;
-
         }
 
         private void mWebHelp_Click(object sender, RoutedEventArgs e)

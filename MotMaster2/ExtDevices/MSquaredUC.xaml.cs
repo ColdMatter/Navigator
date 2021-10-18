@@ -78,8 +78,8 @@ namespace MOTMaster2.ExtDevices
                 if (fctName.Equals("RamanPhase")) return bb;
             }
             // call hardware
-            Dictionary<string, object> curr = Controller.M2PLL.get_status();
-            //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
+            Dictionary<string, object> curr = Controller.M2PLL.get_status(); //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
+            
             double InputFreq = 6834.68;
             if (ucExtFactors.Factors[0].fType == Factor.factorType.ftNone)
             {
@@ -189,6 +189,10 @@ namespace MOTMaster2.ExtDevices
             if (!ignoreMutable && !ucExtFactors.chkMutable.IsChecked.Value) return false; 
             // Talk2Dvc(...
             return true;
+        }
+        public void SequenceEvent(string EventName)
+        {
+
         }
         public bool UpdateDevice(bool ignoreMutable = false)
         {

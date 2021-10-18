@@ -25,6 +25,7 @@ namespace DAQ.HAL
             config.UseMMScripts = false;
             config.UseMSquared = true;
             config.UseMuquans = false;
+            config.Platform = MMConfig.platformType.eurybia;
             Info.Add("MotMasterConfiguration", config);
             //add the boards - perhaps these values can be derived from a settings file
             Boards.Add("multiDAQ", "/Dev1");
@@ -73,7 +74,7 @@ namespace DAQ.HAL
 
             if (Environment.Environs.Debug)
             {
-                ExtDevices["FlexDDS"] = "1";
+                ExtDevices["FlexDDS"] = "3";
             }
           
             // map of all analog, digital and counter channels 
@@ -138,7 +139,7 @@ namespace DAQ.HAL
             AddDigitalOutputChannel("LQTTL/DetTTL", hsdioBoard, 0, 21, Brushes.DarkBlue);
             AddDigitalOutputChannel("MWTTL", hsdioBoard, 0, 24, Brushes.DarkBlue);
             AddDigitalOutputChannel("FreeDO1", hsdioBoard, 0, 25, Brushes.DarkBlue);//
-            if (config.UseMuquans) AddDigitalOutputChannel("serialPreTrigger", hsdioBoard, 0, 31);
+            //if (config.UseMuquans) AddDigitalOutputChannel("serialPreTrigger", hsdioBoard, 0, 31);
 
             AddCounterChannel("Counter", multiBoard + "/ctr0");
 

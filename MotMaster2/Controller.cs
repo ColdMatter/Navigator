@@ -377,7 +377,6 @@ namespace MOTMaster2
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void releaseHardware()
         {
             try

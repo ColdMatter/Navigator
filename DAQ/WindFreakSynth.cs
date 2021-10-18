@@ -70,7 +70,7 @@ namespace DAQ.HAL
             protected void Write(string command)
             {
                 string channelChangeCommand = CommandTypes.Channel + Convert.ToInt32(channelName).ToString();
-                windfreak.Write(channelChangeCommand + command);
+                windfreak.Write(channelChangeCommand + command, true);
             }
 
             protected void ValidateFrequency(double freq)

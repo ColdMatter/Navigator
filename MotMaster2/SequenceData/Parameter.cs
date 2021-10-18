@@ -120,7 +120,7 @@ namespace MOTMaster2.SequenceData
             if (Utils.isNull(Controller.sequenceData.Parameters)) return Double.NaN;
             string func = function.TrimStart('=');
             EqCompiler compiler = new EqCompiler(func, true);
-            CustomizeCompiler.AddFunctions(compiler);   
+            CustomCompiler.AddFunctions(compiler);   
             compiler.Compile();
 
             //Checks all variables to use values in parameter dictionary

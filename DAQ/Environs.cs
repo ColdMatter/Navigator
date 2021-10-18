@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-
 using DAQ.HAL;
 
 namespace DAQ.Environment
@@ -61,12 +60,12 @@ namespace DAQ.Environment
                 case "THEOS":
                 case "THEO-PC":
                     Debug = true;
-                    Hardware = new ShowcaseHardware();
+                    Hardware = new EurybiaHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
                 case "DESKTOP-IHEEQUU": // Eurybia
                     Debug = false;
-                    Hardware = new ShowcaseHardware();
+                    Hardware = new EurybiaHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
                 case "DESKTOP-U9GFG8U": // PLEXAL-MACHINE
@@ -81,7 +80,7 @@ namespace DAQ.Environment
                     break;
                 default:
                     Debug = true;
-					Hardware = new PlexalHardware();
+					Hardware = new EurybiaHardware();
 					FileSystem = new NavigatorFileSystem();					
 					break;
 			}

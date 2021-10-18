@@ -28,7 +28,7 @@ namespace DAQ
             useMuquans = false;//
             useMMScripts = true;
             useMSquared = false;
-
+            platform = platformType.unknown;
         }
 
         private bool debug;
@@ -36,6 +36,15 @@ namespace DAQ
         {
             get { return debug; }
             set { debug = value; }
+        }
+
+        public enum platformType { unknown, eurybia, chameleon, plexal};
+
+        private platformType platform; // less priority than others but gradaully replacing them
+        public platformType Platform
+        {
+            get { return platform; }
+            set { platform = value; }
         }
 
         private bool doubleAxes;

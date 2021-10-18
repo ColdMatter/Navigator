@@ -1,0 +1,5 @@
+﻿- make both modes (synch/asynch) of AI compatible alond the installtions / isolate MMAIWrapper of plexal from the others
+
+- multi FlexDDS with separate script and data directories as Config/DDS and Config/DDS/A,B,C,D
+
+- finish with ramp - freq, ampl, phase

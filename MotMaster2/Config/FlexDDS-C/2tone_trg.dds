@@ -1,0 +1,43 @@
+[script]
+dds reset
+dcp spi:CFR2=0x1000080
+dcp spi:STP0=0x418937
+dcp wait::$select-bnc.trigger$
+dcp update:u
+
+dcp 0 spi:STP0=0x$a0x1$$p0x1$$f0x1$
+dcp 1 spi:STP0=0x$a1x1$$p1x1$$f1x1$
+dcp wait:2929688:
+dcp update:u
+
+dcp 0 spi:STP0=0x$a0x2$$p0x2$$f0x2$
+dcp 1 spi:STP0=0x$a1x2$$p1x2$$f1x2$
+dcp wait:$d1$:
+dcp update:u
+
+dcp start
+
+[factors]
+a0x1=Amplitude 0x1 [ampl]
+f0x1=Freq 0x1 [MHz]
+p0x1=Phase 0x1 [deg]=0
+a1x1=Amplitude  1x1 [ampl]
+f1x1=Freq 1x1 [MHz]
+p1x1=Phase 1x1 [deg]=0
+a0x2=Amplitude 0x2 [ampl]
+f0x2=Freq 0x2 [MHz]
+p0x2=Phase 0x2 [deg]=0
+a1x2=Amplitude 1x2 [ampl]
+f1x2=Freq 1x2 [MHz]
+p1x2=Phase 1x2 [deg]=0
+d1=Duration [ms]
+
+
+
+
+
+
+
+
+
+

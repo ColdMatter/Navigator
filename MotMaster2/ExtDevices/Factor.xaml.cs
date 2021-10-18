@@ -42,7 +42,6 @@ namespace MOTMaster2.ExtDevices
                 else Visibility = Visibility.Collapsed;
             }
         }
-
         public bool Enabled // for now is the same as isVisible
         {
             get { return isVisible; }

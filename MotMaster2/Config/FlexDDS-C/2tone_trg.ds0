@@ -1,0 +1,10 @@
+Amplitude 0x1 [ampl]=100
+Freq 0x1 [MHz]=1
+Amplitude  1x1 [ampl]=60
+Freq 1x1 [MHz]=1
+Amplitude 0x2 [ampl]=80
+Freq 0x2 [MHz]=2
+Amplitude 1x2 [ampl]=100
+Freq 1x2 [MHz]=2
+Duration [ms]=3000
+Mutable=False
