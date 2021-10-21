@@ -151,12 +151,13 @@ namespace MOTMaster2
                             break;
                     }
                     double[] data;
+                    int memsShift = ((DAQ.MMConfig)Environs.Hardware.GetInfo("MotMasterConfiguration")).DoubleAxes ? 2 : 1;
                     if (entry.Key.Equals("Interferometer"))
                     {
                         imin = entry.Value.Item1;
                         imax = entry.Value.Item2;
                         data = new double[imax - imin];
-                        for (int i = imin; i < imax; i++) data[i - imin] = rawData[axis1 + 2, i];
+                        for (int i = imin; i < imax; i++) data[i - imin] = rawData[axis1 + memsShift, i];
                     }
                     else
                     {

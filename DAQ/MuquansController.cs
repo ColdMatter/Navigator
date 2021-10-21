@@ -16,13 +16,10 @@ namespace DAQ.HAL
     public class MuquansRS232 : RS232Instrument
     {
         string id;
-
-
         public MuquansRS232(string visaAddress, string id) : base(visaAddress)
         { 
             this.id = id;
-            this.baudrate = 230400;
-            
+            this.baudrate = 230400;           
         }
         public override void Connect()
         {
@@ -42,10 +39,8 @@ namespace DAQ.HAL
 
         public bool Connected
         {
-        get {  return this.connected;}
-        }
-       
-        
+            get {  return this.connected;}
+        }       
     }
     /// <summary>
     /// An interface to control the muquans laser using serial communication to onboard DDS. These are used to program the frequency/phase of each laser 
@@ -164,7 +159,6 @@ namespace DAQ.HAL
         }
         public void StartOutput()
         {
-
             stopwatch = new Stopwatch();
             serialCounter = 0;
             if (!slaveComm.Connected) slaveComm.Connect();

@@ -21,13 +21,13 @@ namespace MOTMaster2
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			_mutex = new System.Threading.Mutex(true, "{8F6F0AC4-B9A1-45fd-A8CF-72F04E6BDE8F}", out bool createdNew);
+			/*_mutex = new System.Threading.Mutex(true, "{8F6F0AC4-B9A1-45fd-A8CF-72F04E6BDE8F}", out bool createdNew);
 			if (!createdNew)
 			{
 				MessageBox.Show("Previous instance of MotMaster is still running.", "Application Halted");
 				Current.Shutdown();
 			}
-			else Exit += CloseMutexHandler;
+			else Exit += CloseMutexHandler;*/
 			base.OnStartup(e);
 		}
 		protected virtual void CloseMutexHandler(object sender, EventArgs e)

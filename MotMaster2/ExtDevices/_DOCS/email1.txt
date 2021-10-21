@@ -1,0 +1,51 @@
+Hi,
+
+I've just been executing the script
+
+dds reset
+dcp 0 spi:stp0=0x3fff0000028f5c29
+dcp 1 spi:stp0=0x3fff0000028f5c29
+dcp update:u
+dcp start
+
+probably 25 times on a FlexDDS-NG (DUAL) and the waveform *always*
+looked like the one on top, entirely in phase.
+
+- Are you feeding these commands via USB or network?
+- Can you try a different slot/device?
+- Can you try to feed these commands via USB (and Putty) directly into a
+slot?
+
+- Have you tried setting the "auto-clear phase on update" bit in one of
+the CFRs before performing the update?
+
+Regards,
+Wolfgang
+
+Hi Wolfgang,
+
+thank you for your prompt reply.
+
+1. I'm feeding commands 
+
+dds 0 reset
+dcp 0 spi:CFR2=0x1000080
+dcp 0 spi:STP0=0x418937
+dcp 0 wait:0h:
+dcp 0 update:u
+dcp 0 spi:STP0=0x3332000000418937
+dcp 0 wait:0h:
+dcp 0 update:u
+
+dcp 0 start
+
+dds 1 reset
+dcp 1 spi:CFR2=0x1000080
+dcp 1 spi:STP0=0x418937
+dcp 1 wait:0h:
+dcp 1 update:u
+dcp 1 spi:STP0=0x1999000000418937
+dcp 1 wait:0h:
+dcp 1 update:u
+
+dcp 1 start

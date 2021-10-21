@@ -1,0 +1,88 @@
+Hi,
+
+When working with the FlexDDS there is no way around familiarizing
+oneself with the AD9910 from Analog Devices. The datasheet of that chip
+has an explanation for the CFR register contents and the auto-clear
+phase bit.
+
+You may use
+
+dcp spi:CFR1=0x00412202
+
+in your test directly after the dds reset. Note that when sending the
+dds reset over the network (Ethernet, not USB) there might be a delay
+needed. USB does not need it.
+
+For your other question, see below.
+On 7/26/21 10:26 PM, Krastev, Teodor B wrote:
+> dds 0 reset
+> dcp 0 spi:CFR2=0x1000080
+> dcp 0 spi:STP0=0x418937
+> dcp 0 wait:0h:
+> dcp 0 update:u
+> dcp 0 spi:STP0=0x3332000000418937
+> dcp 0 wait:0h:
+> dcp 0 update:u
+>
+> dcp 0 start
+>
+> dds 1 reset
+> dcp 1 spi:CFR2=0x1000080
+> dcp 1 spi:STP0=0x418937
+> dcp 1 wait:0h:
+> dcp 1 update:u
+> dcp 1 spi:STP0=0x1999000000418937
+> dcp 1 wait:0h:
+> dcp 1 update:u
+>
+> dcp 1 start
+>
+> The result is a random phase for each run of the script.
+> Then I did a hard reset with the same results.
+
+That's clear. You need to start the DCPs at the same time otherwise they
+will be out-of-sync by the amout of time it takes to load the "dds 1
+reset... up to dcp start". Also, you need to update both chips at the
+same time, otherwise they might be slightly out of sync while waiting
+for the SPI transfers in the background to finish.
+
+Use one "dds reset" initially. Use one "dcp start" at the end, not
+"dcp 0 start" followed by "dcp 1 start" (which will produce an offset
+already).
+
+
+The best practice to ensure channel-to-channel alignment is that you
+never use "dcp 0 update:u" or "dcp 1 update:u" but always "dcp update:u"
+which will work on both channels at the same time. This means you may
+need to re-order your whole program to something like...
+
+Also, usually in a real world environment, one would have an external
+trigger to trigger changes.
+
+# reset both
+dds reset
+
+# configure one channel
+dcp 0 spi:CFR2=0x1000080
+dcp 0 spi:STP0=0x418937
+# configure other channel
+dcp 1 spi:CFR2=0x1000080
+dcp 1 spi:STP0=0x418937
+# wait for trigger (see example codes for BNC input, you can also use
+BNC A on the main slot via the backplane trigger)
+dcp wait ...
+# update both channels
+dcp update:u
+
+and so on...
+
+So, both DCPs will configure their respective AD9910 which might take
+slightly different times. After that, both wait for the external trigger
+to arrive and will SIMULTANEOUSLY update giving the desired phase
+relationship.
+
+There is nothing on the micro-SD card that affects what you are seeing
+right now.
+
+Regards,
+Wolfgang

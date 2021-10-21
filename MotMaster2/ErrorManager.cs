@@ -66,8 +66,15 @@ namespace ErrorManager
             AutoSave = AutoSave && Directory.Exists(ErrorPath);
             if (Directory.Exists(ErrorPath))
             {
-                ErrorFile = new System.IO.StreamWriter(ErrorPath + "error.log");
-                ErrorFile.AutoFlush = true;
+                try
+                {
+                    ErrorFile = new System.IO.StreamWriter(ErrorPath + "error.log");
+                    ErrorFile.AutoFlush = true;
+                }
+                catch (IOException e)
+                {
+                    Utils.TimedMessageBox("Error: ", e.Message + "   Probably another instans of MotMaster2 is already open. Go to Task Manager and close it.", 5000);
+                }
             }                   
         }
 
