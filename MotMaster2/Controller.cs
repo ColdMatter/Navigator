@@ -377,7 +377,6 @@ namespace MOTMaster2
                 MessageBox.Show(ex.Message);
             }
         }
-
         private void releaseHardware()
         {
             try
@@ -1595,7 +1594,8 @@ namespace MOTMaster2
             axelCommand.sender = "MOTMaster";
  
             axelCommand.mmexec = "";
-            axelCommand.prms["params"] = sequenceData.CreateParameterDictionary();
+            axelCommand.prms["params"] = sequenceData.CreateParameterDictionary(); // all params with values
+            axelCommand.prms["scanPrms"] = sequenceData.ScannableParams(); // list of scanables params
             axelCommand.prms["steps"] = sequenceData.CreateStepsDictionary(true);
             axelCommand.prms["sampleRate"] = ExpData.SampleRate;
             axelCommand.prms["runID"] = BatchNumber;

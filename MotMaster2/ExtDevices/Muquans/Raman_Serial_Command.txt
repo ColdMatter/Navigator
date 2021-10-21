@@ -1,0 +1,2 @@
+set_dds dds_raman; set_freq 65e6; ext_update
+set_dds dds_raman; set_phase 0e0; ext_update

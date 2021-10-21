@@ -1,0 +1,13 @@
+ //Helper function to give a linear intensity ramp using a control voltage to an AOM. Returns control voltage as a function of time
+        public double LinearMolassesRamp(int currentTime)
+        {
+            int startTime = (int)parameters["IntensityRampStartTime"];
+            double a = 0.461751;
+            double b = 0.405836;
+            double c = 0.346444;
+            double d = 0.742407;
+            double power_scale = (double)parameters["MotPower"];
+            //Convert time to seconds based on 100 kHz clock
+            double time_scale = (5.5/(double)parameters["IntensityRampDuration"])*((double)currentTime-(double)startTime)/100000;
+            return (a/Math.Tan(b*time_scale+c)+d)*power_scale;
+        }

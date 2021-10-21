@@ -26,7 +26,7 @@ namespace MOTMaster2.ExtDevices
 
         GeneralOptions genOpt { get; set; }
         void UpdateFromOptions(ref GeneralOptions _genOptions);
-
+        void SequenceEvent(string EventName);
         bool UpdateDevice(bool ignoreMutable = false); // update all factors and others
 
     }
@@ -77,7 +77,13 @@ namespace MOTMaster2.ExtDevices
             }
             return rslt;
         }
-
+        public void SequenceEvent(string EventName)
+        {
+            foreach (IExtDevice dvc in this.Values)
+            {
+                if (dvc.CheckEnabled()) dvc.SequenceEvent(EventName);
+            }
+        }
         public bool UpdateDevices(bool ignoreMutable = false)
         {
             bool rslt = true;

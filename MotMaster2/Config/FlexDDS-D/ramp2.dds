@@ -1,0 +1,55 @@
+[script]
+dds reset
+dcp spi:CFR2=0x80
+dcp spi:DRL=0x$fct4$$fct2$
+dcp spi:DRSS=0x0000000500000005
+dcp spi:DRR=0x06960696
+dcp spi:CFR2=0x80080
+dcp update:u+d
+dcp wait::35
+dcp update:-d
+#dcp spi:DRL=0x$fct5$$fct2$
+#dcp spi:DRSS=0x0000001a00000081
+#dcp wait:$dr2$:
+#dcp update:u+d
+
+dcp wait::35
+dcp spi:CFR2=0x1000080
+dcp update:u
+
+#dcp 0 spi:STP0=0x2D0E560
+#dcp 1 spi:STP0=0x2D0E560
+
+dcp start
+
+[factors]
+fct1=Amplitude 1 [ampl]
+fct2=Freq Low [MHz]
+fct6=Phase 1 [deg]
+fct3=Amplitude  2 [ampl]
+fct4=Freq High [MHz]
+fct5=Freq 3 [MHz]
+dr1=Duration 1 [ms]
+dr2=Duration 2 [ms]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

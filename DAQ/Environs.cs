@@ -61,7 +61,7 @@ namespace DAQ.Environment
                 case "THEOS":
                 case "THEO-PC":
                     Debug = true;
-                    Hardware = new ShowcaseHardware();
+                    Hardware = new EurybiaHardware();
                     FileSystem = new NavigatorFileSystem();
                     break;
                 case "DESKTOP-IHEEQUU": // Eurybia
@@ -86,6 +86,5 @@ namespace DAQ.Environment
 					break;
 			}
 		}
-
 	}
 }

@@ -12,7 +12,7 @@ using UtilsNS;
 namespace MOTMaster2.ExtDevices
 {
     /// <summary>
-    /// extName, fName, content
+    /// extName, fName (desc [unit]), content
     /// </summary>
     public class DDS_factors: List<Tuple<string,string,string>> //
     {
@@ -24,7 +24,7 @@ namespace MOTMaster2.ExtDevices
         {
             AsListOfString = ls;
         }
-
+        
         public int AddFactor(string[] fct)
         {
             switch (fct.Length)
@@ -90,6 +90,8 @@ namespace MOTMaster2.ExtDevices
     }
     public class DDS_units : List<Tuple<string, double, int>> // 0 size -> no size restrictions
     {
+        public bool allowNoUnit = false;
+
         const double freqStep = 232.83064E-3; // [Hz] -> frequency step
         const double usStep = 1.024; // microsec step
         const double nsStep = 0.125; // nanosec step (high-res mode)
@@ -110,10 +112,10 @@ namespace MOTMaster2.ExtDevices
             AddUnit("ampl", amplFull_ampl / 100, 4);
             // phase degree 0-360
             AddUnit("deg", degreeSemiTurn / 180, 4);
-            // non-coeff conversion
-            
+            // non-coeff conversion            
             AddUnit("dBm", Double.NaN, 4);
-
+            // decimal
+            AddUnit("dec", Double.NaN, 0);
         }
         public int AddUnit(string unit, double coeff, int size)
         {
@@ -132,6 +134,7 @@ namespace MOTMaster2.ExtDevices
 
         public string replaceValueByUnit(string unit, double vl)
         {
+            if (unit.Equals("") && allowNoUnit) return Convert.ToString(vl);
             int j = IdxFromUnit(unit);
             if (j < 0)
             {
@@ -175,7 +178,7 @@ namespace MOTMaster2.ExtDevices
     }
     public class DDS_script
     {
-        DDS_units units;
+        public DDS_units units;
         private void SetUnits()
         {
             units = new DDS_units();
@@ -191,7 +194,7 @@ namespace MOTMaster2.ExtDevices
             SetUnits();
         }
         // data core source
-        protected void UpadeFromScript()
+        protected void UpdateFromScript()
         {
             _scriptSection = Utils.readStructList(_AsList)["script"];
             var ls = Utils.skimRem(Utils.readStructList(_AsList)["factors"]);
@@ -204,7 +207,7 @@ namespace MOTMaster2.ExtDevices
             private set 
             {
                 _AsList = new List<string>(value);
-                UpadeFromScript();
+                UpdateFromScript();
             } 
         }
         public string[] AsArray
@@ -225,8 +228,8 @@ namespace MOTMaster2.ExtDevices
         public List<string> ExtractFactors(bool select, out bool correct)
         {
             correct = true;
-            List<string> rslt = new List<string>();
-            if (scriptSection.Count == 0) return rslt;
+            List<string> sf = new List<string>(); // factors in the script
+            if (scriptSection.Count == 0) return sf;
 
             foreach (string line in scriptSection)
             {
@@ -245,15 +248,31 @@ namespace MOTMaster2.ExtDevices
                         break;
                     }
                     string fct = ss.Substring(i + 1, j - i - 1);
-                    if (rslt.IndexOf(fct) > -1) continue;
+                    if (sf.IndexOf(fct) > -1) continue;
                     if (fct.IndexOf("select-") == 0)
                     {
-                        if (select) rslt.Add(fct);
+                        if (select) sf.Add(fct);
                     }
                     else
                     {
-                        if (!select) rslt.Add(fct);
+                        if (!select) sf.Add(fct);
                     }
+                }
+            }
+            List<string> rslt;
+            if (select) rslt = new List<string>(sf);
+            else
+            {
+                rslt = new List<string>();
+                foreach (var fct in factorsSection)
+                {
+                    if (factorsSection.IdxFromExtName(fct.Item3) > -1) // resulting field is a factor
+                    {
+                        if (rslt.IndexOf(fct.Item3) == -1)                    
+                            ErrorMng.errorMsg(fct.Item3 + " is not recognized as a factor.", -134); 
+                        continue;                                           
+                    }
+                    if (sf.IndexOf(fct.Item1) > -1) rslt.Add(fct.Item1);               
                 }
             }
             return rslt;
@@ -269,7 +288,7 @@ namespace MOTMaster2.ExtDevices
                 ss = ss.Replace("\n", "");
                 _AsList.Add(ss.Replace("\r", ""));
             }
-            UpadeFromScript();
+            UpdateFromScript();
         }
         public void SetToTextBox(TextBox textBox)
         {
@@ -298,9 +317,13 @@ namespace MOTMaster2.ExtDevices
             File.WriteAllLines(filename, AsArray);
         }
 
-        public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors) 
+        public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors = null) 
         {
-            Dictionary<string, string> repl = new Dictionary<string, string>(OtherFactors);
+
+            Dictionary<string, string> repl; 
+            if (Utils.isNull(OtherFactors)) repl = new Dictionary<string, string>();
+            else repl = new Dictionary<string, string>(OtherFactors);
+            Dictionary<string, double> vals = new Dictionary<string, double>();
             foreach (var pr in factorsSection) // over ext.names
             {
                 string key = Convert.ToString(pr.Item1); double fct = Double.NaN;
@@ -309,8 +332,12 @@ namespace MOTMaster2.ExtDevices
                 {
                     ErrorMng.errorMsg("Missing value of factor <" + key + "> ", 118); continue;
                 }
-                if (!factorsSection[j].Item3.Equals("")) fct = Convert.ToDouble(factorsSection[j].Item3); // factor-constant
-                else // factor-variable
+                if (!factorsSection[j].Item3.Equals("")) 
+                {                   
+                    if (!double.TryParse(factorsSection[j].Item3, out fct)) // factor-constant
+                        fct = vals[factorsSection[j].Item3];                                                                    
+                }
+                else // open factor
                 {
                     int k = ucExtFactors.IdxFromName(key, true); // ext.name
                     if (k == -1) continue; // the list of factors is larger the number of factors in script
@@ -321,12 +348,15 @@ namespace MOTMaster2.ExtDevices
                 {
                     ErrorMng.errorMsg("Missing value of factor <" + key + "> ", 119); continue;
                 }
-                string unit = Utils.betweenStrings(pr.Item2, "[", "]");
-                if (unit.Equals(""))
+                bool isBrackets = (pr.Item2.IndexOf("[") > 0) && (pr.Item2.IndexOf("]") > 0);
+                string unit = "";
+                if (isBrackets) unit = Utils.betweenStrings(pr.Item2, "[", "]");                 
+                if (!units.allowNoUnit && unit.Equals(""))
                 {
                     ErrorMng.errorMsg("No units in " + pr.Item2, 120); continue;
                 }
                 // rescale from user units to internal units
+                vals[key] = fct;
                 string ss = units.replaceValueByUnit(unit, fct);
                 if (ss.Equals("")) continue;
                 repl[key] = ss;             

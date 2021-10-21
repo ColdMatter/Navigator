@@ -1,0 +1,5 @@
+Amplitude 1 [ampl]=100
+Freq 1 [MHz]=1
+Amplitude  2 [ampl]=40
+Freq 2 [MHz]=1
+Mutable=False

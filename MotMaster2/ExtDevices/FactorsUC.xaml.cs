@@ -168,10 +168,13 @@ namespace MOTMaster2.ExtDevices
             Height = firstRow.Height.Value + h + lastRow.Height.Value;
             return Height;
         }
-        public void UpdateValues()
+        public void UpdateValues(bool takeLocal = true)
         {
             foreach (Factor factor in Factors)
-                factor.VisUpdate();
+            {
+                if (takeLocal) factor.fValue = factor.getReqValue();
+                else factor.VisUpdate();
+            }               
         }
         public bool UpdateDevice(bool ignoreMutable = false) // before sequence (false) or update button (true)
         {          
@@ -194,6 +197,7 @@ namespace MOTMaster2.ExtDevices
         }
         public bool IsScannable(string prm) // is scanning param (prm) in Factors; prm = "" resets
         {
+            if (!chkMutable.IsChecked.Value) return false;
             bool bb = false;
             foreach (Factor factor in Factors)
             {
@@ -201,20 +205,24 @@ namespace MOTMaster2.ExtDevices
                 bb |= factor.Scanning(prm); 
                 if (bb) break;
             }
-            return bb && chkMutable.IsChecked.Value;
+            return bb;
         }
         public delegate bool Send2HWHandler(string fctName, object fctValue);
         public event Send2HWHandler OnSend2HW;
         protected bool Send2HW(string fctName, object fctValue) // hardware update
         {
-            if (OnSend2HW != null) return OnSend2HW(fctName, fctValue); // the real McCoy
+            if (OnSend2HW != null) // the real McCoy
+            { 
+                if (groupUpdate) return OnSend2HW("<ALL>", fctName); // 1 - what to update; 2 - the source of change
+                else return OnSend2HW(fctName, fctValue); // 1 - the factor name; 2 - the factor value
+            } 
             else return false;
         }
         private Factor scanFactor = null; // only ONE scanfactor (it maybe be changed to list)
         public bool ScanIter(string prm, int grpIdx) // return false if no scanning here
             // prm is taken only for grpIdx = 0
         {
-            if (grpIdx.Equals(0)) 
+            if (grpIdx.Equals(0)) // initialize
             {
                 scanFactor = null; 
                 foreach (Factor factor in Factors)
@@ -228,7 +236,7 @@ namespace MOTMaster2.ExtDevices
                 return !Utils.isNull(scanFactor);
             }
             if (Utils.isNull(scanFactor)) return false;
-            if (grpIdx.Equals(-1)) 
+            if (grpIdx.Equals(-1)) // finalize
             {
                 Send2HW("_others_", (object)false);
                 UpdateDevice(false);

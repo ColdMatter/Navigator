@@ -41,25 +41,25 @@ namespace MOTMaster2
         //Name to identify each experiment
         public string ExperimentName {get; set;}
         public MMexec grpMME = new MMexec();
-        public enum JumboModes { none, scan, repeat };
+        public enum JumboModes { none, single, scan, repeat };
         public JumboModes jumboMode()
         {
             JumboModes jm = JumboModes.none;
             if (UtilsNS.Utils.isNull(grpMME)) return jm;
             if (grpMME.sender.Equals("Axel-hub"))
-            {
-                bool problem = true;
+            {             
                 if (grpMME.prms.ContainsKey("axis"))
                 {
-                    problem = !(
+                    bool problem = !(
                         ((Convert.ToString(grpMME.prms["axis"]) == "1") && (axis == 0)) || 
                         ((Convert.ToString(grpMME.prms["axis"]) == "2") && (Math.Abs(axis) == 2)));
+                    if (problem)
+                    {
+                        Utils.TimedMessageBox("Axes in MotMaster2 and Axel-Hub must match!","Error Message", 3000);                   
+                        return jm;
+                    }
                 }
-                if (problem)
-                {
-                    Utils.TimedMessageBox("Axes in MotMaster2 and Axel-Hub must match!","Error Message", 3000);                   
-                    return jm;
-                }
+                if (grpMME.cmd.Equals("shoot")) jm = JumboModes.single;
                 if (grpMME.cmd.Equals("scan")) jm = JumboModes.scan;
                 if (grpMME.cmd.Equals("repeat")) jm = JumboModes.repeat;
             }

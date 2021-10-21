@@ -1,0 +1,6584 @@
+{
+  "Steps": [
+    {
+      "analogData": {
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-A"
+            }
+          ]
+        },
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-A"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-A"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "0"
+            }
+          ]
+        },
+        "AO-4": {},
+        "AO-5": {},
+        "AO-6": {},
+        "AO-7": {},
+        "AO-8": {},
+        "AO-9": {},
+        "AO-10": {},
+        "AO-11": {},
+        "AO-12": {},
+        "AO-13": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-30": {},
+        "AO-31": {}
+      },
+      "digitalData": {
+        "digit-0": false,
+        "digit-1": true,
+        "digit-2": false,
+        "digit-3": true,
+        "digit-4": true,
+        "digit-5": true,
+        "digit-6": false,
+        "digit-7": true,
+        "digit-8": true,
+        "digit-9": false,
+        "digit-10": false,
+        "digit-11": false,
+        "digit-12": false,
+        "digit-13": true,
+        "digit-14": false,
+        "digit-15": false,
+        "digit-16": false,
+        "digit-17": false,
+        "digit-18": false,
+        "digit-19": false,
+        "digit-20": false,
+        "digit-21": false,
+        "acquisitionTrigger": true,
+        "digit-23": false,
+        "digit-24": false,
+        "digit-25": false,
+        "digit-26": false,
+        "digit-27": false,
+        "digit-28": false,
+        "digit-29": false,
+        "digit-30": false
+      },
+      "usedAnalogChannels": [
+        "AO-3"
+      ],
+      "serialCommands": [
+        {
+          "Name": "muquansSlave",
+          "Value": ""
+        },
+        {
+          "Name": "microwaveSynth",
+          "Value": ""
+        },
+        {
+          "Name": "muquansAOM",
+          "Value": ""
+        }
+      ],
+      "Name": "Initialization 1",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": false,
+      "AnalogValueTypes": {
+        "AO-4": 0,
+        "AO-5": 0,
+        "AO-6": 0,
+        "AO-7": 0,
+        "AO-8": 0,
+        "AO-9": 0,
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-1": 1,
+        "AO-2": 1,
+        "AO-0": 1,
+        "AO-3": 1
+      },
+      "DigitalValueTypes": {
+        "digit-2": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-9": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": true
+        },
+        "digit-4": {
+          "Value": true
+        },
+        "digit-5": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-9": {},
+        "AO-8": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-A"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-A"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-A"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": "0"
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-A"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-10": {},
+        "AO-11": {},
+        "AO-12": {},
+        "AO-13": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {}
+      },
+      "digitalData": {
+        "digit-12": false,
+        "acquisitionTrigger": false,
+        "digit-11": false,
+        "digit-10": false,
+        "digit-21": false,
+        "digit-13": false,
+        "digit-20": false,
+        "digit-23": false,
+        "digit-15": false,
+        "digit-14": false,
+        "digit-25": false,
+        "digit-17": false,
+        "digit-24": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-26": false,
+        "digit-30": false,
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "digit-2": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-28": false
+      },
+      "usedAnalogChannels": [
+        "AO-3",
+        "AO-1",
+        "AO-0"
+      ],
+      "serialCommands": [],
+      "Name": "2/3DMOT",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "300",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 1,
+        "AO-2": 1,
+        "AO-0": 1,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-12": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": true
+        },
+        "digit-4": {
+          "Value": true
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-A"
+            }
+          ]
+        },
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-0"
+      ],
+      "serialCommands": [],
+      "Name": "BFieldOff",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "3",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": true
+        },
+        "digit-5": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "5"
+            }
+          ]
+        },
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": "0"
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-B"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-B"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "5"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-A"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-1",
+        "AO-3"
+      ],
+      "serialCommands": [],
+      "Name": "FreqRamp",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-2": 0,
+        "AO-1": 0,
+        "AO-31": 0,
+        "AO-3": 0,
+        "AO-0": 1
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": true
+        },
+        "digit-3": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "DelayA",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        },
+        "digit-1": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-B"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-B"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-B"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-B"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-0"
+      ],
+      "serialCommands": [],
+      "Name": "IntRamp",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "3",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-2": 0,
+        "AO-3": 0,
+        "AO-1": 0,
+        "AO-0": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-D"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-D"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "0"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-D"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-1",
+        "AO-2"
+      ],
+      "serialCommands": [],
+      "Name": "LD1",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "3",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 1,
+        "AO-1": 1,
+        "AO-2": 1,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "RepumpPulse",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "3",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "5"
+            }
+          ]
+        },
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-3"
+      ],
+      "serialCommands": [],
+      "Name": "DelayB",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-C"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-C"
+            }
+          ]
+        },
+        "AO-3": {},
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-C"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-2"
+      ],
+      "serialCommands": [],
+      "Name": "LD2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-3": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 1,
+        "AO-1": 1,
+        "AO-2": 1
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-C"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-C"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-C"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-C"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-0"
+      ],
+      "serialCommands": [],
+      "Name": "BFieldSettle1",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 0,
+        "AO-1": 0,
+        "AO-2": 0,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "Raman1",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 0,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "T1",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "Raman2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 0,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "T2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "Raman3",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 0,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "5"
+            }
+          ]
+        },
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "DelayC",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-E"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-E"
+            }
+          ]
+        },
+        "AO-3": {},
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-E"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-1",
+        "AO-2"
+      ],
+      "serialCommands": [],
+      "Name": "LD3",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "2",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-3": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 1,
+        "AO-1": 1,
+        "AO-2": 1
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "BFieldSettle2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "N2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "0.5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": true
+        },
+        "digit-4": {
+          "Value": true
+        },
+        "digit-5": {
+          "Value": true
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-E"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-E"
+            }
+          ]
+        },
+        "AO-3": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-E"
+            }
+          ]
+        },
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-E"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "Ntot",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "0.5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-0": 0,
+        "AO-1": 0,
+        "AO-2": 0,
+        "AO-3": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": true
+        },
+        "digit-5": {
+          "Value": true
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "BlowAway",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "B2",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "0.5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {},
+        "AO-0": {},
+        "AO-3": {},
+        "AO-2": {},
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [],
+      "serialCommands": [],
+      "Name": "Btot",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "0.5",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-1": 0,
+        "AO-0": 0,
+        "AO-3": 0,
+        "AO-2": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        }
+      }
+    },
+    {
+      "analogData": {
+        "AO-10": {},
+        "AO-11": {},
+        "AO-30": {},
+        "AO-31": {},
+        "AO-18": {},
+        "AO-19": {},
+        "AO-1": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Master-A"
+            }
+          ]
+        },
+        "AO-0": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "VCO-A"
+            }
+          ]
+        },
+        "AO-3": {},
+        "AO-2": {
+          "_selectedItem": [
+            {
+              "Name": "Start Time",
+              "Value": ""
+            },
+            {
+              "Name": "Value",
+              "Value": "Slave-A"
+            }
+          ]
+        },
+        "AO-5": {},
+        "AO-4": {},
+        "AO-7": {},
+        "AO-6": {},
+        "AO-26": {},
+        "AO-27": {},
+        "AO-24": {},
+        "AO-25": {},
+        "AO-22": {},
+        "AO-23": {},
+        "AO-20": {},
+        "AO-21": {},
+        "AO-9": {},
+        "AO-8": {},
+        "AO-28": {},
+        "AO-29": {},
+        "AO-16": {},
+        "AO-17": {},
+        "AO-14": {},
+        "AO-15": {},
+        "AO-12": {},
+        "AO-13": {}
+      },
+      "digitalData": {
+        "digit-9": false,
+        "digit-8": false,
+        "digit-5": false,
+        "digit-4": false,
+        "digit-7": false,
+        "digit-6": false,
+        "digit-1": false,
+        "digit-0": false,
+        "digit-3": false,
+        "acquisitionTrigger": false,
+        "digit-21": false,
+        "digit-30": false,
+        "digit-20": false,
+        "digit-14": false,
+        "digit-13": false,
+        "digit-24": false,
+        "digit-12": false,
+        "digit-23": false,
+        "digit-11": false,
+        "digit-17": false,
+        "digit-16": false,
+        "digit-27": false,
+        "digit-15": false,
+        "digit-26": false,
+        "digit-25": false,
+        "digit-19": false,
+        "digit-18": false,
+        "digit-29": false,
+        "digit-2": false,
+        "digit-28": false,
+        "digit-10": false
+      },
+      "usedAnalogChannels": [
+        "AO-2",
+        "AO-1"
+      ],
+      "serialCommands": [],
+      "Name": "End",
+      "Description": "",
+      "Enabled": true,
+      "Duration": "1",
+      "Timebase": 1,
+      "RS232Commands": true,
+      "AnalogValueTypes": {
+        "AO-10": 0,
+        "AO-11": 0,
+        "AO-30": 0,
+        "AO-31": 0,
+        "AO-18": 0,
+        "AO-19": 0,
+        "AO-3": 0,
+        "AO-5": 0,
+        "AO-4": 0,
+        "AO-7": 0,
+        "AO-6": 0,
+        "AO-26": 0,
+        "AO-27": 0,
+        "AO-24": 0,
+        "AO-25": 0,
+        "AO-22": 0,
+        "AO-23": 0,
+        "AO-20": 0,
+        "AO-21": 0,
+        "AO-9": 0,
+        "AO-8": 0,
+        "AO-28": 0,
+        "AO-29": 0,
+        "AO-16": 0,
+        "AO-17": 0,
+        "AO-14": 0,
+        "AO-15": 0,
+        "AO-12": 0,
+        "AO-13": 0,
+        "AO-1": 1,
+        "AO-2": 1,
+        "AO-0": 1
+      },
+      "DigitalValueTypes": {
+        "digit-9": {
+          "Value": false
+        },
+        "digit-8": {
+          "Value": false
+        },
+        "digit-6": {
+          "Value": false
+        },
+        "digit-1": {
+          "Value": false
+        },
+        "digit-3": {
+          "Value": false
+        },
+        "acquisitionTrigger": {
+          "Value": false
+        },
+        "digit-21": {
+          "Value": false
+        },
+        "digit-30": {
+          "Value": false
+        },
+        "digit-20": {
+          "Value": false
+        },
+        "digit-14": {
+          "Value": false
+        },
+        "digit-13": {
+          "Value": false
+        },
+        "digit-24": {
+          "Value": false
+        },
+        "digit-12": {
+          "Value": false
+        },
+        "digit-23": {
+          "Value": false
+        },
+        "digit-11": {
+          "Value": false
+        },
+        "digit-17": {
+          "Value": false
+        },
+        "digit-16": {
+          "Value": false
+        },
+        "digit-27": {
+          "Value": false
+        },
+        "digit-15": {
+          "Value": false
+        },
+        "digit-26": {
+          "Value": false
+        },
+        "digit-25": {
+          "Value": false
+        },
+        "digit-19": {
+          "Value": false
+        },
+        "digit-18": {
+          "Value": false
+        },
+        "digit-29": {
+          "Value": false
+        },
+        "digit-2": {
+          "Value": false
+        },
+        "digit-28": {
+          "Value": false
+        },
+        "digit-10": {
+          "Value": false
+        },
+        "digit-0": {
+          "Value": false
+        },
+        "digit-7": {
+          "Value": false
+        },
+        "digit-4": {
+          "Value": false
+        },
+        "digit-5": {
+          "Value": false
+        }
+      }
+    }
+  ],
+  "Parameters": [
+    {
+      "Name": "runID",
+      "Value": 624.0,
+      "Description": "Seq.number",
+      "IsLaser": false,
+      "Read_Only": true,
+      "SequenceVariable": true,
+      "Types": "<readonly><seq>"
+    },
+    {
+      "Name": "aChn",
+      "Value": 0.0,
+      "Description": "Act.channel",
+      "IsLaser": false,
+      "Read_Only": true,
+      "SequenceVariable": true,
+      "Types": "<readonly><seq>"
+    },
+    {
+      "Name": "ElapsedTime",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "PLLFreq",
+      "Value": 6834.682,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "ChirpRate",
+      "Value": 0.32,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "ChirpDuration",
+      "Value": 0.2,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse1Power",
+      "Value": 22.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse1Duration",
+      "Value": 30.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse1Phase",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse2Power",
+      "Value": 22.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse2Duration",
+      "Value": 30.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse2Phase",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse3Power",
+      "Value": 22.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse3Duration",
+      "Value": 30.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "Pulse3Phase",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "VelPulsePower",
+      "Value": 22.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "VelPulseDuration",
+      "Value": 100.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "VelPulsePhase",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "IntTime1",
+      "Value": 10.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "IntTime2",
+      "Value": 10.0,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "test",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "AnalogClockFrequncy",
+      "Value": 100000.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "AnalogLength",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "HSClockFrequency",
+      "Value": 200000000.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "2DCoil",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "AnalogClockFrequency",
+      "Value": 100000.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Z",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "2DAtten",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YpFreqMOT",
+      "Value": 6.759,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YmFreqLaunch",
+      "Value": 6.782,
+      "Description": "=if(aChn,6.806,6.782)",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YmFreqMOT",
+      "Value": 6.801,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "DetFreq",
+      "Value": 3.8,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "DetAttn",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "y2DBias",
+      "Value": 0.4,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZmAttenState",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YmAttenMOT",
+      "Value": 2.71,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YmAttenImg",
+      "Value": 2.65,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "x2DBias",
+      "Value": 1.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "PushAtten",
+      "Value": 3.5,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XpFreqMOT",
+      "Value": 6.711,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "3DCoil",
+      "Value": 2.9,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "2DFreq",
+      "Value": 7.25,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "2DPushFreq",
+      "Value": 7.75,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZmAttenImg",
+      "Value": 3.75,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "mwTime",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YBiasState",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "yBiasState",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "zBiasMW",
+      "Value": -1.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YBiasMW",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "zBiasInt",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YpAttenLaunch",
+      "Value": 2.5,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XpFreqLaunch",
+      "Value": 6.713,
+      "Description": "=if(aChn,6.685,6.713)",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YpFreqLaunch",
+      "Value": 6.774,
+      "Description": "=if(aChn,6.75,6.774)",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "xBiasInt",
+      "Value": 9.0,
+      "Description": "=if(aChn,-9,9)",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZmAttenMOT",
+      "Value": 3.55,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZpAttenMOT",
+      "Value": 2.53,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "xBiasMot",
+      "Value": -6.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "yBiasMot",
+      "Value": -2.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "zBiasMot",
+      "Value": -2.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XBiasState",
+      "Value": -0.8,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "xBiasState",
+      "Value": -0.8,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "zBiasImg",
+      "Value": -1.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZBiasState",
+      "Value": -1.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YBiasInt",
+      "Value": -0.5,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZpFreqMOT",
+      "Value": 6.784,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZmFreqMOT",
+      "Value": 6.81,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XmFreqLaunch",
+      "Value": 6.866,
+      "Description": "=if(aChn,6.896,6.866)",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XmFreqMOT",
+      "Value": 6.873,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XmAttenLaunch",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZpAttenState",
+      "Value": 3.2,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZpAttenImg",
+      "Value": 2.68,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XpAttenLaunch",
+      "Value": 4.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XpAttenImg",
+      "Value": 2.8,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XpAttenMOT",
+      "Value": 2.28,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YpAttenMOT",
+      "Value": 3.97,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "YpAttenImg",
+      "Value": 4.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XmAttenMOT",
+      "Value": 2.18,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "XmAttenImg",
+      "Value": 2.5,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "xBiasMW",
+      "Value": 9.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZmFreqLaunch",
+      "Value": 6.772,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "ZpFreqLaunch",
+      "Value": 6.824,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "rPhase0",
+      "Value": 0.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "rPhase",
+      "Value": 50.0,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "PLLFreqX",
+      "Value": 6834.92,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "PLLFreqY",
+      "Value": 6834.412,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "ChirpRateX",
+      "Value": 0.65,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "ChirpRateY",
+      "Value": 0.32,
+      "Description": "",
+      "IsLaser": true,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": "<laser>"
+    },
+    {
+      "Name": "MWFreq",
+      "Value": 6834.682,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": false,
+      "Types": ""
+    },
+    {
+      "Name": "VCO-A",
+      "Value": 0.4223,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "VCO-B",
+      "Value": 6.647,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "VCO-C",
+      "Value": 7.055,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "VCO-D",
+      "Value": 0.3183,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Master-A",
+      "Value": 0.0308,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Master-B",
+      "Value": 0.0826,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Master-C",
+      "Value": 0.275,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Master-D",
+      "Value": 0.0452,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Slave-A",
+      "Value": 0.003,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Slave-B",
+      "Value": 0.3,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Slave-C",
+      "Value": 0.255,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Slave-D",
+      "Value": 0.019,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Master-E",
+      "Value": 0.043,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "VCO-E",
+      "Value": 0.4106,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    },
+    {
+      "Name": "Slave-E",
+      "Value": 0.015,
+      "Description": "",
+      "IsLaser": false,
+      "Read_Only": false,
+      "SequenceVariable": true,
+      "Types": "<seq>"
+    }
+  ]
+}

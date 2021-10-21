@@ -7,6 +7,7 @@ using System.Collections;
 using System.ComponentModel;
 using NationalInstruments.Analysis.Math;
 using Newtonsoft.Json;
+using ErrorManager;
 using dotMath;
 using UtilsNS;
 
@@ -120,7 +121,7 @@ namespace MOTMaster2.SequenceData
             if (Utils.isNull(Controller.sequenceData.Parameters)) return Double.NaN;
             string func = function.TrimStart('=');
             EqCompiler compiler = new EqCompiler(func, true);
-            CustomizeCompiler.AddFunctions(compiler);   
+            CustomCompiler.AddFunctions(compiler);             
             compiler.Compile();
 
             //Checks all variables to use values in parameter dictionary
@@ -135,7 +136,9 @@ namespace MOTMaster2.SequenceData
                 if(!Controller.sequenceData.Parameters[variable].IsScannable())
                     throw new Exception(string.Format("Variable {0} is derivative (non-scannable) - not allowed!", variable));
             }
-            return compiler.Calculate();
+            double d = compiler.Calculate();
+            if (Name == "test") Utils.TimedMessageBox("test="+d.ToString());
+            return d;
         }
     }
     #region CustomizeCompiler
