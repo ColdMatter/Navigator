@@ -238,7 +238,8 @@ namespace MOTMaster2.ExtDevices
             SetFactors(fcts);
             List<string> efcts = script.ExtractFactors(true, out correct);
             SetSelectFactors(efcts);
-            if (inclContent) ucExtFactors.factorsState = Utils.readDict(System.IO.Path.ChangeExtension(script.filename, ".ds0"));
+            if (inclContent) 
+                ucExtFactors.factorsState = Utils.readDict(System.IO.Path.ChangeExtension(script.filename, ".ds0"));
             ucExtFactors.UpdateFromSequence();
         }
         private void SetFactors(List<string> fcts) // list from script section

@@ -59,18 +59,21 @@ namespace MOTMaster2.ExtDevices
             if (fctName.Equals("_others_")) return UpdateOthers(Convert.ToBoolean(fctValue)); // recursive           
             if (!OptEnabled())
             {
-                ErrorMng.Log("Error: the device <" + dvcName + "> is not Enabled (options)!", Brushes.DarkRed.Color);
+                ErrorMng.errorMsg("the device <" + dvcName + "> is not Enabled (options)!", 118);
                 return false;
             }
-            if (Controller.config.Debug) return true;
+            if (Controller.config.Debug)
+            {
+                //return true; // no factors visual update with values when debug; maybe later ???
+            }
             if (!CheckHardware())
             {
-                ErrorMng.Log("Error: the device <" + dvcName + "> is not available!", Brushes.Red.Color);
+                ErrorMng.errorMsg("the device <" + dvcName + "> is not available!", 119);
                 return false;
             }
             if (!CheckEnabled(true)) return false;
             bool bAll = fctName.Equals("<ALL>");
-            if ((fctName.Equals("RamanPhase") || bAll) && false)
+            if ((fctName.Equals("RamanPhase") || bAll) && false) // temporary disabled
             {
                 double sVal = bAll ? ucExtFactors.Factors[4].getReqValue(0) : Convert.ToDouble(fctValue);
                 bool bb = Controller.M2DCS.phaseControl(sVal);
@@ -78,7 +81,15 @@ namespace MOTMaster2.ExtDevices
                 if (fctName.Equals("RamanPhase")) return bb;
             }
             // call hardware
-            Dictionary<string, object> curr = Controller.M2PLL.get_status(); //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
+            Dictionary<string, object> curr;
+            if (Controller.config.Debug)
+            {
+                Dictionary<string, string> curr0 = Utils.readDict(Utils.configPath + @"M2PLL_get_status");
+                curr = new Dictionary<string, object>();
+                foreach (var item in curr0)
+                    curr[item.Key] = (object)item.Value;
+            }
+            else curr = Controller.M2PLL.get_status(); //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
             
             double InputFreq = 6834.68;
             if (ucExtFactors.Factors[0].fType == Factor.factorType.ftNone)
@@ -105,22 +116,22 @@ namespace MOTMaster2.ExtDevices
                 case "ChirpDuration":
                     ChirpDuration = Convert.ToDouble(fctValue);
                     break;
-            }
-            
-            Controller.CheckPhaseLock();
-            if (Controller.M2PLL.configure_lo_profile(true, false, "ecd", InputFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false))
+            }          
+            bool bc = Controller.CheckPhaseLock();
+            bc &= (!Controller.config.Debug) ? Controller.M2PLL.configure_lo_profile(true, false, "ecd", InputFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false) : true;
+            if (bc)
             {
-                if (Utils.isNull(fctValue))
+                if (Utils.isNull(fctValue) || ((string)fctValue == "<ALL>"))
                 {
                     ucExtFactors.Factors[0].fValue = InputFreq / 1.0e6; ucExtFactors.Factors[1].fValue = BeatFreqTrim;
                     ucExtFactors.Factors[2].fValue = ChirpRate / 1.0e6; ucExtFactors.Factors[3].fValue = ChirpDuration;
                     ucExtFactors.UpdateValues(); // ALL
                 }
             }
-            else ErrorMng.Log("Error: in device <" + dvcName + "> update (out of range value).", Brushes.DarkRed.Color); 
-            Controller.CheckPhaseLock();
+            else ErrorMng.errorMsg("Error: in device <" + dvcName + "> update (out of range value).", 122);
+            bc &= Controller.CheckPhaseLock();
             
-            return true;
+            return bc;
         }
         public bool OptEnabled()
         {

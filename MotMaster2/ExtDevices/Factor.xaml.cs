@@ -163,7 +163,7 @@ namespace MOTMaster2.ExtDevices
         }
         public void ParamUpdate(ObservableDictionary<string, Parameter> Parameters) // when params list is introduced or changed
         {
-            string txt = cbFactor.Text; factorType kind = fType; 
+            string txt = cbFactor.Text; 
             cbFactor.Items.Clear(); 
             if (!RequireValue) cbFactor.Items.Add(NoneFactor);
             bool pressent = false;
@@ -173,7 +173,7 @@ namespace MOTMaster2.ExtDevices
                 cbFactor.Items.Add(prm.Key);
                 pressent |= txt.Equals(prm.Key);
             } 
-            switch (kind)
+            switch (fType)
             {
                 case factorType.ftNone: cbFactor.Text = NoneFactor;
                     break;

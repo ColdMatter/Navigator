@@ -167,7 +167,15 @@ namespace MOTMaster2.ExtDevices
             {
                 ErrorMng.errorMsg("Wrong unit -> " + unit, 123); return "";
             }
-            string sval = Convert.ToString(Convert.ToInt32(fct), 16);
+            string sval = "";
+            try
+            {
+                sval = Convert.ToString(Convert.ToInt32(fct), 16);
+            }   
+            catch (OverflowException e)
+            {
+                ErrorMng.errorMsg("Overflow -> " + e.Message + " for " + fct, 120);
+            }    
             if (this[j].Item3 > 0) // if size-restricted
                 if (sval.Length > this[j].Item3)
                 {
