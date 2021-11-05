@@ -188,7 +188,7 @@ namespace MOTMaster2.ExtDevices
                     foreach(Factor factor in Factors)
                     {
                         bool bb = factor.SendValue();
-                        if (!bb) ErrorMng.Log("Error: problem with factor <" + factor.fName + ">");
+                        if (!bb) ErrorMng.errorMsg("problem with factor <" + factor.fName + ">", 321);
                         rslt &= bb;
                     }
                 }
@@ -245,7 +245,7 @@ namespace MOTMaster2.ExtDevices
                 return true;
             }
             // value is taken from parameters
-            if (!scanFactor.SendValue()) ErrorMng.Log("Error: problem with factor <" + scanFactor.fName + ">");      
+            if (!scanFactor.SendValue()) ErrorMng.errorMsg("problem with factor <" + scanFactor.fName + ">",322);      
             return true;
         }
         public bool SetFactor(string factor, string param)
@@ -254,7 +254,7 @@ namespace MOTMaster2.ExtDevices
             int j = IdxFromName(factor);
             if (j.Equals(-1))
             {
-                Utils.TimedMessageBox("No factor <"+factor+"> found."); return false;
+                ErrorMng.errorMsg("No factor <"+factor+"> found.",323); return false;
             }
             Factors[j].Text = param;
             return true;
@@ -263,12 +263,12 @@ namespace MOTMaster2.ExtDevices
         {
             if (!genOpt_Enabled)
             {
-                ErrorMng.Log("Error: the device is not Enable (options)!", Brushes.DarkRed.Color);
+                ErrorMng.errorMsg("Error: the device is not Enable (options)!", 324);
                 return;
             }
             if (!HW_Enabled)
             {
-                ErrorMng.Log("Error: the device is not available!", Brushes.DarkRed.Color);
+                ErrorMng.errorMsg("Error: the device is not available!", 325);
                 return;
             }
             Send2HW("_others_", (object)true);

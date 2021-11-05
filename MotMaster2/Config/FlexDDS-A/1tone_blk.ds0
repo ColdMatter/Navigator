@@ -1,5 +1,5 @@
 Amplitude 1 [ampl]=22
-Freq 1 [MHz]=PLLFreq
+Freq 1 [MHz]=10
 Amplitude  2 [ampl]=Pulse1Power
 Freq 2 [MHz]=1
 Duration [ms]=1.024

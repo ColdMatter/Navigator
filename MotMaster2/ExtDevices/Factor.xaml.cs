@@ -155,7 +155,7 @@ namespace MOTMaster2.ExtDevices
                     if (b) fValue = d;
                     else
                     {
-                        fValue = Double.NaN; ErrorMng.Log("Error in sending "+fName, Brushes.DarkRed.Color);
+                        fValue = Double.NaN; ErrorMng.errorMsg("Error in sending "+fName, 326);
                     }
                     return b;
                 default: return false;

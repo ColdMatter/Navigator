@@ -30,8 +30,8 @@
                                     <ComboBox x:Name="cbTemplates" HorizontalAlignment="Left" Margin="3,2,00,0"  Width="165" DropDownOpened="cbTemplates_DropDownOpened" DropDownClosed="cbTemplates_DropDownClosed" VerticalAlignment="Center" Background="{x:Null}">
                                         <ComboBoxItem Content="some text"/>
                                     </ComboBox>
-                                    <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="3,0,0,0" Width="35" Click="btnEdit_Click" Foreground="Navy"></Button>
-                                    <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Test" Margin="3,0,0,0" Width="35" Click="btnTest_Click" Foreground="DarkGreen"></Button>
+                                    <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="3,0,0,0" Width="35" Click="btnEdit_Click" Foreground="Navy" Background="#FFFDFCFC"></Button>
+                                    <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Test" Margin="3,0,0,0" Width="35" Click="btnTest_Click" Foreground="DarkGreen" Background="White"></Button>
                                 </StackPanel>
                                 <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
                                 <StackPanel x:Name="spSelectFactors" Grid.Row="2" Margin="5,0,5,0">
@@ -61,8 +61,8 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Button x:Name="btnAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Accept" Margin="7,3,0,2.949" Width="51" Click="btnAccept_Click" IsEnabled="False" Foreground="#FF005500"></Button>
                                     <Button x:Name="btnSaveAccept" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Save 'n Accept" Margin="5,3,0,2.949" Width="95" Click="btnAccept_Click" IsEnabled="False" Foreground="#FF016201"/>
-                                    <ToggleButton x:Name="btnHelp" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Help" Margin="5,3,0,2.949" Width="41" Click="btnHelp_Click" />
-                                    <Button x:Name="btnCancel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Cancel" Margin="7,3,0,2.949" Width="50" Click="btnCancel_Click" Foreground="#FF7C0101"/>
+                                    <ToggleButton x:Name="btnHelp" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Help" Margin="5,3,0,2.949" Width="41" Click="btnHelp_Click" Background="#FFECEBEB" />
+                                    <Button x:Name="btnCancel" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Cancel" Margin="7,3,0,2.949" Width="50" Click="btnCancel_Click" Foreground="#FF7C0101" Background="#FFF8F1F1"/>
                                 </StackPanel>
                                 <TabControl x:Name="tcEdit" Grid.Row="1">
                                     <TabItem Visibility="Hidden">
@@ -81,7 +81,7 @@
                                     <RowDefinition></RowDefinition>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="btnClose" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Close" Margin="5,0,0,0" Width="45" Click="btnCancel_Click"/>
+                                    <Button x:Name="btnClose" HorizontalAlignment="Left" VerticalAlignment="Center" Content="Close" Margin="5,0,0,0" Width="45" Click="btnCancel_Click" Background="#FFFFF9F9"/>
                                 </StackPanel>
                                 <TextBox x:Name="tbTest" Grid.Row="1" Text="" IsReadOnly="True" Foreground="DarkGreen"/>
                             </Grid>
