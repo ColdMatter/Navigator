@@ -90,16 +90,16 @@ namespace MOTMaster2.ExtDevices
                     curr[item.Key] = (object)item.Value;
             }
             else curr = Controller.M2PLL.get_status(); //Utils.writeDict(Utils.configPath + @"M2PLL_get_status", curr);
-            
-            double InputFreq = 6834.68;
+
+            double InputFreq = 6834.68 * 1e6;
             if (ucExtFactors.Factors[0].fType == Factor.factorType.ftNone)
             {
-                if (curr.ContainsKey("beat_freq")) InputFreq = Convert.ToDouble(curr["beat_freq"])/1e6;
+                if (curr.ContainsKey("beat_freq")) InputFreq = Convert.ToDouble(curr["beat_freq"]);
             }
             else InputFreq = ucExtFactors.Factors[0].getReqValue(0) * 1.0e6;
 
             double BeatFreqTrim = (ucExtFactors.Factors[1].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[1].getReqValue(0);
-            double ChirpRate = (ucExtFactors.Factors[2].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[2].getReqValue(0) * 1.0e6; 
+            double ChirpRate = (ucExtFactors.Factors[2].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[2].getReqValue(0) * 1.0e6;
             double ChirpDuration = (ucExtFactors.Factors[3].fType == Factor.factorType.ftNone) ? 0 : ucExtFactors.Factors[3].getReqValue(0); //ucExtFactors.Factors[3].fValue = ChirpDuration;
 
             switch (fctName)
@@ -116,9 +116,9 @@ namespace MOTMaster2.ExtDevices
                 case "ChirpDuration":
                     ChirpDuration = Convert.ToDouble(fctValue);
                     break;
-            }          
-            bool bc = Controller.CheckPhaseLock();
-            bc &= (!Controller.config.Debug) ? Controller.M2PLL.configure_lo_profile(true, false, "ecd", InputFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false) : true;
+            }
+            Controller.CheckPhaseLock();
+            bool bc = (!Controller.config.Debug) ? Controller.M2PLL.configure_lo_profile(true, false, "ecd", InputFreq, BeatFreqTrim, ChirpRate, ChirpDuration, false) : true;
             if (bc)
             {
                 if (Utils.isNull(fctValue) || ((string)fctValue == "<ALL>"))
@@ -128,9 +128,9 @@ namespace MOTMaster2.ExtDevices
                     ucExtFactors.UpdateValues(); // ALL
                 }
             }
-            else ErrorMng.errorMsg("Error: in device <" + dvcName + "> update (out of range value).", 122);
-            bc &= Controller.CheckPhaseLock();
-            
+            else ErrorMng.errorMsg("in device <" + dvcName + "> update (out of range value).", 122);
+            Controller.CheckPhaseLock();
+
             return bc;
         }
         public bool OptEnabled()
