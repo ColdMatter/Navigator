@@ -76,6 +76,8 @@ namespace DAQ.HAL
                 ExtDevices["FlexDDS"] = "1";
             }
 
+            ExtDevices["Magneto"] = "1";
+
             // map of all analog, digital and counter channels 
             // complex names (name/showAs): 
             //      'name' is the channel name in sequence file

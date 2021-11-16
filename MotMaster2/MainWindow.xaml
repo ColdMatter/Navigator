@@ -78,7 +78,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Content="Iterations number:" HorizontalAlignment="Left" Height="24" Margin="10,0,0,0" VerticalAlignment="Center" Width="113"/>
                         <Label Content="(-1 for endless)" HorizontalAlignment="Left" Height="24" Margin="10,44,0,0" VerticalAlignment="Top" Width="101"/>
-                        <Button x:Name="btnRun" Content="R u n" HorizontalAlignment="Left" Height="33" Margin="321,0,0,0" VerticalAlignment="Center" Width="87" Background="#FFB8F8B8" Click="btnRun_Click" FontSize="16"/>
+                        <Button x:Name="btnRun" Content="R u n" HorizontalAlignment="Left" Height="33" Margin="321,0,0,0" VerticalAlignment="Center" Width="87" Background="#FFB8F8B8" Click="btnRun_Click" FontSize="15"/>
                         <ni:NumericTextBoxDouble x:Name="ntbIterNumb" HorizontalAlignment="Left" Height="27" Margin="123,0,0,0" VerticalAlignment="Center" Width="88" FontSize="14" Range="-1, Infinity, System.Double" Value="-1"/>
                         <Label x:Name="lbCurNumb" Content="0" HorizontalAlignment="Left" Height="27" Margin="221,0,0,0" VerticalAlignment="Center" Width="95" FontWeight="Bold" FontSize="14" Foreground="#FF27836E"/>
                     </Grid>

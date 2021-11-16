@@ -148,6 +148,11 @@ namespace MOTMaster2
                     ExtDevices.Add(edn, fd); stackExtDevices.Children.Add(fd); ExtFactors.Add(fd.ucExtFactors);
                 }
             }
+            if (Environs.Hardware.ExtDevices.ContainsKey("Magneto"))
+            {
+                MagnetoUC ms = new MagnetoUC("Magneto", Brushes.DarkRed);
+                ExtDevices.Add("Magneto", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
+            }
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
             ExtDevices.UpdateFromOptions(ref Controller.genOptions);
         }
@@ -309,7 +314,8 @@ namespace MOTMaster2
 
         private void btnRun_Click(object sender, RoutedEventArgs e)
         {
-            if (btnRun.Content.Equals("Run"))
+            const string run = "R u n";
+            if (btnRun.Content.Equals(run))
             {
                 Controller.ExpData.SaveRawData = true;
                 btnRun.Content = "Stop";
@@ -326,14 +332,14 @@ namespace MOTMaster2
                 {
                     ErrorMng.errorMsg(ex.Message, -5);
                 }
-                if (!btnRun.Content.Equals("Run")) btnRun_Click(null, null);
+                if (!btnRun.Content.Equals(run)) btnRun_Click(null, null);
                 return;
             }
 
             if (btnRun.Content.Equals("Stop"))
             {
                 tbExperimentRun.Text = "---";
-                btnRun.Content = "Run";
+                btnRun.Content = run;
                 btnRun.Background = Brushes.LightGreen;
                 groupRun = GroupRun.none;
                 controller.StopRunning();
@@ -350,7 +356,7 @@ namespace MOTMaster2
             if (btnRun.Content.Equals("Abort"))
             {
                 tbExperimentRun.Text = "---";
-                btnRun.Content = "Run";
+                btnRun.Content = run;
                 btnRun.Background = Brushes.LightGreen;
                 groupRun = GroupRun.none;
                 //Send Remote Message to AxelHub
@@ -585,7 +591,7 @@ namespace MOTMaster2
                 if (groupRun != GroupRun.scan) break;
                 c++;      
             }
-            if (!btnScan.Content.Equals("Scan")) btnScan_Click(null, null);
+            if (!btnScan.Content.Equals("S c a n")) btnScan_Click(null, null);
             StartScanEvent(false, true, scanParam);
             param.Value = defaultValue;
             ExtFactors.ScanIter(parameter, -1); // reset factors           
@@ -595,8 +601,9 @@ namespace MOTMaster2
 
         private void btnScan_Click(object sender, RoutedEventArgs e)
         {
+            const string scan = "S c a n";
             var brush = Utils.ToSolidColorBrush("#FFF9E76B"); 
-            if (btnScan.Content.Equals("Scan"))
+            if (btnScan.Content.Equals(scan))
             {
                 btnScan.Content = "Cancel";
                 btnScan.Background = Brushes.Coral;
@@ -613,7 +620,7 @@ namespace MOTMaster2
                 }
                 controller.StopRunning();
                 StartScanEvent(false, true, null);
-                btnScan.Content = "Scan";
+                btnScan.Content = scan;
                 btnScan.Background = brush;
                 groupRun = GroupRun.none;
                 return;
@@ -622,7 +629,7 @@ namespace MOTMaster2
             if (btnScan.Content.Equals("Cancel"))
             {
                 tbExperimentRun.Text = "---";
-                btnScan.Content = "Scan";
+                btnScan.Content = scan;
                 btnScan.Background = brush;
                 groupRun = GroupRun.none;
                 controller.StopRunning();
@@ -637,7 +644,7 @@ namespace MOTMaster2
             if (btnScan.Content.Equals("Abort"))
             {
                 tbExperimentRun.Text = "---";
-                btnScan.Content = "Scan";
+                btnScan.Content = scan;
                 btnScan.Background = brush;
                 groupRun = GroupRun.none;
                 controller.StopRunning();
