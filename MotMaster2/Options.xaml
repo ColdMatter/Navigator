@@ -33,12 +33,12 @@
             <TabItem x:Name="tiOptions" Header="General Options" Width="170">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="65"/>
-                        <RowDefinition Height="65"/>
-                        <RowDefinition Height="110"/>
                         <RowDefinition Height="60"/>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="110"/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <StackPanel Margin="0" Orientation="Horizontal">
+                    <StackPanel Margin="0,0,-0.127,2.329" Orientation="Horizontal">
 
                         <GroupBox Header="Save sequence on exit" HorizontalAlignment="Left" Margin="10,5,0,0" Height="50" Width="216" VerticalAlignment="Top">
                             <Grid>
@@ -61,31 +61,31 @@
                         </GroupBox>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="1" Margin="0" Orientation="Horizontal">
+                    <StackPanel Margin="0,58,-0.127,0.443" Orientation="Horizontal" Grid.RowSpan="2">
                         <!--      <GroupBox Header="MSquared Communication"  HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="46" Width="180" >
                             <Grid Margin="0,0,0,0">
                                 <RadioButton x:Name="m2On" Content="Yes"  Margin="25,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                 <RadioButton x:Name="m2Off" Content="No"  Margin="86,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </GroupBox> -->
-                        <GroupBox Header="Force sequence loading in PXI" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="46" Width="183" >
+                        <GroupBox Header="Force sequence loading in PXI" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="52" Width="183" >
                             <Grid Margin="0,0,0,0">
                                 <CheckBox x:Name="chkForceSeqCharge" Content="Enabled"  Margin="15,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Save sequence before proc" Grid.Row="1" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="46" Width="180" Grid.RowSpan="2">
+                        <GroupBox Header="Save sequence before proc" Grid.Row="1" HorizontalAlignment="Left" Margin="10,2,0,0" VerticalAlignment="Top" Height="52" Width="180" Grid.RowSpan="2">
                             <Grid Margin="0,0,0,0">
                                 <CheckBox x:Name="chkSaveSeqB4proc" Content="Enabled"  Margin="15,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             </Grid>
                         </GroupBox>
-                        <GroupBox Header="Delay between shots [ms]" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" VerticalAlignment="Top" Height="50" Width="156" Grid.RowSpan="2">
+                        <GroupBox Header="Delay between shots [ms]" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" VerticalAlignment="Top" Height="52" Width="156" Grid.RowSpan="2">
                             <Grid Margin="0,0,0,0">
                                 <ni:RadixNumericTextBoxInt32 x:Name="numDelayBwnShots" RadixVisibility="Collapsed" Margin="35,1,5,1"></ni:RadixNumericTextBoxInt32>
                             </Grid>
                         </GroupBox>
                     </StackPanel>
 
-                    <GroupBox Header="Analog data acquisition" Grid.Row="1" HorizontalAlignment="Left" Margin="10,65.38,0,60.582" Width="626" Grid.RowSpan="3">
+                    <GroupBox Header="Analog data acquisition" Grid.Row="2" HorizontalAlignment="Left" Margin="10,0.557,0,1.633" Width="626">
                         <Grid Margin="0,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="75"/>
@@ -129,12 +129,10 @@
                             </GroupBox>
                         </Grid>
                     </GroupBox>
-                    <GroupBox Header="External devices enabled" Grid.Row="3" Margin="10,0.177,9.873,-0.418">
-                        <StackPanel Orientation="Horizontal" Margin="10,3,0,0">
-                            <CheckBox x:Name="chkWindFreakEnabled" Grid.Column="0" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="WindFreak"/>
-                            <CheckBox x:Name="chkM2Enabled" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="MSquared"/>
-                            <CheckBox x:Name="chkFlexDDSEnabled" Grid.Column="1" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Center" Width="88" Content="FlexDDS"/>
-                        </StackPanel>
+                    <GroupBox Header="External devices enabled" Grid.Row="3" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="160" Height="200" Grid.RowSpan="2">
+                        <Grid>
+                            <ListBox x:Name="lbExtDvcs" Margin="5"/>
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </TabItem>
@@ -180,6 +178,7 @@
                     </TabControl>
                 </Grid>
             </TabItem>
+
 
         </TabControl>
         <Button x:Name="btnOK" Content="OK" HorizontalAlignment="Right" Margin="0,10.429,17.143,10.286" VerticalAlignment="Center" Width="90" Click="OKButton_Click" Grid.Row="1" Height="25" FontWeight="Bold" Background="#FFEEEDED"/>

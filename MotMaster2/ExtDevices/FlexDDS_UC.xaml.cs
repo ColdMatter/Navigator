@@ -70,7 +70,7 @@ namespace MOTMaster2.ExtDevices
         public bool OptEnabled()
         {
             if (Utils.isNull(genOpt)) return false;
-            else return genOpt.FlexDDSEnabled;
+            else return genOpt.ExtDvcEnabled["FlexDDS"];
         }
         protected bool lastCheckHardware = false;
         public bool CheckHardware()
@@ -179,7 +179,7 @@ namespace MOTMaster2.ExtDevices
         public void UpdateFromOptions(ref GeneralOptions _genOptions)
         {
             genOpt = _genOptions;
-            ucExtFactors.UpdateEnabled(genOpt.FlexDDSEnabled, CheckHardware(), CheckEnabled());
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["FlexDDS"], CheckHardware(), CheckEnabled());
         }
         public bool UpdateOthers(bool ignoreMutable = false) // update all non-factors (others) ???
         {
@@ -316,7 +316,7 @@ namespace MOTMaster2.ExtDevices
         }
         private void miCheckHw_Click(object sender, RoutedEventArgs e)
         {
-            ucExtFactors.UpdateEnabled(genOpt.FlexDDSEnabled, CheckHardware(), CheckEnabled(false));
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["FlexDDS"], CheckHardware(), CheckEnabled(false));
         }
         private void miTestHw_Click(object sender, RoutedEventArgs e)
         {

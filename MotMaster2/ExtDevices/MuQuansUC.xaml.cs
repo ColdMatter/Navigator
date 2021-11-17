@@ -72,7 +72,7 @@ namespace MOTMaster2.ExtDevices
         public bool OptEnabled()
         {
             if (Utils.isNull(genOpt)) return false;
-            else return genOpt.m2Enabled;
+            else return genOpt.ExtDvcEnabled["MSquared"];
         }
         protected bool lastCheckHardware = false;
         public bool CheckHardware()
@@ -142,7 +142,7 @@ namespace MOTMaster2.ExtDevices
         public void UpdateFromOptions(ref GeneralOptions _genOptions)
         {
             genOpt = _genOptions;
-            ucExtFactors.UpdateEnabled(genOpt.m2Enabled, CheckHardware());
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["MSquared"], CheckHardware());
         }
         private void SetAllFactors(bool keepContent) // from script
         {
@@ -270,7 +270,7 @@ namespace MOTMaster2.ExtDevices
         }
         private void miCheckHw_Click(object sender, RoutedEventArgs e)
         {
-            ucExtFactors.UpdateEnabled(genOpt.m2Enabled, CheckHardware(), CheckEnabled(false));
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["MSquared"], CheckHardware(), CheckEnabled(false));
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)

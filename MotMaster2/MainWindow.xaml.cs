@@ -150,7 +150,7 @@ namespace MOTMaster2
             }
             if (Environs.Hardware.ExtDevices.ContainsKey("Magneto"))
             {
-                MagnetoUC ms = new MagnetoUC("Magneto", Brushes.DarkRed);
+                MagnetoUC ms = new MagnetoUC("Magneto", Brushes.DarkOrange);
                 ExtDevices.Add("Magneto", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
             }
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
@@ -255,7 +255,7 @@ namespace MOTMaster2
             if ((Iters == 0) || (Iters < -1))
             {
                 ErrorMng.errorMsg("Invalid <Iteration Number> value.", 2, true);
-                if (!btnRun.Content.Equals("Run")) btnRun_Click(null, null);
+                if (!btnRun.Content.Equals("R u n")) btnRun_Click(null, null);
                 return;
             }
             progBar.Minimum = 0;
@@ -437,7 +437,7 @@ namespace MOTMaster2
                 if ((Iters == 0) || (Iters < 0)) // cancel the scan
                 {
                     ErrorMng.errorMsg("Invalid scan values.", 2, true);
-                    if (!btnRun.Content.Equals("Run")) btnRun_Click(null, null);
+                    if (!btnRun.Content.Equals("S c a n")) btnScan_Click(null, null);
                     return;
                 }
                 progBar.Minimum = 0;
@@ -480,7 +480,7 @@ namespace MOTMaster2
                 }
                 StartScanEvent(false, true, scan);
                 controller.AutoLogging = false; ExtFactors.ScanIter(parameter, -1); // reset factors
-                if (!btnScan.Content.Equals("Scan")) btnScan_Click(null, null);               
+                if (!btnScan.Content.Equals("S c a n")) btnScan_Click(null, null);               
                 return;
             }
 
@@ -557,7 +557,7 @@ namespace MOTMaster2
             Controller.SaveTempSequence(null, scanParam);
 
             progBar.Minimum = 0;
-            progBar.Maximum = scanArray.Length;
+            progBar.Maximum = scanArray.Length-1;
 
             int c = 0;
             Controller.ScanParam = scanParam.Clone();
@@ -1557,19 +1557,28 @@ namespace MOTMaster2
 
         private void frmMain_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if (e.Key == Key.O && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            switch (e.Key)
             {
-                LoadSequence_Click(sender, e);
+                case (Key.O): 
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        LoadSequence_Click(sender, e);
+                    }
+                    break;
+                case (Key.S):    
+                    if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                    {
+                        SaveSequence_Click(sender, e);
+                    }
+                    break;
+                case (Key.F4):
+                    EditParameters_Click(sender, e);
+                    break;
+                case (Key.F1):
+                    mWebHelp_Click(sender, e);
+                    break;
             }
-            if (e.Key == Key.S && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
-            {
-                SaveSequence_Click(sender, e);
-            }
-            if (e.Key == Key.F4)
-            {
-                EditParameters_Click(sender, e);
-            }
-        }
+         }
 
         private void rbX_Checked(object sender, RoutedEventArgs e)
         {

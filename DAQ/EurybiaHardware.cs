@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 using System.Collections.Generic;
 using System.Windows.Media;
 using NationalInstruments.DAQmx;
@@ -62,10 +63,14 @@ namespace DAQ.HAL
             Info.Add("AIAcquireTrigger", "pfi0");
 
             //Add other instruments such as serial channels
-            ExtDevices["WindFreak"] = "2";
-            Dictionary<string, string> wDict = Utils.readDict(Utils.configPath + "WindFreak.CFG");
-            Instruments.Add("microwaveSynth", new WindfreakSynth(wDict.ContainsKey("dev1") ? wDict["dev1"] : "ASRL12::INSTR"));
-            Instruments.Add("microwaveSynth2", new WindfreakSynth(wDict.ContainsKey("dev2") ? wDict["dev2"] : "ASRL04::INSTR"));
+            
+            if (File.Exists(Utils.configPath + "WindFreak.CFG"))
+            {
+                ExtDevices["WindFreak"] = "2";
+                Dictionary<string, string> wDict = Utils.readDict(Utils.configPath + "WindFreak.CFG");
+                Instruments.Add("microwaveSynth", new WindfreakSynth(wDict.ContainsKey("dev1") ? wDict["dev1"] : "ASRL12::INSTR"));
+                Instruments.Add("microwaveSynth2", new WindfreakSynth(wDict.ContainsKey("dev2") ? wDict["dev2"] : "ASRL04::INSTR"));
+            }
 
             ExtDevices["MSquared"] = "1";
             Instruments.Add("MSquaredDCS", new ICEBlocDCS());

@@ -254,7 +254,7 @@ namespace MOTMaster2
             catch
             {
                 //Set to popup to avoid Exception called when it can't write to a Log
-                if (genOptions.m2Enabled)
+                if (genOptions.ExtDvcEnabled["MSquared"])
                     ErrorMng.warningMsg("Could not set MSquared Parameters", -1, true);
             }
         }
@@ -638,7 +638,7 @@ namespace MOTMaster2
                     }
                 }    
                                  
-                if (!config.Debug && config.UseMSquared && genOptions.m2Enabled)
+                if (!config.Debug && config.UseMSquared && genOptions.ExtDvcEnabled["MSquared"])
                 {
                     if (Math.Abs(ExpData.axis).Equals(2)) axisControl(actChannel(value), true);
                     else

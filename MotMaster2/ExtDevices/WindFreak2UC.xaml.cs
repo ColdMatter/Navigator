@@ -50,7 +50,7 @@ namespace MOTMaster2.ExtDevices
         public bool OptEnabled()
         {
             if (Utils.isNull(genOpt)) return false;
-            else return genOpt.WindFreakEnabled;
+            else return genOpt.ExtDvcEnabled[dvcName];
         }
         protected bool lastCheckHardware = false;
         public bool CheckHardware()
@@ -170,7 +170,7 @@ namespace MOTMaster2.ExtDevices
         public void UpdateFromOptions(ref GeneralOptions _genOptions)
         {
             genOpt = _genOptions;
-            ucExtFactors.UpdateEnabled(genOpt.WindFreakEnabled, CheckHardware());
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled[dvcName], CheckHardware());
         }
         public bool UpdateOthers(bool ignoreMutable = false) // update all non-factors (others)
         {
@@ -206,7 +206,7 @@ namespace MOTMaster2.ExtDevices
         }
         private void miCheckHw_Click(object sender, RoutedEventArgs e)
         {
-            ucExtFactors.UpdateEnabled(genOpt.WindFreakEnabled, CheckHardware(), CheckEnabled(false));
+            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled[dvcName], CheckHardware(), CheckEnabled(false));
         }
     }
 }

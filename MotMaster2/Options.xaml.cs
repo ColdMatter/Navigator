@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Globalization;
+using DAQ.Environment;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UtilsNS;
@@ -59,9 +60,7 @@ namespace MOTMaster2
         public double RiseTime { get; set; }
         public Dictionary<string,int> Skim { get; set; }
         
-        public bool WindFreakEnabled { get; set; }
-        public bool m2Enabled { get; set; }
-        public bool FlexDDSEnabled { get; set; }
+        public Dictionary<string,bool> ExtDvcEnabled { get; set; }
 
         public void Save()
         {
@@ -82,19 +81,22 @@ namespace MOTMaster2
             InitializeComponent();
             
             string fileJson = JsonConvert.SerializeObject(DAQ.Environment.Environs.FileSystem);
-            var HW = DAQ.Environment.Environs.Hardware;
+            var HW = Environs.Hardware;
             hardwareJson = JsonConvert.SerializeObject(HW, Formatting.Indented);
             LoadJsonToTreeView(hardwareTreeView, hardwareJson);
             LoadJsonToTreeView(filesystemTreeView, fileJson);
             // ExtDevices
-            if (HW.ExtDevices.ContainsKey("MSquared")) chkM2Enabled.Visibility = Visibility.Visible;
-            else chkM2Enabled.Visibility = Visibility.Collapsed;
-            if (HW.ExtDevices.ContainsKey("WindFreak")) chkWindFreakEnabled.Visibility = Visibility.Visible;
-            else chkWindFreakEnabled.Visibility = Visibility.Collapsed;
-            if (HW.ExtDevices.ContainsKey("FlexDDS")) chkFlexDDSEnabled.Visibility = Visibility.Visible;
-            else chkFlexDDSEnabled.Visibility = Visibility.Collapsed;          
-        }       
-        
+            if (Utils.isNull(Controller.genOptions.ExtDvcEnabled)) Controller.genOptions.ExtDvcEnabled = new Dictionary<string, bool>();
+            Dictionary<string, string> extDvcs = new Dictionary<string, string>(HW.ExtDevices);
+            lbExtDvcs.Items.Clear();
+            foreach (var dvc in extDvcs)
+            {
+                CheckBox chk = new CheckBox(); chk.Content = dvc.Key; chk.Height = 20; chk.Margin = new Thickness(5, 5,0,0);
+                chk.IsChecked = Controller.genOptions.ExtDvcEnabled.ContainsKey(dvc.Key) ? Controller.genOptions.ExtDvcEnabled[dvc.Key] : false;
+                lbExtDvcs.Items.Add(chk);
+            }
+        }
+
         string hardwareJson = "";
         void LoadJsonToTreeView(TreeView treeView, string json)
         {
@@ -144,9 +146,10 @@ namespace MOTMaster2
 
             if (aiEnable.IsChecked.Value) Controller.UpdateAIValues();
 
-            Controller.genOptions.WindFreakEnabled = chkWindFreakEnabled.IsChecked.Value;
-            Controller.genOptions.m2Enabled = chkM2Enabled.IsChecked.Value;
-            Controller.genOptions.FlexDDSEnabled = chkFlexDDSEnabled.IsChecked.Value;
+            foreach (var item in lbExtDvcs.Items)
+            {
+                CheckBox chk = (CheckBox)item; Controller.genOptions.ExtDvcEnabled[(string)chk.Content] = chk.IsChecked.Value; 
+            }
             Controller.genOptions.Save();
             Close();
         }
@@ -213,10 +216,7 @@ namespace MOTMaster2
             numPreSkimTot.Value = Controller.genOptions.Skim.ContainsKey("PreSkimTot") ? Controller.genOptions.Skim["PreSkimTot"] : 0;
             numPostSkimTot.Value = Controller.genOptions.Skim.ContainsKey("PostSkimTot") ? Controller.genOptions.Skim["PostSkimTot"]: 0;
 
-            chkWindFreakEnabled.IsChecked = Controller.genOptions.WindFreakEnabled;
-            chkM2Enabled.IsChecked = Controller.genOptions.m2Enabled;
-            chkFlexDDSEnabled.IsChecked = Controller.genOptions.FlexDDSEnabled;
-        }
+         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
