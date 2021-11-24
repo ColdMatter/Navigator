@@ -1,1 +1,0 @@
-git clone -b navigator_v0.x --single-branch https://github.com/ColdMatter/EDMSuite.git

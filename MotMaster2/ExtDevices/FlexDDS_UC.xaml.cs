@@ -344,3 +344,11 @@ namespace MOTMaster2.ExtDevices
         }
     }
 }
+
+/* Meta commands - start with @
+ * Init() or Init(0/1) - initialize both or 0/1 channel 
+ * 
+ * 
+ * 
+ * 
+ */

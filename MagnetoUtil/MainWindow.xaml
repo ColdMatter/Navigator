@@ -1,0 +1,239 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MagnetoUtil"
+        xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" x:Class="MagnetoUtil.MainWindow"
+        mc:Ignorable="d"
+        Title="  Magneto Utility" Height="900" Width="1500" Icon="Properties/icons8-magneto-96.png">
+    <Grid>
+        <TabControl x:Name="tabControl" Background="{x:Null}">
+            <TabItem Header="Repeat" Width="60" Height="28" FontSize="13" Background="#FFEDECEC">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="155"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <GroupBox Height="80" Margin="0,0,5.215,0" Header="Short term log (2 sec)" VerticalAlignment="Top" BorderBrush="#FF9AD6FA">
+                            <Grid>
+                                <CheckBox x:Name="chkShortEnabled" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5,0,0" Content="Enabled" IsChecked="True"></CheckBox>
+                                <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="NPoints" Margin="0,0,0,0"></Label>
+                                <ni:RadixNumericTextBoxInt32 x:Name="numShort" HorizontalAlignment="Right" Height="24" Margin="0,0,0.316,-0.101" VerticalAlignment="Bottom" Width="84" RadixVisibility="Collapsed" Range="10, 20000, System.Int32" Interval="10" Value="1000"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Height="78" Margin="0,0,5,0" Header="Long term log (1 min)" VerticalAlignment="Top" BorderBrush="#FFB4FAA6">
+                            <Grid>
+                                <CheckBox x:Name="chkLongEnabled" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,5,0,0" Content="Enabled" IsChecked="True"></CheckBox>
+                                <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="NPoints" Margin="0,0,0,0"></Label>
+                                <ni:RadixNumericTextBoxInt32 x:Name="numLong" HorizontalAlignment="Right" Height="24" Margin="0,0,-0.076,0.468" VerticalAlignment="Bottom" Width="84" RadixVisibility="Collapsed" Range="-1, 20000, System.Int32" Interval="15" Value="12"/>
+                            </Grid>
+                        </GroupBox>
+                        <ni:BooleanContentButton x:Name="bbtnRepeat" Height="38" Margin="0,18,0,0" VerticalAlignment="Top" Width="103" FontSize="15" Background="#FFFFFDFD" FalseBrush="#FFB8F8B8" BorderThickness="10,8" FalseContent="Repeat" TrueContent="Cancel" TrueBrush="Coral" Click="bbtnRepeat_Click"/>
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <TabControl x:Name="tcRepeat">
+                            <TabItem Header="Short term">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="60*"/>
+                                        <RowDefinition Height="40*"/>
+                                    </Grid.RowDefinitions>
+                                    <ni:Graph x:Name="graphShortRepeat" Margin="0" >
+                                        <ni:Graph.Plots>
+                                            <ni:Plot Label="A_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="B_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="C_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                            </ni:Plot>
+
+                                        </ni:Graph.Plots>
+                                        <ni:Graph.Axes>
+                                            <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                                        </ni:Graph.Axes>
+                                    </ni:Graph>
+                                    <ni:Graph x:Name="graphShortRepeatStd" Margin="0" Grid.Row="1">
+                                        <ni:Graph.Plots>
+                                            <ni:Plot Label="A_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="B_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="C_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                            </ni:Plot>
+                                        </ni:Graph.Plots>
+                                        <ni:Graph.Axes>
+                                            <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                                        </ni:Graph.Axes>
+                                    </ni:Graph>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Long term">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="60*"/>
+                                        <RowDefinition Height="40*"/>
+                                    </Grid.RowDefinitions>
+                                    <ni:Graph x:Name="graphLongRepeat" Margin="0" >
+                                        <ni:Graph.Plots>
+                                            <ni:Plot Label="A_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="B_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="C_mean">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                            </ni:Plot>
+
+                                        </ni:Graph.Plots>
+
+                                        <ni:Graph.Axes>
+                                            <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                                        </ni:Graph.Axes>
+                                    </ni:Graph>
+                                    <ni:Graph x:Name="graphLongRepeatStd" Margin="0" Grid.Row="1">
+                                        <ni:Graph.Plots>
+                                            <ni:Plot Label="A_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="B_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                            </ni:Plot>
+                                            <ni:Plot Label="C_std">
+                                                <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                            </ni:Plot>
+                                        </ni:Graph.Plots>
+
+                                        <ni:Graph.Axes>
+                                            <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                                        </ni:Graph.Axes>
+                                    </ni:Graph>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="___No_Name_" Header="Scan" Width="60" Height="28" FontSize="13" Background="#FFEDECEC">
+                <Grid Margin="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <GroupBox Height="109" Margin="0" BorderBrush="#FF99F6FB">
+                            <Grid Margin="0,5,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="31*"/>
+                                    <RowDefinition Height="31*"/>
+                                    <RowDefinition Height="31*"/>
+                                </Grid.RowDefinitions>
+                                <Label Content="From[V]" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                <ni:NumericTextBoxDouble x:Name="numFrom" HorizontalAlignment="Left" Height="24" Margin="52,3,0,0" VerticalAlignment="Top" Width="70" Value="-10"/>
+                                <Label Grid.Row="1" Content="To[V]" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                <ni:NumericTextBoxDouble x:Name="numTo" Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="52,3,0,0" VerticalAlignment="Top" Width="70" Value="10"/>
+                                <Label Grid.Row="2" Content="By[V]" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                <ni:NumericTextBoxDouble x:Name="numBy" Grid.Row="2" HorizontalAlignment="Left" Height="24" Margin="52,3,0,0" VerticalAlignment="Top" Width="70" Value="0.1" Interval="0.1"/>
+                            </Grid>
+                        </GroupBox>
+                        <ni:BooleanContentButton x:Name="bbtnScan" Height="38" Margin="0,18,0,0" VerticalAlignment="Top" Width="103" FontSize="15" Background="#FFFFFDFD" FalseBrush="#FFFBFFAE" BorderThickness="10,8" FalseContent="Scan" TrueContent="Cancel" TrueBrush="Coral" Click="bbtnScan_Click"/>
+
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60*"/>
+                            <RowDefinition Height="40*"/>
+                        </Grid.RowDefinitions>
+                        <ni:Graph x:Name="graphScan" Margin="0">
+                            <ni:Graph.Plots>
+                                <ni:Plot Label="A_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                </ni:Plot>
+                                <ni:Plot Label="B_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                </ni:Plot>
+                                <ni:Plot Label="C_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                </ni:Plot>
+                            </ni:Graph.Plots>
+
+                            <ni:Graph.Axes>
+                                <ni:AxisDouble x:Name="axisXscan" Adjuster="GrowLoosely" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                            </ni:Graph.Axes>
+
+                        </ni:Graph>
+                        <ni:Graph x:Name="graphScanStd" Margin="0" Grid.Row="1">
+                            <ni:Graph.Plots>
+                                <ni:Plot Label="A_std">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                </ni:Plot>
+                                <ni:Plot Label="B_std">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                </ni:Plot>
+                                <ni:Plot Label="C_std">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                </ni:Plot>
+                            </ni:Graph.Plots>
+
+                            <ni:Graph.Axes>
+                                <ni:AxisDouble x:Name="axisXscanStd" Adjuster="GrowLoosely" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                            </ni:Graph.Axes>
+
+                        </ni:Graph>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tiStabilization" Header="Stabilization" Width="90" Height="28" FontSize="13" Background="#FFEDECEC">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <GroupBox Height="109" Margin="0,0,-0.253,0" BorderBrush="#FFF8D5B1">
+                            <Grid Margin="0,5,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="31*"/>
+                                    <RowDefinition Height="31*"/>
+                                    <RowDefinition Height="26*"/>
+                                </Grid.RowDefinitions>
+                                <Label Content="kP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                                <ni:NumericTextBoxDouble HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double" SelectOnFocus="True" Value="1"/>
+                                <Label Grid.Row="1" Content="kI" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                                <ni:NumericTextBoxDouble Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double"/>
+                                <Label Grid.Row="2" Content="kD" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
+                                <ni:NumericTextBoxDouble Grid.Row="2" HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double"/>
+                            </Grid>
+                        </GroupBox>
+                        <ni:BooleanContentButton x:Name="bbtnStabil" Height="38" Margin="0,18,0,0" VerticalAlignment="Top" Width="120" FontSize="15" Background="#FFFFFDFD" FalseBrush="#FFECD1FB" BorderThickness="10,8" FalseContent="Stabilization" TrueContent="Cancel" TrueBrush="#FFF7E6CD"/>
+                    </StackPanel>
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="60*"/>
+                            <RowDefinition Height="40*"/>
+                        </Grid.RowDefinitions>
+                        <ni:Graph x:Name="graphPIDsignal" Margin="0" >
+                            <ni:Graph.Axes>
+                                <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                            </ni:Graph.Axes>
+                        </ni:Graph>
+                        <ni:Graph x:Name="graphPIDcorrect" Margin="0" Grid.Row="1">
+                            <ni:Graph.Axes>
+                                <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
+                            </ni:Graph.Axes>
+                        </ni:Graph>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

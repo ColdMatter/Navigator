@@ -26,12 +26,12 @@
                                     <RowDefinition Height="155*"/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
-                                    <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarGreen.bmp" HorizontalAlignment="Left" MouseUp="imgTripleBars_MouseUp_1"/>
-                                    <ComboBox x:Name="cbTemplates" HorizontalAlignment="Left" Margin="3,2,00,0"  Width="165" DropDownOpened="cbTemplates_DropDownOpened" DropDownClosed="cbTemplates_DropDownClosed" VerticalAlignment="Center" Background="{x:Null}">
+                                    <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarGreen.bmp" HorizontalAlignment="Left" MouseUp="imgTripleBars_MouseUp_1" Margin="3,0,0,0"/>
+                                    <ComboBox x:Name="cbTemplates" HorizontalAlignment="Left" Margin="3,0,0,0"  Width="165" DropDownOpened="cbTemplates_DropDownOpened" DropDownClosed="cbTemplates_DropDownClosed" VerticalAlignment="Center" Background="{x:Null}" Height="23">
                                         <ComboBoxItem Content="some text"/>
                                     </ComboBox>
-                                    <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="3,0,0,0" Width="35" Click="btnEdit_Click" Foreground="Navy" Background="#FFFDFCFC"></Button>
-                                    <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Test" Margin="3,0,0,0" Width="35" Click="btnTest_Click" Foreground="DarkGreen" Background="White"></Button>
+                                    <Button x:Name="btnEdit" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Edit" Margin="3,0,0,0" Width="35" Click="btnEdit_Click" Foreground="Navy" Background="#FFFDFCFC" Height="23"></Button>
+                                    <Button x:Name="btnTest" HorizontalAlignment="Right" VerticalAlignment="Center" Content="Output" Margin="3,0,0,0" Width="53" Click="btnTest_Click" Foreground="DarkGreen" Background="White" Height="23"></Button>
                                 </StackPanel>
                                 <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
                                 <StackPanel x:Name="spSelectFactors" Grid.Row="2" Margin="5,0,5,0">

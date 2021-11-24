@@ -175,7 +175,7 @@ namespace MOTMaster2
 
         private void frmOptions_Loaded(object sender, RoutedEventArgs e) // internal to visual
         {
-            Title = "Options  v" + Utils.getAppFileVersion;
+            Title = " Options  v" + Utils.getAppFileVersion + (Controller.config.Debug ? "   (Debug mode)" : "");
 
             rbSaveSeqYes.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.save);
             rbSaveSeqAsk.IsChecked = Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.ask);

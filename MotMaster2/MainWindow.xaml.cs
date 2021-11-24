@@ -836,7 +836,8 @@ namespace MOTMaster2
         }
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("\tMOTMaster2 v"+Utils.getAppFileVersion+"\n\n by Teodor Krastev, et al.\n\n for Imperial College, London, UK");
+            MessageBox.Show("           MOTMaster2 v"+Utils.getAppFileVersion+"\n\n         by Teodor Krastev, et al.\n\n for Imperial College, London, UK", 
+                "About" + (Controller.config.Debug ? "   (Debug mode)" : ""));
         }
         private void cbParamsManual_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {

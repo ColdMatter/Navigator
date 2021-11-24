@@ -1,0 +1,24 @@
+[Init()]
+dds reset
+dcp 0 spi:CFR2=0x1000080
+dcp 0 spi:STP0=0x418937
+dcp 0 wait:0h:
+dcp 0 update:u
+
+dcp 1 spi:CFR2=0x1000080
+dcp 1 spi:STP0=0x418937
+dcp 1 wait:0h:
+dcp 1 update:u
+
+[Test(£p1£,£w2£)]
+# all arguments start and end with £
+dds reset
+dcp 0 spi:CFR2=0x1000080
+dcp 0 spi:STP0=0x418937
+dcp 0 wait:0h:
+dcp 0 update:u
+
+dcp 1 spi:CFR2=0x1000080
+dcp 1 spi:STP0=0x418937
+dcp 1 wait:0h:
+dcp 1 update:u

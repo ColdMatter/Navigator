@@ -184,9 +184,55 @@ namespace MOTMaster2.ExtDevices
             return new String('0', this[j].Item3 - sval.Length) + sval;
         }
     }
+    public class MetaDDS
+    {
+        private Dictionary<string, List<string>> metaCmds;
+        private DDS_units units;
+        public MetaDDS(ref DDS_units _units)
+        {
+            units = _units;
+            metaCmds = Utils.readStructList(Utils.configPath + "MetaDDS.txt");
+        }
+
+        public List<string> meta2Script(string meta, Dictionary<string, string> fcts)
+        {
+            List<string> ls = new List<string>();
+            if (meta.IndexOf('(') == -1)
+            {
+                ErrorMng.errorMsg("( is missing", 456); return ls;
+            }
+            // no arguments
+            foreach (var cmd in metaCmds)
+            {
+                if (meta.Equals(cmd.Key))
+                {
+                    ls.AddRange(cmd.Value);
+                    return ls;
+                }
+            }
+            // with arguments
+            string[] mtCmd = meta.Split('('); string[] mtArgs = (mtCmd[1].Remove(mtCmd[1].Length-1)).Split(','); // in the script          
+            foreach (var cmd in metaCmds)
+            {
+                string[] mtList = cmd.Key.Split('('); if (mtList[1].Equals(')')) continue; // no arguments
+                string[] mtPrms = (mtList[1].Remove(mtList[1].Length - 1)).Split(','); // from MetaDDS file
+                if (mtCmd[0].Equals(mtList[0])) // match arg with prm
+                {
+                    // replace mtPrms with mtArgs from cmd.Value
+                    foreach (string line in cmd.Value)
+                    {
+
+                    }
+                }
+            }
+            return ls;
+        }
+    }
+
     public class DDS_script
     {
         public DDS_units units;
+        private MetaDDS metaDDS;
         private void SetUnits()
         {
             units = new DDS_units();
@@ -195,11 +241,13 @@ namespace MOTMaster2.ExtDevices
         {
             AsList = new List<string>(_template);
             SetUnits();
+            metaDDS = new MetaDDS(ref units); 
         }
         public DDS_script(string __filename)
         {
             Open(__filename);
             SetUnits();
+            metaDDS = new MetaDDS(ref units);
         }
         // data core source
         protected void UpdateFromScript()
@@ -324,10 +372,8 @@ namespace MOTMaster2.ExtDevices
             }
             File.WriteAllLines(filename, AsArray);
         }
-
         public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors = null) 
         {
-
             Dictionary<string, string> repl; 
             if (Utils.isNull(OtherFactors)) repl = new Dictionary<string, string>();
             else repl = new Dictionary<string, string>(OtherFactors);
@@ -377,7 +423,14 @@ namespace MOTMaster2.ExtDevices
             foreach (string line in scriptSection)
             {
                 if (line.Length > 0)
+                {               
                     if (line[0] == '#') continue;
+                    if (line[0] == '@')
+                    {
+                        ls.AddRange(metaDDS.meta2Script(line.Substring(1), fcts));                   
+                        continue;
+                    }
+                }
                 string ss = Utils.skimRem(line);
                 foreach (var fct in fcts)
                 {
