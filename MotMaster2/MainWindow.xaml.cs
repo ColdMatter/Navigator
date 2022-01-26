@@ -793,7 +793,7 @@ namespace MOTMaster2
                 if (result != true) return;
                 string filename = dlg.FileName;
                 Controller.SaveSequenceToPath(filename);
-                Log("Saved Sequence to ..." + filename.Substring(filename.Length - 50));
+                Log("Saved Sequence to ..." + filename.Substring(Utils.EnsureRange(filename.Length - 50, 0, 100)));
                 if (history.Count > 0)
                 {
                     if (!history[0].Equals(filename)) history.Insert(0, filename);
