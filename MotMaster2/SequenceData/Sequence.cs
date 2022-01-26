@@ -39,6 +39,15 @@ namespace MOTMaster2.SequenceData
             ls.Sort();
             return ls;
         }
+        public bool DynamicLength()
+        {
+            bool rslt = false; double dbl;
+            foreach (var step in Steps)
+            {
+                rslt |= !Double.TryParse((string)step.Duration, out dbl);
+            }
+            return rslt;
+        }
 
         public List<string> DependableParams(string param) // the list of non-scan parameters dependable on "param" 
         {

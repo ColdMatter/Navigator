@@ -161,7 +161,7 @@ namespace DAQ.HAL
             //  channelMap["ramanDDSTrig"] = "msquaredTTL";
             //  channelMap["shutter"] = "fp1MicrowaveTTL";
             channelMap["pushaomTTL"] = "f0MicrowaveTTL";
-
+            DaqSystem.Local.ConnectTerminals((string)Boards["multiDAQ"] + "/PFI3", "PXI_Trig3");
             Info.Add("channelMap", channelMap);
         }
     }

@@ -155,11 +155,11 @@ namespace MOTMaster2.ExtDevices
         private void SetFactors(List<string> fcts) // list from script section
         {
             ucExtFactors.Factors.Clear();
-            DDS_factors ddsFcts = script.factorsSection;
+            DCP_factors ddsFcts = script.factorsSection;
             var ffs = new Dictionary<string, bool>(); // script ones with flags
             foreach (string ss in fcts)
             {
-                int j = ddsFcts.IdxFromExtName(ss);
+                int j = ddsFcts.IdxFromName(ss);
                 if (j == -1)
                 {
                     ErrorMng.errorMsg("Missing declaration of factor <" + ss + ">", 143); continue;

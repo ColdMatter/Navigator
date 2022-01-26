@@ -26,12 +26,11 @@
 
             <Menu Margin="0,0,-0.143,0" Background="#FFFFFDFD" FontSize="13">
                 <Menu x:Name="MainMenu" Height="20" Width="127" Grid.Row="0" HorizontalAlignment="Left" Background="#FFFFFEFE">
-                    <MenuItem x:Name="mFile" Header="File" Margin="0">
-                        <MenuItem Header="_Open Sequence..." Click="LoadSequence_Click" InputGestureText="Ctrl+O"/>
-
-                        <MenuItem Header="Save Sequence As..."  Click="SaveSequence_Click" InputGestureText="Ctrl+S"/>
+                    <MenuItem x:Name="mFile" Header="File" Margin="0" >
+                        <MenuItem x:Name="mOpenSequence" Header="_Open Sequence..." Click="LoadSequence_Click" InputGestureText="Ctrl+O"/>
+                        <MenuItem x:Name="mOpenRecent" Header="Open Recently Saved" IsVisibleChanged="mOpenRecent_IsVisibleChanged" />
                         <Separator HorizontalAlignment="Left" Height="2" Width="218.285714285714"/>
-                        <MenuItem x:Name="mLoadParams" Header="Load Parameters..." Click="mLoadParams_Click" />
+                        <MenuItem Header="Save Sequence As..."  Click="SaveSequence_Click" InputGestureText="Ctrl+S"/>
                         <Separator HorizontalAlignment="Left" Height="2" Width="218.285714285714"/>
                     </MenuItem>
                     <MenuItem Header="Edit">
@@ -216,9 +215,11 @@
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="tiExtDevices" Header="Ext.Devices" Width="150" Height="25" FontSize="13" Background="#FFE9E9E9">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto" CanContentScroll="True" VerticalScrollBarVisibility="Auto">
                     <Grid>
-                        <StackPanel x:Name="stackExtDevices" Grid.Row="2" Orientation="Horizontal"/>
+                        <StackPanel x:Name="stackExtDevices" Grid.Row="2" Orientation="Horizontal" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </Grid>
+                    </ScrollViewer>
                 </TabItem>
                 <TabItem x:Name="tiImageProcess" Header="Image Process" Width="120" Height="25" FontSize="13" Visibility="Collapsed">
                     <Grid>

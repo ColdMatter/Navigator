@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="  Magneto Utility" Height="900" Width="1500" Icon="Properties/icons8-magneto-96.png">
     <Grid>
-        <TabControl x:Name="tabControl" Background="{x:Null}">
+        <TabControl x:Name="tabControl" Background="{x:Null}" SelectionChanged="tabControl_SelectionChanged">
             <TabItem Header="Repeat" Width="60" Height="28" FontSize="13" Background="#FFEDECEC">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -199,22 +199,9 @@
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel>
-                        <GroupBox Height="109" Margin="0,0,-0.253,0" BorderBrush="#FFF8D5B1">
-                            <Grid Margin="0,5,0,0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="31*"/>
-                                    <RowDefinition Height="31*"/>
-                                    <RowDefinition Height="26*"/>
-                                </Grid.RowDefinitions>
-                                <Label Content="kP" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
-                                <ni:NumericTextBoxDouble HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double" SelectOnFocus="True" Value="1"/>
-                                <Label Grid.Row="1" Content="kI" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
-                                <ni:NumericTextBoxDouble Grid.Row="1" HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double"/>
-                                <Label Grid.Row="2" Content="kD" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
-                                <ni:NumericTextBoxDouble Grid.Row="2" HorizontalAlignment="Left" Height="24" Margin="50,3,0,0" VerticalAlignment="Top" Width="70" Range="0, 10, System.Double"/>
-                            </Grid>
-                        </GroupBox>
-                        <ni:BooleanContentButton x:Name="bbtnStabil" Height="38" Margin="0,18,0,0" VerticalAlignment="Top" Width="120" FontSize="15" Background="#FFFFFDFD" FalseBrush="#FFECD1FB" BorderThickness="10,8" FalseContent="Stabilization" TrueContent="Cancel" TrueBrush="#FFF7E6CD"/>
+                        <CheckBox x:Name="chkStabilLog" IsChecked="True" Content="Log" HorizontalAlignment="Right" Margin="0,0,5,0"></CheckBox>
+                        <local:StabilUC x:Name="stabilUC" Height="434" VerticalAlignment="Top" Width="Auto" Margin="0,0,-0.253,0"/>
+                        <ni:BooleanContentButton x:Name="bbtnStabil" Height="38" Margin="0,18,0,0" VerticalAlignment="Top" Width="120" FontSize="15" Background="#FFFFFDFD" FalseBrush="#FFECD1FB" BorderThickness="10,8" FalseContent="Stabilization" TrueContent="Cancel" TrueBrush="#FFFFB851" Click="bbtnStabil_Click"/>
                     </StackPanel>
                     <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
@@ -225,8 +212,24 @@
                             <ni:Graph.Axes>
                                 <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
                             </ni:Graph.Axes>
+                            <ni:Graph.Plots>
+                                <ni:Plot Label="A_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FFA90505"/>
+                                </ni:Plot>
+                                <ni:Plot Label="B_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF0D9212"/>
+                                </ni:Plot>
+                                <ni:Plot Label="C_mean">
+                                    <ni:LinePlotRenderer StrokeThickness="2" Stroke="#FF052C9F"/>
+                                </ni:Plot>
+                            </ni:Graph.Plots>
                         </ni:Graph>
                         <ni:Graph x:Name="graphPIDcorrect" Margin="0" Grid.Row="1">
+                            <ni:Graph.Plots>
+                                <ni:Plot x:Name="srsCorrection" Label="Plot 1">
+                                    <ni:PointPlotRenderer Fill="#FF09AE73" Stroke="#FF06764E" Size="8,8"/>
+                                </ni:Plot>
+                            </ni:Graph.Plots>
                             <ni:Graph.Axes>
                                 <ni:AxisDouble Adjuster="ContinuousChart" Orientation="Horizontal" Range="0, 100, System.Double"/>
                             </ni:Graph.Axes>

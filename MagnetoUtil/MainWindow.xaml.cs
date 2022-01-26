@@ -25,14 +25,12 @@ namespace MagnetoUtil
     {
         InOutClass InOut;
         DictFileLogger loggerS, loggerL;
-        string device = "Dev1";
+        string device = "Dev7";
         string precision = "G8";
         public MainWindow()
         {
-            InitializeComponent();
-            if (Utils.TheosComputer()) tiStabilization.Visibility = Visibility.Visible;
-            else tiStabilization.Visibility = Visibility.Collapsed;
-            InOut = new InOutClass(true);
+            InitializeComponent();           
+            InOut = new InOutClass(Utils.TheosComputer());
             Title = "   Magneto Utility  v" + Utils.getAppFileVersion + (InOut.simulation ? "  (simulation)": "");           
             dTimer = new DispatcherTimer(); dTimer.Interval = new TimeSpan(0, 0, 2);
             dTimer.Tick += new EventHandler(dTimer_Tick);
@@ -55,12 +53,14 @@ namespace MagnetoUtil
                 bbtnRepeat.Value = false;  return;
             }
             string timeName = Utils.dataPath + Utils.timeName();
-            loggerS = new DictFileLogger(InOut.cols, "S", timeName);
+            string[] cols = new string[8]; InOut.cols.CopyTo(cols, 0); cols[1] = "time[sec]";
+            loggerS = new DictFileLogger(cols, "S", timeName);
             loggerS.Enabled = false;           
             loggerS.defaultExt = ".stl";
             loggerS.Enabled = chkShortEnabled.IsChecked.Value;
 
-            loggerL = new DictFileLogger(InOut.cols, "L", timeName);
+            cols[1] = "time[min]";
+            loggerL = new DictFileLogger(cols, "L", timeName);
             loggerL.Enabled = false;
             loggerL.defaultExt = ".ltl";
             loggerL.Enabled = chkLongEnabled.IsChecked.Value;
@@ -97,7 +97,8 @@ namespace MagnetoUtil
             }
             axisXscan.Range = new Range<double>(scan.sFrom, scan.sTo); axisXscanStd.Range = new Range<double>(scan.sFrom, scan.sTo);
             string timeName = Utils.dataPath + Utils.timeName();
-            loggerS = new DictFileLogger(InOut.cols, "N", timeName);
+            string[] cols = new string[8]; InOut.cols.CopyTo(cols, 0); cols[1] = "volts";
+            loggerS = new DictFileLogger(cols, "N", timeName);
             loggerS.Enabled = false;
             loggerS.defaultExt = ".snl";
             loggerS.Enabled = chkShortEnabled.IsChecked.Value;
@@ -113,10 +114,10 @@ namespace MagnetoUtil
             InOut.Configure(new string[] { device + "/ai0", device + "/ai1", device + "/ai2" }, device + "/ao0");
             dTimer.Start();
         }
-        List<double[]> dts; 
+        List<double[]> dts; DataStack dsCorr = new DataStack();
         private void dTimer_Tick(object sender, EventArgs e)
         {
-            Dictionary<string, double> sts;
+            Dictionary<string, double> sts; double nextV;
             switch (state)
             {
                 case States.cancelRequest:
@@ -130,7 +131,7 @@ namespace MagnetoUtil
                     if (chkShortEnabled.IsChecked.Value)
                     {
                         sts = InOut.shortStats(dts);
-                        bs = lds[0].Count > numShort.Value; 
+                        bs = InOut.index > numShort.Value; 
                         if (!bs)
                         {
                             addPoint2graph(sts, graphShortRepeat);
@@ -143,7 +144,7 @@ namespace MagnetoUtil
                     {
                         sts = InOut.longStats(dts);                       
                         if (numLong.Value < 1) bl = false;
-                        else bl = lds[6].Count > numLong.Value;
+                        else bl = InOut.lidx > numLong.Value;
                         if (!Utils.isNull(sts) && !bl)
                         {
                             addPoint2graph(sts, graphLongRepeat);
@@ -154,7 +155,7 @@ namespace MagnetoUtil
                     if (bs && bl) state = States.cancelRequest;
                     break;
                 case States.scan:
-                    double nextV = scan.sFrom + InOut.index * scan.sBy; 
+                    nextV = scan.sFrom + InOut.index * scan.sBy; 
                     if (nextV > scan.sTo)
                     {
                         state = States.cancelRequest; return;
@@ -162,24 +163,71 @@ namespace MagnetoUtil
                     InOut.setVoltage(nextV); 
                     dts = InOut.acquire();
                     sts = InOut.shortStats(dts);
-                    sts["time"] = nextV;
+                    sts["volts"] = nextV;
                     addPoint2graph(sts, graphScan);
                     addPoint2graph(sts, graphScanStd);
                     loggerS.dictLog(sts, precision);
-
+                    break;
+                case States.stabilazing:
+                    dts = InOut.acquire();
+                    sts = InOut.shortStats(dts);
+                    addPoint2graph(sts, graphPIDsignal);
+                    nextV = stabilUC.PID(sts["A_mean"],sts["C_mean"]);                   
+                    dsCorr.AddPoint(nextV, sts["time[sec]"]); graphPIDcorrect.Data[0] = dsCorr;
+                    InOut.setVoltage(nextV); sts["volts"] = nextV;
+                    loggerS.dictLog(sts, precision);
                     break;
             }
+        }
+ 
+        private void bbtnStabil_Click(object sender, RoutedEventArgs e)
+        {
+            bbtnStabil.Value = !bbtnStabil.Value;
+            if (!bbtnStabil.Value) { state = States.cancelRequest; return; }
+            if (state != States.idle)
+            {
+                MessageBox.Show("Some other procedure is running -> " + state.ToString());
+                bbtnScan.Value = false; return;
+            }
+            dsCorr.Clear();
+            string timeName = Utils.dataPath + Utils.timeName();
+            string[] cols = new string[8]; InOut.cols.CopyTo(cols, 0); cols[1] = "volts";
+            loggerS = new DictFileLogger(cols, "B", timeName);
+            loggerS.Enabled = false;
+            loggerS.defaultExt = ".sbl";
+            loggerS.Enabled = chkStabilLog.IsChecked.Value;
+
+            lds = new List<DataStack>();
+            // short
+            for (int i = 0; i < 3; i++)
+                lds.Add(new DataStack());
+            graphPIDsignal.Data[0] = lds[0]; graphPIDsignal.Data[1] = lds[1]; graphPIDsignal.Data[2] = lds[2];
+
+            state = States.stabilazing;
+            InOut.Configure(new string[] { device + "/ai0", device + "/ai1", device + "/ai2" }, device + "/ao0");
+            stabilUC.Init();
+            dTimer.Start();
+        }
+
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!state.Equals(States.idle)) Utils.TimedMessageBox("Do not start another procedure until the current <" + state.ToString() + "> is finished!", "Warning", 3600);
         }
 
         void addPoint2graph(Dictionary<string, double> sts, Graph graph)
         {
-            if (!sts.ContainsKey("time")) throw new Exception("no time column");            
+            double x = Double.NaN;
+            if (sts.ContainsKey("time[sec]")) x = sts["time[sec]"];
+            if (sts.ContainsKey("time[min]")) x = sts["time[min]"];
+            if (sts.ContainsKey("volts")) x = sts["volts"];
+
+            if (Double.IsNaN(x)) throw new Exception("no time column");            
             for (int i = 0; i< graph.Plots.Count; i++)
             {
                 string ss = (string)graph.Plots[i].Label;
                 if (sts.ContainsKey(ss))
                 {
-                    ((DataStack)graph.Data[i]).AddPoint(sts[ss], sts["time"]); 
+                    ((DataStack)graph.Data[i]).AddPoint(sts[ss], x); 
                 }
             }
             graph.Refresh();

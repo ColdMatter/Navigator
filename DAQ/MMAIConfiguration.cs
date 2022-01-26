@@ -20,6 +20,7 @@ namespace DAQ.Analog
         private int samples;
         private double[,] aiData;
 
+        public bool DynamicLength { get; set; }
         //This class will contain all the required information to configure the timed analog-input tasks when using MOTMaster.
         public MMAIConfiguration()
         {

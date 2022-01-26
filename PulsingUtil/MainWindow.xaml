@@ -1,0 +1,33 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PulsingUtil"
+        xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" x:Class="PulsingUtil.MainWindow"
+        mc:Ignorable="d"
+        Title="Pulsing Utility for AO" Height="450" Width="327.251" Closing="Window_Closing">
+    <Grid Margin="0">
+        <Label Content="Device/channel" Margin="40,10,-0.286,-0.286" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
+        <ComboBox x:Name="cbPhysicalChannel" HorizontalAlignment="Right" Margin="0,10,40,0" VerticalAlignment="Top" Width="139" SelectionChanged="cbPhysicalChannel_SelectionChanged"/>
+
+        <GroupBox HorizontalAlignment="Center" VerticalAlignment="Top" BorderBrush="#FF78CCFE" Height="113" Margin="0,50,0,0" Width="242" Header="Constant">
+            <Grid>
+                <Label x:Name="label" Content="Voltage" HorizontalAlignment="Left" Margin="20,17,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.018,-1.958"/>
+                <ni:NumericTextBoxDouble x:Name="numVoltage" HorizontalAlignment="Left" Height="24" Margin="87,19,0,0" VerticalAlignment="Top" Width="120" Value="4.75" Range="-10, 10, System.Double" SelectOnFocus="True" RenderTransformOrigin="0.508,0.482"/>
+                <Button x:Name="bbSetVoltage" Content="Set Voltage" HorizontalAlignment="Center" Height="23" Margin="0,0,0,10" VerticalAlignment="Bottom" Width="184" Click="bbSetVoltage_Click" Background="#FFDFEEFF" />
+            </Grid>
+        </GroupBox>
+        <GroupBox HorizontalAlignment="Center" VerticalAlignment="Top" BorderBrush="#FF8EFE78" Height="196" Margin="0,180,0,0" Width="242" Header="Pulses">
+            <Grid>
+                <Label x:Name="label2" Content="Duration [ms]" HorizontalAlignment="Left" Margin="20,17,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.018,-1.958"/>
+                <ni:NumericTextBoxDouble x:Name="numDuration" HorizontalAlignment="Left" Height="24" Margin="103,19,0,0" VerticalAlignment="Top" Width="104" Value="100" Range="0, 1000, System.Double" SelectOnFocus="True" Interval="10"/>
+                <Label x:Name="label3" Content="Period [ms]" HorizontalAlignment="Left" Margin="20,48,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.018,-1.958"/>
+                <ni:NumericTextBoxDouble x:Name="numPeriod" HorizontalAlignment="Left" Height="24" Margin="103,50,0,0" VerticalAlignment="Top" Width="104" Value="500" Range="0, 1000, System.Double" SelectOnFocus="True" Interval="10"/>
+                <Button x:Name="bbSinglePulse" Content="Single Pulse" HorizontalAlignment="Center" Height="23" Margin="0,0,0,50" VerticalAlignment="Bottom" Width="184" Click="bbSinglePulse_Click" Background="#FFE1FFDA"/>
+                <ni:BooleanContentButton x:Name="bbGenerator" Content="BooleanContentButton" FalseContent="Generator" HorizontalAlignment="Center" Height="33" Margin="0,0,0,10" TrueContent="Cancel" VerticalAlignment="Bottom" Width="184" Click="bbGenerator_Click" Background="{x:Null}" FalseBrush="#FFBEFFE5" TrueBrush="#FFFEC280" BorderThickness="10,6"/>
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</Window>

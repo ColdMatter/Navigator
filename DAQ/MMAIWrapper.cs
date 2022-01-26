@@ -64,6 +64,14 @@ namespace DAQ.Analog
             AITask.Control(TaskAction.Verify);
             AITask.Control(TaskAction.Commit);            
         }
+
+        public void UpdateSamplesCount(MMAIConfiguration aiConfig)
+        {
+            if (Utils.isNull(AITask)) return;
+            AITask.Timing.ConfigureSampleClock("", aiConfig.SampleRate, SampleClockActiveEdge.Rising,
+                    SampleQuantityMode.FiniteSamples, aiConfig.Samples);
+
+        }
         #region private methods for creating timed Tasks/channels
 
         private void AddToAnalogInputTask(Task task, string channel, double RangeLow, double RangeHigh)

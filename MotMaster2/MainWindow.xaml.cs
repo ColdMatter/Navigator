@@ -74,7 +74,7 @@ namespace MOTMaster2
             if (Controller.sequenceData.Parameters.ContainsKey("swapAxes"))
             {
                 bool sa = Convert.ToDouble(Controller.sequenceData.Parameters["swapAxes"].Value) < 0.5;
-                mnXleading.IsChecked = sa; mnYleading.IsChecked = !sa;
+                mnXleading.IsChecked = sa; mnYleading.IsChecked = !sa; Controller.ExpData.SwappedAxes = !sa;
             }
             if (!Environs.Hardware.config.DoubleAxes)
             {
@@ -155,6 +155,9 @@ namespace MOTMaster2
             }
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
             ExtDevices.UpdateFromOptions(ref Controller.genOptions);
+
+            if (File.Exists(historyFile)) history = Utils.readList(historyFile);
+            else history = new List<string>();
         }
         private void OpenDefaultModes()
         {
@@ -791,23 +794,34 @@ namespace MOTMaster2
                 string filename = dlg.FileName;
                 Controller.SaveSequenceToPath(filename);
                 Log("Saved Sequence to ..." + filename.Substring(filename.Length - 50));
+                if (history.Count > 0)
+                {
+                    if (!history[0].Equals(filename)) history.Insert(0, filename);
+                    if (history.Count > 10) history.RemoveAt(history.Count - 1);
+                } 
+                else history.Insert(0, filename);
             }
             else
                 ErrorMng.warningMsg("You have tried to save a Sequence before loading a script", -1, true);
         }
         private void LoadSequence_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = ""; // Default file name
-            dlg.DefaultExt = ".sm2"; // Default file extension
-            dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
+            string filename = (string)((MenuItem)sender).Header;
+            if (sender.Equals(mOpenSequence)) 
+            {            
+                Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+                dlg.FileName = ""; // Default file name
+                dlg.DefaultExt = ".sm2"; // Default file extension
+                dlg.Filter = "Sequence (.sm2)|*.sm2"; // Filter files by extension
 
-            // Show open file dialog box
-            bool? result = dlg.ShowDialog();
+                // Show open file dialog box
+                bool? result = dlg.ShowDialog();
 
-            // Process open file dialog box results
-            if (result != true) return;
-            string filename = dlg.FileName;
+                // Process open file dialog box results
+                if (result != true) return;
+                filename = dlg.FileName;
+            }
+            if (!File.Exists(filename)) { Log("Error: file not found - " + filename); return; }
             sequenceControl.ClearSteps();
             Controller.LoadSequenceFromPath(filename);
             sequenceControl.UpdateSequenceData();
@@ -1014,7 +1028,6 @@ namespace MOTMaster2
         private void frmMain_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             ExtDevices.Final();
-            if (Controller.sequenceData.Parameters.ContainsKey("swapAxes")) Controller.sequenceData.Parameters["swapAxes"].Value = 0;
             if (Controller.genOptions.saveSequence.Equals(GeneralOptions.SaveOption.ask))
             {
                 //Save the currently open sequence to a default location
@@ -1048,6 +1061,7 @@ namespace MOTMaster2
                 if(!Utils.isNull(obj)) modes.MultiScan.Add((string)(obj as ListBoxItem).Content);
             }
             modes.Save();
+            if (history.Count > 0) Utils.writeList(historyFile, history);
         }
         private void EditParameters_Click(object sender, RoutedEventArgs e)
         {
@@ -1563,7 +1577,7 @@ namespace MOTMaster2
                 case (Key.O): 
                     if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                     {
-                        LoadSequence_Click(sender, e);
+                        LoadSequence_Click(mOpenSequence, e);
                     }
                     break;
                 case (Key.S):    
@@ -1610,10 +1624,11 @@ namespace MOTMaster2
         {
             System.Diagnostics.Process.Start("http://www.axelsuite.com/?pg=motmaster2/user/index.htm");
         }
-
-        private void mLoadParams_Click(object sender, RoutedEventArgs e)
+        readonly string historyFile = Utils.configPath + "history.lst";
+        List<string> history;
+        private void mOpenRecent_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            /*Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = ""; // Default file name
             dlg.DefaultExt = ".mme"; // Default file extension
             dlg.Filter = "MotMaster Exec (.mme)|*.mme"; // Filter files by extension
@@ -1624,7 +1639,7 @@ namespace MOTMaster2
             // Process open file dialog box results
             if (result != true) return;
             string inMME = System.IO.File.ReadAllText(dlg.FileName);
-            Interpreter(inMME);
+            Interpreter(inMME);*/
         }
 
         private void Image_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1670,5 +1685,16 @@ namespace MOTMaster2
             }
         }
 
+        private void mOpenRecent_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (!mOpenRecent.Visibility.Equals(Visibility.Visible)) return;
+            mOpenRecent.Items.Clear();
+            foreach (string itm in history)
+            {
+                MenuItem mi = new MenuItem();
+                mi.Header = itm; mi.Click += new System.Windows.RoutedEventHandler(LoadSequence_Click);
+                mOpenRecent.Items.Add(mi);
+            }
+        }
     }
 }

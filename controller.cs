@@ -1,4 +1,4 @@
-﻿using DAQ;
+using DAQ;
 using DAQ.Analog;
 using DAQ.Environment;
 using DAQ.HAL;
@@ -324,7 +324,6 @@ namespace MOTMaster2
 
             if (Controller.genOptions.AIEnabled)
             {
-                sequence.AIConfiguration.DynamicLength = sequenceData.DynamicLength();
                 aip.Configure(sequence.AIConfiguration, StaticSequence);
                 aip.AnalogDataReceived += OnAnalogDataReceived;
                 acquireTime = Double.NaN;
@@ -632,15 +631,15 @@ namespace MOTMaster2
                 {
                     if (sequenceData.Parameters.ContainsKey("swapAxes"))
                     {
-                        sequenceData.Parameters["aChn"].Value = (double)actChannel(value, Convert.ToDouble(sequenceData.Parameters["swapAxes"].Value) > 0.5);
+                         sequenceData.Parameters["aChn"].Value = (double)actChannel(value, Convert.ToDouble(sequenceData.Parameters["swapAxes"].Value) > 0.5);                          
                     }
                     else
                     {
                         if (actChannel(value) == 0) sequenceData.Parameters["aChn"].Value = 1.0;
                         else sequenceData.Parameters["aChn"].Value = 0.0;
                     }
-                }
-
+                }    
+                                 
                 if (!config.Debug && config.UseMSquared && genOptions.ExtDvcEnabled["MSquared"])
                 {
                     if (Math.Abs(ExpData.axis).Equals(2)) axisControl(actChannel(value), true);
@@ -822,7 +821,7 @@ namespace MOTMaster2
                     if (!sequenceData.Steps.Any(t=>t.GetDigitalData("acquisitionTrigger")))
                     {
                         Controller.genOptions.AIEnabled = false;
-                        ErrorMng.warningMsg("acquisitionTrigger is not enabled. Setting AIEnable to false."); return;
+                        ErrorMng.warningMsg("acquisitionTrigger is not enabled. Setting AIEnable to false.");
                     }
                     else
                     {
@@ -831,7 +830,6 @@ namespace MOTMaster2
                 }
                 if (!StaticSequence || BatchNumber == 0) 
                     sequence = getSequenceFromSequenceData(dict);
-                aip.UpdateSamplesCount(sequence.AIConfiguration); // new?
                 if (sequence == null) { throw runThreadException; }
             }
         }
@@ -1558,7 +1556,7 @@ namespace MOTMaster2
 
         public static int actChannel(int batch = -1, bool swappAxes = false)
         {
-            int b = swappAxes ? batch + 1 : batch;
+            int b = swappAxes ? batch+1 : batch;
             if (batch.Equals(-1)) b = BatchNumber;
             int chn = -1;
             switch (Math.Abs(ExpData.axis))
@@ -1573,7 +1571,6 @@ namespace MOTMaster2
                     break;
                 case 2:
                     chn = (b % 2).Equals(0) ? 0 : 1;  // X : Y axis                    
-
                     break;
             }
             return chn;

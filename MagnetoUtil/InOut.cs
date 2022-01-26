@@ -14,7 +14,7 @@ namespace MagnetoUtil
 {
     public class InOutClass
     {
-        public bool simulation = false;
+        public bool simulation = false; double lastV = 0;
         private NationalInstruments.DAQmx.Task AITask, AOTask;
         private AnalogMultiChannelReader reader; AnalogSingleChannelWriter writer;
         public string[] cols = new string[] { "index", "time", "A_mean", "B_mean", "C_mean", "A_std", "B_std", "C_std"};
@@ -24,12 +24,12 @@ namespace MagnetoUtil
             simulation = _simulation;
         }
         public int chnCount { get; private set; }
-        private DateTime startTime; public int index; 
+        private DateTime startTime; public int index, lidx; 
         const double minRange = -10; const double maxRange = 10;
         const int sampleRate = 1000; const int samplesPerChannel = 1000;
         public bool Configure(string[] inChns, string outChn)
         {
-            chnCount = inChns.Length; index = 0; startTime = DateTime.Now;
+            chnCount = inChns.Length; index = 0; lidx = 1; startTime = DateTime.Now;
             bool rslt = true; if (simulation) return true;
             string[] chnIn = DaqSystem.Local.GetPhysicalChannels(PhysicalChannelTypes.AI, PhysicalChannelAccess.External);
             string[] chnOut = DaqSystem.Local.GetPhysicalChannels(PhysicalChannelTypes.AO, PhysicalChannelAccess.External);
@@ -63,7 +63,6 @@ namespace MagnetoUtil
             {
                 MessageBox.Show("OUT> "+exception.Message); rslt = false;
             }
-
             return rslt;
         }
         public List<double[]> acquire()
@@ -75,7 +74,7 @@ namespace MagnetoUtil
                 {
                     dt.Add(new double[samplesPerChannel]);
                     for (int j = 0; j < samplesPerChannel; j++)
-                        dt[dt.Count - 1][j] = Utils.NextGaussian(i, 0.2);
+                        dt[dt.Count - 1][j] = Utils.NextGaussian(i, 0.2) + Math.Sin(0.1*index);
                 }
                 return dt;
             }
@@ -100,7 +99,7 @@ namespace MagnetoUtil
         public Dictionary<string,double> shortStats(List<double[]> dt)
         {
             Dictionary<string, double> sts = new Dictionary<string, double>();
-            sts["index"] = index; sts["time"] = DateTime.Now.Subtract(startTime).TotalSeconds;
+            sts["index"] = index; sts["time[sec]"] = DateTime.Now.Subtract(startTime).TotalSeconds;
             for (int i = 0; i<dt.Count; i++)
             {
                 sts[(char)(65 + i) + "_mean"] = dt[i].Average();
@@ -108,7 +107,7 @@ namespace MagnetoUtil
             }                 
             return sts;
         }
-        private List<DataStack> dts;
+        private List<DataStack> dts; 
         public void longClear()
         {
             dts = new List<DataStack>();
@@ -120,19 +119,20 @@ namespace MagnetoUtil
         public Dictionary<string, double> longStats(List<double[]> dt)
         {
             Dictionary<string, double> sts = new Dictionary<string, double>();
-            sts["index"] = Convert.ToInt32(index / 30); sts["time"] = DateTime.Now.Subtract(startTime).TotalMinutes;
             for (int i = 0; i < dt.Count; i++)
             {
                 for (int j = 0; j < dt[i].Length; j++)                   
                     dts[i].AddPoint(dt[i][j]);
             }
-            if (dts[0].Count > 29) 
+            if (dts[0].Count > 29000) 
             {  
                 for (int i = 0; i < dt.Count; i++)
                 {
                     sts[(char)(65 + i) + "_mean"] = dts[i].pointYs().Average();
                     sts[(char)(65 + i) + "_std"] = Statistics.StandardDeviation(dts[i].pointYs());
                 }
+                sts["index"] = lidx; lidx++;
+                sts["time[min]"] = DateTime.Now.Subtract(startTime).TotalMinutes;
                 longClear(); 
                 return sts;
             }
@@ -141,6 +141,7 @@ namespace MagnetoUtil
 
         public void setVoltage(double volt)
         {
+            lastV = volt;
             if (simulation) return;
             try
             {

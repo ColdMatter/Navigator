@@ -12,21 +12,29 @@ using UtilsNS;
 namespace MOTMaster2.ExtDevices
 {
     /// <summary>
-    /// extName, fName (desc [unit]), content
+    /// Name, Desc [unit], value/factor
     /// </summary>
-    public class DDS_factors: List<Tuple<string,string,string>> //
+    public class DCP_factors: List<Tuple<string,string,string>> //
     {
-        public DDS_factors()
+        public DCP_factors()
         {
 
         }
-        public DDS_factors(List<string> ls)
+        public DCP_factors(List<string> ls)
         {
             AsListOfString = ls;
         }
         
         public int AddFactor(string[] fct)
         {
+            if (!Utils.InRange(fct.Length,2,3))
+            {
+                ErrorMng.errorMsg("Wrong format factor", 444); return -1;
+            }
+            if (!Utils.IsIdentifier(fct[0]))
+            {
+                ErrorMng.errorMsg("Invalid name -> " + fct[0], 443); return -1;
+            }
             switch (fct.Length)
             {
                 case 2:
@@ -34,35 +42,31 @@ namespace MOTMaster2.ExtDevices
                     break;
                 case 3:
                     this.Add(new Tuple<string, string, string>(fct[0], fct[1], fct[2]));
-                    break;
-                default: 
-                    {
-                        ErrorMng.errorMsg("Wrong format factor", 444); return -1;
-                    }
-            }           
+                    break;                
+             }           
             return this.Count;
+        }
+        public int IdxFromDesc(string fDesc)
+        {
+            int j = -1;
+            for (int i = 0; i < Count; i++)
+            {
+                if ((this[i].Item2).Equals(fDesc)) { j = i; break; }
+            }
+            return j;
         }
         public int IdxFromName(string fName)
         {
             int j = -1;
             for (int i = 0; i < Count; i++)
             {
-                if ((this[i].Item2).Equals(fName)) { j = i; break; }
+                if ((this[i].Item1).Equals(fName)) { j = i; break; }
             }
             return j;
         }
-        public int IdxFromExtName(string extName)
+        public string fNameFromExtName(string fName)
         {
-            int j = -1;
-            for (int i = 0; i < Count; i++)
-            {
-                if ((this[i].Item1).Equals(extName)) { j = i; break; }
-            }
-            return j;
-        }
-        public string fNameFromExtName(string extName)
-        {
-            int j = IdxFromExtName(extName);
+            int j = IdxFromName(fName);
             if (j == -1) return "";
             return this[j].Item2;
         }
@@ -74,7 +78,7 @@ namespace MOTMaster2.ExtDevices
                 foreach (var itm in this)
                 {
                     string ss = itm.Item1 + "=" + itm.Item2;
-                    if (!itm.Item3.Equals("")) ss += "=" + itm.Item3;
+                    if (!string.IsNullOrWhiteSpace(itm.Item3)) ss += "=" + itm.Item3;
                     ls.Add(ss);
                 }
                 return ls;
@@ -83,7 +87,7 @@ namespace MOTMaster2.ExtDevices
             {
                 Clear(); 
                 foreach (string ss in value)
-                    if(!ss.Equals(""))
+                    if(!string.IsNullOrWhiteSpace(ss))
                         AddFactor(ss.Split('='));
             }
         }
@@ -184,11 +188,11 @@ namespace MOTMaster2.ExtDevices
             return new String('0', this[j].Item3 - sval.Length) + sval;
         }
     }
-    public class MetaDDS
+    public class MetaDCP
     {
         private Dictionary<string, List<string>> metaCmds;
         private DDS_units units;
-        public MetaDDS(ref DDS_units _units)
+        public MetaDCP(ref DDS_units _units)
         {
             units = _units;
             metaCmds = Utils.readStructList(Utils.configPath + "MetaDDS.txt");
@@ -232,7 +236,7 @@ namespace MOTMaster2.ExtDevices
     public class DDS_script
     {
         public DDS_units units;
-        private MetaDDS metaDDS;
+        private MetaDCP metaDCP;
         private void SetUnits()
         {
             units = new DDS_units();
@@ -241,20 +245,20 @@ namespace MOTMaster2.ExtDevices
         {
             AsList = new List<string>(_template);
             SetUnits();
-            metaDDS = new MetaDDS(ref units); 
+            metaDCP = new MetaDCP(ref units); 
         }
         public DDS_script(string __filename)
         {
             Open(__filename);
             SetUnits();
-            metaDDS = new MetaDDS(ref units);
+            metaDCP = new MetaDCP(ref units);
         }
         // data core source
         protected void UpdateFromScript()
         {
             _scriptSection = Utils.readStructList(_AsList)["script"];
             var ls = Utils.skimRem(Utils.readStructList(_AsList)["factors"]);
-            _factorsSection = new DDS_factors(ls);
+            _factorsSection = new DCP_factors(ls);
         }
         public List<string> _AsList;
         public List<string> AsList 
@@ -276,8 +280,8 @@ namespace MOTMaster2.ExtDevices
         {
             get { return _scriptSection; }
         }
-        public DDS_factors _factorsSection;
-        public DDS_factors factorsSection
+        public DCP_factors _factorsSection;
+        public DCP_factors factorsSection
         {
             get { return _factorsSection; } 
         }
@@ -322,7 +326,7 @@ namespace MOTMaster2.ExtDevices
                 rslt = new List<string>();
                 foreach (var fct in factorsSection)
                 {
-                    if (factorsSection.IdxFromExtName(fct.Item3) > -1) // resulting field is a factor
+                    if (factorsSection.IdxFromName(fct.Item3) > -1) // resulting field is a factor
                     {
                         if (rslt.IndexOf(fct.Item3) == -1)                    
                             ErrorMng.errorMsg(fct.Item3 + " is not recognized as a factor.", -134); 
@@ -381,7 +385,7 @@ namespace MOTMaster2.ExtDevices
             foreach (var pr in factorsSection) // over ext.names
             {
                 string key = Convert.ToString(pr.Item1); double fct = Double.NaN;
-                int j = factorsSection.IdxFromExtName(key);
+                int j = factorsSection.IdxFromName(key);
                 if (j == -1)
                 {
                     ErrorMng.errorMsg("Missing value of factor <" + key + "> ", 118); continue;
@@ -427,7 +431,7 @@ namespace MOTMaster2.ExtDevices
                     if (line[0] == '#') continue;
                     if (line[0] == '@')
                     {
-                        ls.AddRange(metaDDS.meta2Script(line.Substring(1), fcts));                   
+                        ls.AddRange(metaDCP.meta2Script(line.Substring(1), fcts));                   
                         continue;
                     }
                 }

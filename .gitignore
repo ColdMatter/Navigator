@@ -20,8 +20,11 @@ obj
 
 *.csv
 
-
-
+*.pdf
+*.zip
+*.sbl
+*.cfg
+*.lst
 
 iamjack.sh
 

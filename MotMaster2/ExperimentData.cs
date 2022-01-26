@@ -132,6 +132,7 @@ namespace MOTMaster2
             }
 
             Dictionary<string, double[]> segData = new Dictionary<string, double[]>();
+            Controller.CreateAcquisitionTimeSegments();
             foreach (KeyValuePair<string, Tuple<int, int>> entry in AnalogSegments.OrderBy(t => t.Value.Item1))
             {
                 if (!IgnoredSegments.Contains(entry.Key))

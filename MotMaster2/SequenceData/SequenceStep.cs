@@ -22,8 +22,8 @@ namespace MOTMaster2.SequenceData
         public double evalDuration(bool inSec = false) 
         {
             double rslt;
-            if (Duration is string) rslt = SequenceParser.ParseOrGetParameter((string)Duration);
-            else rslt = Convert.ToDouble(Duration);
+            if (!double.TryParse((string)Duration, out rslt))
+                rslt = SequenceParser.ParseOrGetParameter((string)Duration);
             if (inSec)
             {
                 double timeMultiplier = 1.0;
