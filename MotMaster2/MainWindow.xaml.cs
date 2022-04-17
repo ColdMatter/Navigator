@@ -153,6 +153,13 @@ namespace MOTMaster2
                 MagnetoUC ms = new MagnetoUC("Magneto", Brushes.DarkOrange);
                 ExtDevices.Add("Magneto", ms); stackExtDevices.Children.Add(ms); ExtFactors.Add(ms.ucExtFactors);
             }
+            if (Environs.Hardware.ExtDevices.ContainsKey("TiltSynchro"))
+            {
+                TiltSynchroUC ts = new TiltSynchroUC("TiltSynchro", Brushes.Teal);
+                ExtDevices.Add("TiltSynchro", ts); stackExtDevices.Children.Add(ts); ExtFactors.Add(ts.ucExtFactors);
+            }
+
+
             ExtDevices.Init(ref Controller.sequenceData, ref Controller.genOptions);
             ExtDevices.UpdateFromOptions(ref Controller.genOptions);
 
@@ -674,8 +681,7 @@ namespace MOTMaster2
                 }
                 else // something is running
                 {
-                    if (tcMain.SelectedIndex == 3) ;
-                    else
+                    if (tcMain.SelectedIndex != 3) 
                     {
                         if (tcMain.SelectedIndex != _TabItemIndex)
                         {

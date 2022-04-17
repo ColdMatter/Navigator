@@ -30,7 +30,7 @@ namespace DAQ.HAL
            // this.length = length;
 
             /**** Configure the output lines ****/
-            hsTask = niHSDIO.InitGenerationSession(device, true, true, "");
+            hsTask = niHSDIO.InitGenerationSession(device, true, false, "");
 
   
             //configure the card for dynamic generation

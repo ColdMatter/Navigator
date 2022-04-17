@@ -78,10 +78,11 @@ namespace DAQ.HAL
 
             if (Environment.Environs.Debug)
             {
-                ExtDevices["FlexDDS"] = "1";
+                ExtDevices["FlexDDS"] = "3";
             }
 
-            ExtDevices["Magneto"] = "1";
+            //ExtDevices["Magneto"] = "1";
+            ExtDevices["TiltSynchro"] = "1";
 
             // map of all analog, digital and counter channels 
             // complex names (name/showAs): 
