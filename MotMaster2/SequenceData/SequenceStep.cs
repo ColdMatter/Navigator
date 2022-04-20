@@ -259,6 +259,11 @@ namespace MOTMaster2.SequenceData
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public static explicit operator DigitalChannelSelector(bool v)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     //This stores a list of arguments for each analog channel in the sequence step. Nominally these are strings which are parsed to either numbers or Parameter names

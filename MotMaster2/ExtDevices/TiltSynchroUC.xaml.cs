@@ -157,7 +157,7 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.factorsState = Utils.readDict(Utils.configPath + dvcName + ".CFG");
 
             remoteTilt = new RemoteMessaging();
-            remoteTilt.Connect("Axel Tilt", 668);
+            remoteTilt.Connect("Axel Tilt 2", 668);
             remoteTilt.Enabled = OptEnabled() && chkAxelTilt.IsChecked.Value;
             remoteTilt.OnReceive += new RemoteMessaging.ReceiveHandler(OnTiltReceive);
             remoteTilt.OnActiveComm += new RemoteMessaging.ActiveCommHandler(OnTiltActiveComm);
@@ -180,7 +180,7 @@ namespace MOTMaster2.ExtDevices
 
         private void OnTiltActiveComm(bool active, bool forced)
         {
-            ledAxelTilt.Value = active && remoteTilt.Connected;
+            ledAxelTilt.Value = active;
         }
 
         public void Final() // closing stuff and save state 

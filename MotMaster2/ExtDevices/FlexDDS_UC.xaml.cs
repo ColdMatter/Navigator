@@ -50,7 +50,7 @@ namespace MOTMaster2.ExtDevices
             _dvcName = __dvcName;
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
-            flexDDS_HW = new FlexDDS_HW("ASRL04::INSTR");
+            //flexDDS_HW = new FlexDDS_HW("ASRL04::INSTR");
             ucExtFactors.groupUpdate = true;
             tiMain.Visibility = Visibility.Collapsed; tiEdit.Visibility = Visibility.Collapsed; tiTest.Visibility = Visibility.Collapsed;
             SelectFactors = new List<GroupBox>(); SelectFactors.Add(gbTrigger); SelectFactors.Add(gbBoolean);
@@ -119,19 +119,20 @@ namespace MOTMaster2.ExtDevices
         }
         public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts
         {
+            // load config file            
+            Dictionary<string, string> cfg = Utils.readDict(dvcPath+"FlexDDS.CFG");
+            if (!cfg.ContainsKey("Address"))
+            {
+                ErrorMng.errorMsg("Address is missing from " + Utils.configPath + dvcName + ".CFG -> set to default #12", -436);
+                flexDDS_HW = new FlexDDS_HW("ASRL12::INSTR");
+            }
+            else flexDDS_HW = new FlexDDS_HW(cfg["Address"]);
+
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
             ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
-            // load config file            
-            Dictionary<string, string> cfg = Utils.readDict(dvcPath+"FlexDDS.CFG");
-            /*if (!cfg.ContainsKey("Address"))
-            {
-                ErrorMng.errorMsg("Address is missing from " + Utils.configPath + dvcName + ".CFG -> set to default #12", -436);
-                flexDDS_HW = new FlexDDS_HW("ASRL12::INSTR");
-            }
-            else flexDDS_HW = new FlexDDS_HW(cfg["Address"]);*/
 
             if (!cfg.ContainsKey("LastScript"))
             {

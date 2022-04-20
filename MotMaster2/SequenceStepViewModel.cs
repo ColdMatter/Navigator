@@ -12,7 +12,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Shapes;
 using MOTMaster2.SequenceData;
 using System.Dynamic;
 using System.Collections.ObjectModel;
@@ -74,14 +73,14 @@ namespace MOTMaster2
             }
         }
 
+        public string lastDigitColName { get; set; }
+
         public SequenceStepViewModel()
         {
-
             if (Controller.sequenceData == null)
             {
                 SequenceSteps = new ObservableCollection<SequenceStep>();
                 SequenceSteps.Add(new SequenceStep());
-
             }
             else
             {
@@ -90,7 +89,6 @@ namespace MOTMaster2
 
             this.PropertyChanged += SequenceStep.SequenceStep_PropertyChanged;
         }
-
 
         private RelayCommand newSequenceStep;
         public RelayCommand NewSequenceStep
@@ -145,6 +143,53 @@ namespace MOTMaster2
             int index = SequenceSteps.IndexOf(_selectedStep);
             SequenceSteps.Insert(index, _selectedStep.Copy());
         }
+
+        private RelayCommand allDigitON;
+        public RelayCommand AllDigitON
+        {
+            get
+            {
+                if (allDigitON == null)
+                {
+                    allDigitON = new RelayCommand(param => this.allDigitONMtd());
+                }
+                return allDigitON;
+            }
+        }
+        public void allDigitONMtd()
+        {
+            if (lastDigitColName.Equals("")) return;
+            CheckUncheckAll(lastDigitColName, true);
+        }
+
+        private RelayCommand allDigitOFF;
+        public RelayCommand AllDigitOFF
+        {
+            get
+            {
+                if (allDigitOFF == null)
+                {
+                    allDigitOFF = new RelayCommand(param => this.allDigitOFFMtd());
+                }
+                return allDigitOFF;
+            }
+        }
+        public void allDigitOFFMtd()
+        {
+            if (lastDigitColName.Equals("")) return;
+            CheckUncheckAll(lastDigitColName, false);
+        }
+
+        protected void CheckUncheckAll(string chnName, bool toValue)
+        {
+            if (chnName.Equals("") || SequenceSteps==null) return;
+            foreach (SequenceStep step in SequenceSteps)
+            {                
+                SelectedSequenceStep = step; 
+                SelectedDigitalChannel = new KeyValuePair<string, DigitalChannelSelector>(chnName, new DigitalChannelSelector(toValue));                
+            }            
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

@@ -277,6 +277,7 @@ namespace MOTMaster2
         public int lastColumnIdx = 0;
         private void sequenceDataGrid_MouseMove(object sender, MouseEventArgs e)
         {
+            if (ContextMenuOpened) return;
             DependencyObject dep;
             if (sender is DataGridCell)
             {
@@ -304,7 +305,15 @@ namespace MOTMaster2
                     Point pGrid = this.PointFromScreen(pCell);
                     recSelector.Margin = new Thickness(0, pGrid.Y+cell.ActualHeight, 18, 0);
                     lastColumnIdx = columnIdx;
+                }
+                string lastDigitColName = "";
+                if (c2 != null && c2.GetType() == typeof(DataGridCheckBoxColumn) && cell != null)
+                {
+                    string channelName1 = (string)c2.Header;
+                    lastDigitColName = Environs.Hardware.nameFromDigitalShowAs(channelName1);
                 }               
+                SequenceStepViewModel model = (SequenceStepViewModel)sequenceDataGrid.DataContext;
+                model.lastDigitColName = lastDigitColName;
             }
         }
 
@@ -359,16 +368,26 @@ namespace MOTMaster2
             }
             return child;
         }
-
-    /*    private void sequenceDataGrid_MouseMove(object sender, MouseEventArgs e)
+        bool ContextMenuOpened = false;
+        private void sequenceDataGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
-            var element = (UIElement)e.Source;
+            ContextMenuOpened = true;
+        }
 
-            int c = Grid.GetColumn(element);
-            int r = Grid.GetRow(element);
+        private void sequenceDataGrid_ContextMenuClosing(object sender, ContextMenuEventArgs e)
+        {
+            ContextMenuOpened = false;
+        }
 
-            Console.WriteLine(r.ToString() + " / " + c.ToString());
-        }*/
+        /*    private void sequenceDataGrid_MouseMove(object sender, MouseEventArgs e)
+            {
+                var element = (UIElement)e.Source;
+
+                int c = Grid.GetColumn(element);
+                int r = Grid.GetRow(element);
+
+                Console.WriteLine(r.ToString() + " / " + c.ToString());
+            }*/
 
     }
 
