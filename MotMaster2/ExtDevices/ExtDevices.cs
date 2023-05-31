@@ -26,7 +26,7 @@ namespace MOTMaster2.ExtDevices
 
         GeneralOptions genOpt { get; set; }
         void UpdateFromOptions(ref GeneralOptions _genOptions);
-        void SequenceEvent(string EventName);
+        string SequenceEvent(string EventName);
         bool UpdateDevice(bool ignoreMutable = false); // update all factors and others
 
     }
@@ -77,12 +77,32 @@ namespace MOTMaster2.ExtDevices
             }
             return rslt;
         }
-        public void SequenceEvent(string EventName)
+        public Dictionary<string,string> SequenceEvent(string EventName)
         {
+            Dictionary<string, string> se = new Dictionary<string, string>();
+
             foreach (IExtDevice dvc in this.Values)
             {
-                if (dvc.CheckEnabled()) dvc.SequenceEvent(EventName);
+                if (dvc.CheckEnabled())
+                {
+                    se[dvc.dvcName] = dvc.SequenceEvent(EventName);
+                }
             }
+            return se;
+        }
+        /// <summary>
+        /// summary of 
+        /// </summary>
+        /// <param name="SeqEvents"></param>
+        /// <returns>true if "cancel" is detected on any dvc</returns>
+        public bool DetectCancel(Dictionary<string, string> SeqEvents) 
+        {
+            bool bb = false;
+            foreach (var pair in SeqEvents)
+            {
+                bb = bb || pair.Value.Equals("cancel");
+            }
+            return bb;
         }
         public bool UpdateDevices(bool ignoreMutable = false)
         {
@@ -105,7 +125,8 @@ namespace MOTMaster2.ExtDevices
         {            
             foreach (IFactors dvc in this)
             {
-                if (dvc.genOpt_Enabled && dvc.HW_Enabled) dvc.UpdateFromSequence(ref _sequenceData);
+                //if (dvc.genOpt_Enabled && dvc.HW_Enabled) 
+                    dvc.UpdateFromSequence(ref _sequenceData);
             }
         }
         public bool IsScannable(string prm) // check if prm is in any factor; prm = "" - reset 

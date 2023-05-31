@@ -1,0 +1,33 @@
+[script]
+dds reset 
+
+dcp 0 spi:STP0=0x3fff0000051eb85
+#dcp 0 spi:CFR2=0x01000080
+dcp 0 update:u
+
+dcp 0 spi:DRL=0xfffc000000000000
+dcp 0 spi:DRR=0x3d093d09
+dcp 0 spi:DRSS=0x0008310600083106
+dcp 0 spi:CFR2=0x01280080
+dcp 0 wait::BNC_IN_A_RISING
+dcp 0 update:u+d
+
+dcp 0 wait:1:
+dcp 0 wait::35
+dcp 0 update:u-d
+
+dcp 0 wait:1:
+dcp 0 wait::35
+dcp 0 update:u 
+
+dcp 0 spi:STP0=0x10000000051eb85
+dcp 0 spi:CFR2=0x0000080
+dcp 0 update:u
+
+dcp 0 spi:CFR2=0x0100080
+dcp 0 wait:1000000:
+dcp 0 spi:STP0=0x3fff#0000051eb85
+dcp 0 update:u
+
+dcp start
+[factors]

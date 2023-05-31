@@ -1,0 +1,38 @@
+[script]
+@Init()
+
+dcp wait::$select-bnc.trigger$
+dcp update:u
+# tone 1
+dcp 0 spi:STP0=0x$a1$0000$f1$
+dcp 1 spi:STP0=0x$a1$0000$f1$
+dcp update:u
+dcp wait:$d1$:
+
+# tone 2.0
+dcp 0 spi:STP0=0x$a20$0000$f20$
+dcp 1 spi:STP0=0x$a20$0000$f20$
+dcp update:u
+dcp wait:$d20$:
+
+# tone 2.1
+dcp 0 spi:STP0=0x$a21$0000$f21$
+dcp 1 spi:STP0=0x$a21$0000$f21$
+dcp update:u
+
+dcp start
+
+[factors]
+a1=Amplitude 1 [ampl]
+f1=Frequency 1 [MHz]
+d1=Duration 1 [ms]
+a20=Amplitude 2.0 [ampl]=a1
+f20=Frequency 2.0 [MHz]
+d20=Duration 2.0 [ms]
+a21=Amplitude 2.1 [ampl]=a1
+f21=Frequency 2.1 [MHz]
+
+a3=Amplitude 3 [ampl]=a1
+f3=Frequency 3 [MHz]
+
+

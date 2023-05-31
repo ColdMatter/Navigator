@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NationalInstruments.DAQmx;
+using DAQ.HAL;
+
 using UtilsNS;
 
 
@@ -93,5 +95,20 @@ namespace PulsingUtil
         {
             bbGenerator.Value = false; Thread.Sleep(Convert.ToInt32(numPeriod.Value)); Utils.DoEvents();
         }
+
+        //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+        RS232Instrument serial;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            serial = new RS232Instrument();
+            serial.Connect();
+            serial.Wri
+        }
+        private void btnRestart_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

@@ -1,0 +1,27 @@
+[script]
+#amplitude ramp example: manual p.20
+
+dds reset 
+dcp spi:CFR2=0x01000080
+dcp spi:STP0=0x3fff0000051eb852
+dcp update:u
+
+dcp wait::BNC_IN_A_RISING
+dcp spi:DRL=0x7fffffff00000000
+dcp spi:DRSS=0x0000020000000200
+dcp spi:DRR=0x00960096 
+dcp update:u
+
+dcp spi:CFR2=0x01280080
+dcp update:u+d 
+
+#dcp wait:3000000: 
+dcp wait:1:
+dcp wait::35
+dcp update:-d 
+
+dcp start
+
+[factors]
+#fct1=Amplitude High []
+#fct2=Amplitude Low [ampl]

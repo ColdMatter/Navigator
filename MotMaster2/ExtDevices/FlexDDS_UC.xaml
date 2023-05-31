@@ -10,6 +10,8 @@
         <ContextMenu x:Key="cmTripleBars">
             <MenuItem x:Name="miCheckHw" Header="Check the device" Click="miCheckHw_Click" />
             <MenuItem x:Name="miTestHw" Header="Test the device" Click="miTestHw_Click" />
+            <Separator/>
+            <MenuItem x:Name="miNewTemplate" Header="New template" Click="miNewTemplate_Click" />
         </ContextMenu>
     </UserControl.Resources>
 

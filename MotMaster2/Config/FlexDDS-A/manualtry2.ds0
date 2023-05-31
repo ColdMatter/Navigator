@@ -1,0 +1,8 @@
+Freq Initial [MHz]=4
+Freq High1 [MHz]=11
+Freq Low1 [MHz]=2
+Freq Middle [MHz]=5
+Freq High2 [MHz]=8
+Freq Low2 [MHz]=3
+Freq Final [MHz]=6
+Mutable=False

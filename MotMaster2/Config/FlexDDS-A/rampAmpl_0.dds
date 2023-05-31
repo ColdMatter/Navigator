@@ -1,0 +1,33 @@
+[script]
+#amplitude ramp example: manual p.20
+
+dds reset 
+#All the following is done by both channels simultaneously:
+dcp spi:CFR2=0x80 
+#set matched latency (not needed) and ramp destination frequency
+dcp spi:DRL=0x07ae147b051eb852 
+#ramp limits 20 MHz (low) and 30 MHz (high)
+dcp spi:DRSS=0x0000001a0000000d 
+#ramp step size to about 6 Hz down and 3 Hz up
+dcp spi:DRR=0x00960096 
+#ramp rate 150 (up and down)
+dcp spi:CFR2=0x80080 
+#enable the ramp generator
+dcp wait::BNC_IN_A_RISING
+dcp update:u+d 
+#do IO UPDATE, set DRCTL HIGH to start upwards ramp
+dcp wait:3000000: 
+#wait for about 3 seconds for ramp to complete
+dcp update:-d 
+#set DRCTL LOW to start downwards ramp
+dcp spi:DRL=0x1999999a051eb852 
+#set upper ramp limit to 100 MHz (effective at next IO UPDATE)
+dcp spi:DRSS=0x0000001a00000081 
+#ramp step size to about 30 Hz up
+dcp wait:2000000: 
+#wait 2 seconds for ramp to complete
+dcp update:u+d 
+#set DRCTL HIGH again to sweep up to 100 MHz
+dcp start
+
+[factors]

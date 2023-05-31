@@ -7,7 +7,7 @@ dcp update:u
 
 dcp 0 spi:STP0=0x$a0x1$$p0x1$$f0x1$
 dcp 1 spi:STP0=0x$a1x1$$p1x1$$f1x1$
-dcp wait:2929688:
+#dcp wait:2929688: #after trigger waits 3s before going to st
 dcp update:u
 
 dcp 0 spi:STP0=0x$a0x2$$p0x2$$f0x2$
@@ -31,13 +31,3 @@ a1x2=Amplitude 1x2 [ampl]
 f1x2=Freq 1x2 [MHz]
 p1x2=Phase 1x2 [deg]=0
 d1=Duration [ms]
-
-
-
-
-
-
-
-
-
-

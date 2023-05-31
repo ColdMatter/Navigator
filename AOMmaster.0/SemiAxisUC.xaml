@@ -1,0 +1,27 @@
+﻿<UserControl x:Name="SemiAxisName" x:Class="AOMmaster.SemiAxisUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AOMmaster"
+             mc:Ignorable="d" Height="103.2" Width="355.602" HorizontalAlignment="Left" VerticalAlignment="Top">
+    <Grid Margin="3,0,0,0">
+        <GroupBox x:Name="groupBox" Header="GroupBox" Margin="0" FontSize="13" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="17"/>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <CheckBox x:Name="chkEnabled" Content="Enabled" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Center" FontSize="12"
+                    IsChecked="{Binding Path=Enabled, Mode=TwoWay}" Checked="chkEnabled_Checked" Unchecked="chkEnabled_Checked"      >
+                    </CheckBox>
+                <StackPanel Margin="0" Grid.Row="1" Orientation="Horizontal">
+                    <local:AnalogUC x:Name="analogVCO" Height="Auto" Width="171" Margin="0,0,0,-0.089" FontSize="12"/>
+                    <local:AnalogUC x:Name="analogVCA" Height="Auto" Width="172" Margin="0,0,0,-0.089" FontSize="12"/>
+                </StackPanel>
+
+            </Grid>
+        </GroupBox>
+
+    </Grid>
+</UserControl>

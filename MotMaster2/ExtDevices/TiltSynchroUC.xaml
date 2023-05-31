@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:MOTMaster2.ExtDevices"
              xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" x:Name="TiltSynchroUC1" x:Class="MOTMaster2.ExtDevices.TiltSynchroUC"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="316.543" HorizontalAlignment="Left" Width="300">
+             d:DesignHeight="450" d:DesignWidth="316.543" HorizontalAlignment="Left" Width="280">
     <Grid>
         <GroupBox x:Name="grpBox" Header="GroupBox" Margin="0" Background="White">
             <Grid  Margin="0">
@@ -17,9 +17,17 @@
                 </Grid.RowDefinitions>
                 <Image x:Name="imgTripleBars" Width="22" Height="22" Source="/MOTMaster2;component/Properties/TripleBarRusty.bmp" HorizontalAlignment="Left" Margin="6,3,0,0" MouseUp="imgTripleBars_MouseUp"/>
                 <local:FactorsUC x:Name="ucExtFactors" Grid.Row="1"/>
-                <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Top">
+                <StackPanel Grid.Row="2" VerticalAlignment="Top">
+                    <Grid>
+                        <Label Content="Start at position #" VerticalAlignment="Top" Margin="0,5,0,0" Foreground="#FF0143A1"></Label>
+                        <ni:RadixNumericTextBoxInt32 x:Name="inumStart" Height="24" Margin="120,1,0,0" IsRadixEnabled="False" RadixVisibility="Collapsed" HorizontalAlignment="Left" Width="40" Range="0, 100, System.Int32" SelectOnFocus="True" Value="1" FontWeight="Bold"/>
+                    </Grid>
+                    <Grid>
+                        <Label Content="Finish at position #" Margin="0,5,0,0" Foreground="#FF610500"></Label>
+                        <ni:RadixNumericTextBoxInt32 x:Name="inumFinish" Height="24" Margin="120,1,0,1.286" IsRadixEnabled="False" RadixVisibility="Collapsed" Width="40" Range="2, 100, System.Int32" SelectOnFocus="True" Value="3" HorizontalAlignment="Left" FontWeight="Bold"/>
+                    </Grid>
+                    <Label x:Name="lbCurrPoint" Margin="2,7,0,0" Content="Current position #" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FF027404" FontWeight="Bold"></Label>
                     <ni:LED x:Name="ledAxelTilt" Content="Tilt" FalseContent="Off" Height="23" TrueContent="On" Width="23" HorizontalAlignment="Left" Margin="10,5,0,5"/>
-                    <CheckBox x:Name="chkAxelTilt" Content="Axel Tilt" VerticalAlignment="Center" Margin="10,0,0,0" IsChecked="True" Checked="chkAxelTilt_Checked" Unchecked="chkAxelTilt_Checked"/>
                 </StackPanel>
             </Grid>
         </GroupBox>

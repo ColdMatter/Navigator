@@ -1,0 +1,7 @@
+Amplitude 1 [ampl]=100
+Freq 1 [MHz]=5
+Up ramp rate [hex:4]=2
+Up ramp step [hex:8]=2000
+Low limit of ramp range[dBmR]=-34
+High limit of ramp range[dBmR]=-5
+Mutable=False

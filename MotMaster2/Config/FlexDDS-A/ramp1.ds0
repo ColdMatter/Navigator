@@ -1,4 +1,6 @@
-Freq High [MHz]=4
-Freq Low [MHz]=1
-Freq 3 [MHz]=10
+Amplitude 1 [ampl]=100
+Freq Low [MHz]=20
+Freq Start [MHz]=2
+Freq High [MHz]=- - -
+Freq 3 [MHz]=- - -
 Mutable=False

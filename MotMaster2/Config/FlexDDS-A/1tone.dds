@@ -4,16 +4,15 @@
 dcp 0 spi:STP0=0x$fct1$$fct6$$fct2$
 dcp 1 spi:STP0=0x$fct3$$fct5$$fct4$
 
-dcp wait:0h:
+dcp wait:10h:
 dcp update:u
 
 dcp start
 
 [factors]
-fct1=Amplitude 1 [ampl]
+fct1=Amplitude 1 [dBm]
 fct2=Freq 1 [MHz]
 fct6=Phase 1 [deg]=0
-fct3=Amplitude  2 [ampl]
+fct3=Amplitude  2 [dBm]
 fct4=Freq 2 [MHz]
 fct5=Phase 2 [deg]=0
-

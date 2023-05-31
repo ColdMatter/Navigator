@@ -57,7 +57,8 @@ namespace DAQ.Environment
                 case "NAVIGATOR-ANAL":
                 case "PH-LAB-015":               
                 case "DESKTOP-U334RMA": // office HP
-                case "THEOS":
+				case "DESKTOP-3UQQHSO":
+				case "THEOS":
                 case "THEO-PC":
                     Debug = true;
                     Hardware = new EurybiaHardware();

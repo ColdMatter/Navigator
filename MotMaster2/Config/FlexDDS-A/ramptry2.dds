@@ -1,0 +1,47 @@
+[script]
+dds reset
+
+dcp 0 spi:CFR2=0x01000080
+dcp 0 spi:STP0=0x3fff0000$fct3$
+dcp 0 update:u
+
+dcp 0 wait:2000000:
+dcp 0 spi:STP0=0x3fff0000$fct5$
+dcp 0 update:u
+
+dcp 0 spi:DRL=0x$fct4$$fct5$
+#dcp 0 spi:DRL=0xffbe76c9fd2f1aa0
+dcp 0 spi:DRSS=0x0000035b0000035b
+dcp 0 spi:DRR=0x61a861a8
+dcp 0 update:u
+
+dcp 0 spi:CFR2=0x01080080
+dcp 0 wait:3000000:
+dcp 0 update:u+d
+
+#dcp 0 wait:1:
+dcp 0 wait::DROVER
+dcp 0 wait:2000000:
+dcp 0 update:u-d
+
+dcp 0 wait:2000000:
+dcp 0 wait::DROVER
+dcp 0 update:u
+
+dcp 0 wait:3000000:
+dcp 0 spi:CFR2=0x01000080
+dcp 0 spi:STP0=0x3fff0000$fct8$
+dcp 0 update:u
+
+dcp start
+
+
+[factors]
+fct1=Amplitude 1 [ampl]
+#fct2=Amplitude 2 [ampl]
+fct3=Frequency 1  [MHz]
+fct4=Freq High [MHz]
+fct5=Freq Low [MHz]
+fct6=Amplitude Final [ampl]
+fct7=Phase Final [deg]=0
+fct8=Freq Final [MHz]

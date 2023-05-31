@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PulsingUtil"
         xmlns:ni="http://schemas.ni.com/controls/2009/xaml/presentation" x:Class="PulsingUtil.MainWindow"
         mc:Ignorable="d"
-        Title="Pulsing Utility for AO" Height="450" Width="327.251" Closing="Window_Closing">
+        Title="Pulsing Utility for AO" Height="637.247" Width="327.251" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid Margin="0">
         <Label Content="Device/channel" Margin="40,10,-0.286,-0.286" HorizontalAlignment="Left" VerticalAlignment="Top"></Label>
         <ComboBox x:Name="cbPhysicalChannel" HorizontalAlignment="Right" Margin="0,10,40,0" VerticalAlignment="Top" Width="139" SelectionChanged="cbPhysicalChannel_SelectionChanged"/>
@@ -28,6 +28,7 @@
                 <ni:BooleanContentButton x:Name="bbGenerator" Content="BooleanContentButton" FalseContent="Generator" HorizontalAlignment="Center" Height="33" Margin="0,0,0,10" TrueContent="Cancel" VerticalAlignment="Bottom" Width="184" Click="bbGenerator_Click" Background="{x:Null}" FalseBrush="#FFBEFFE5" TrueBrush="#FFFEC280" BorderThickness="10,6"/>
             </Grid>
         </GroupBox>
+        <Button x:Name="btnRestart" Content="Restart serial" HorizontalAlignment="Left" Height="29" Margin="40,424,0,0" VerticalAlignment="Top" Width="241" Click="btnRestart_Click"/>
 
     </Grid>
 </Window>

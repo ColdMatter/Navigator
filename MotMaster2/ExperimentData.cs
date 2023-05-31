@@ -40,6 +40,7 @@ namespace MOTMaster2
         public bool SaveRawData { get; set; }
         //Name to identify each experiment
         public string ExperimentName {get; set;}
+        public string Description { get; set; }
         public MMexec grpMME = new MMexec();
         public enum JumboModes { none, single, scan, repeat };
         public JumboModes jumboMode()

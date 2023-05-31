@@ -1,0 +1,5 @@
+Frequency 1  [MHz]=6
+Freq High [MHz]=10
+Freq Low [MHz]=1
+Freq Final [MHz]=3
+Mutable=False

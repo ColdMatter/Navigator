@@ -178,7 +178,6 @@ namespace MOTMaster2
         {
             return null;
         }
-
         public void StartApplication()
         {
             LoadEnvironment();
@@ -194,7 +193,6 @@ namespace MOTMaster2
             ioHelper = new MMDataIOHelper(motMasterDataPath,
                     (string)Environs.Hardware.GetInfo("Element"));
         }
-
         //TODO Set config flags based on if hardware exists
         private void CheckHardware(bool debug)
         {
@@ -735,7 +733,7 @@ namespace MOTMaster2
         {
             Run((Dictionary<string, object>)dict);
         }
-       
+        
         public void Run(Dictionary<String, Object> dict)
         {
             Stopwatch watch = new Stopwatch();
@@ -831,7 +829,7 @@ namespace MOTMaster2
                 }
                 if (!StaticSequence || BatchNumber == 0) 
                     sequence = getSequenceFromSequenceData(dict);
-                aip.UpdateSamplesCount(sequence.AIConfiguration); // new?
+                //aip.UpdateSamplesCount(sequence.AIConfiguration); // new?
                 if (sequence == null) { throw runThreadException; }
             }
         }
@@ -871,39 +869,39 @@ namespace MOTMaster2
 
         [Obsolete("This method encapsulates the old-style data acquisition and will be removed in the future", false)]
         private void AcquireDataFromHardware()
-                    {
-                        if (config.CameraUsed)
-                        {
+        {
+            if (config.CameraUsed)
+            {
 
-                            waitUntilCameraAquisitionIsDone();
+                waitUntilCameraAquisitionIsDone();
 
-                            try
-                            {
-                                checkDataArrived();
-                            }
-                            catch (DataNotArrivedFromHardwareControllerException)
-                            {
+                try
+                {
+                    checkDataArrived();
+                }
+                catch (DataNotArrivedFromHardwareControllerException)
+                {
                     ErrorMng.warningMsg("No Data Arrived from Hardware Controller", -10, true);
-                            }
+                }
 
-                            Dictionary<String, Object> report = new Dictionary<string, object>();
-                            if (config.ReporterUsed)
-                            {
-                                report = GetExperimentReport();
-                                //TODO Change save method
+                Dictionary<String, Object> report = new Dictionary<string, object>();
+                if (config.ReporterUsed)
+                {
+                    report = GetExperimentReport();
+                    //TODO Change save method
                                 
-                            }
-                            save(script, scriptPath, imageData, report, BatchNumber);
-                        }
-                        else
-                        {
-                            Dictionary<String, Object> report = new Dictionary<string, object>();
-                            if (config.ReporterUsed)
-                            {
-                                report = GetExperimentReport();
+                }
+                save(script, scriptPath, imageData, report, BatchNumber);
+            }
+            else
+            {
+                Dictionary<String, Object> report = new Dictionary<string, object>();
+                if (config.ReporterUsed)
+                {
+                    report = GetExperimentReport();
                                
-                            }
-                            if (config.UseMMScripts)
+                }
+                if (config.UseMMScripts)
                     save(builder, motMasterDataPath, report, ExpData.ExperimentName, BatchNumber);
             }
         }
@@ -1347,11 +1345,11 @@ namespace MOTMaster2
 
         public static void LoadSequenceFromPath(string path)
         {
+            sequenceData = null;
             string sequenceJson = File.ReadAllText(path);
             sequenceData = JsonConvert.DeserializeObject<Sequence>(sequenceJson);
             //RenameOldChannels((Dictionary<string, string>)Environs.Hardware.GetInfo("channelMap"));
             //script.Parameters = sequenceData.CreateParameterDictionary();
-
         }
 
         private static void RenameOldChannels(Dictionary<string,string> channelMap)
@@ -1601,7 +1599,7 @@ namespace MOTMaster2
             MMexec axelCommand = new MMexec();
             axelCommand.sender = "MOTMaster";
  
-            axelCommand.mmexec = "";
+            axelCommand.mmexec = ExpData.Description;
             axelCommand.prms["params"] = sequenceData.CreateParameterDictionary(); // all params with values
             axelCommand.prms["scanPrms"] = sequenceData.ScannableParams(); // list of scanables params
             axelCommand.prms["steps"] = sequenceData.CreateStepsDictionary(true);

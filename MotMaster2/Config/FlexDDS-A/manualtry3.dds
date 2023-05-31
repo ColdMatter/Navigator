@@ -1,0 +1,25 @@
+[script]
+dds reset
+dcp 0 spi:CFR1=0x400000
+dcp 0 spi:CFR2=0x01000080
+dcp 0 spi:STP0=0x0FFC00001353F7CF
+dcp 0 wait:5000000:
+dcp 0 update:u
+dcp 0 wait:1h:
+dcp 0 spi:DRL=0x153F7CEE1353F7CF
+dcp 0 spi:DRSS=0x10000000000006FF
+dcp 0 spi:DRR=0x0001008B
+dcp 0 spi:CFR2=0x01080080
+dcp 0 wait:5000000:
+dcp 0 update:u+d
+dcp 0 wait:1h:
+dcp 0 wait::DROVER
+dcp 0 spi:CFR1=0x400000
+dcp 0 spi:CFR2=0x01000080
+dcp 0 spi:STP0=0x3fff000013333333
+dcp 0 wait:5000000:
+dcp 0 update:u-d
+dcp 0 wait:1h:
+dcp start
+
+[factors]

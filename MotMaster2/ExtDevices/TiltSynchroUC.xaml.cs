@@ -146,29 +146,34 @@ namespace MOTMaster2.ExtDevices
         RemoteMessaging remoteTilt;
         public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts; call after creating factors
         {
-            ucExtFactors.AddFactor("Start event number", "sen");
-            ucExtFactors.AddFactor("End event number", "een");
+            //ucExtFactors.AddFactor("Start event number", "sen");
+            //ucExtFactors.AddFactor("End event number", "een");
+            //ucExtFactors.Visibility = Visibility.Collapsed;
 
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors() + 10);
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
             ucExtFactors.UpdateFromSequence(ref _sequenceData);
             ucExtFactors.OnSend2HW += new FactorsUC.Send2HWHandler(Talk2Dvc);
             ucExtFactors.OnCheckHw += new FactorsUC.CheckHwHandler(CheckHardware);
-            ucExtFactors.factorsState = Utils.readDict(Utils.configPath + dvcName + ".CFG");
+            ucExtFactors.factorsState = Utils.readDict(Utils.configPath + dvcName + ".CFG");           
 
             remoteTilt = new RemoteMessaging();
-            remoteTilt.Connect("Axel Tilt 2", 668);
-            remoteTilt.Enabled = OptEnabled() && chkAxelTilt.IsChecked.Value;
+            remoteTilt.Connect("Axel Tilt", 668);
+            remoteTilt.Enabled = OptEnabled();
             remoteTilt.OnReceive += new RemoteMessaging.ReceiveHandler(OnTiltReceive);
             remoteTilt.OnActiveComm += new RemoteMessaging.ActiveCommHandler(OnTiltActiveComm);
 
             ucExtFactors.btnUpdate.Visibility = Visibility.Collapsed;
+            ucExtFactors.Height = 30;
         }
         private bool OnTiltReceive(string message)
         {
             try
             {
                 bool back = true;
+
+                tiltMessage = message;
+                lbCurrPoint.Content = "Current position # " + tiltMessage;
                 return back;
             }
             catch (Exception ex)
@@ -186,10 +191,7 @@ namespace MOTMaster2.ExtDevices
         public void Final() // closing stuff and save state 
         {
             Utils.writeDict(Utils.configPath + dvcName + ".CFG", ucExtFactors.factorsState);
-            // Disconnect
-            //if (!Utils.isNull(Controller.microSynth))
-            //    if (Controller.microSynth.Connected) Controller.microSynth.Disconnect();
-
+            // Disconnect ?
         }
         public GeneralOptions genOpt { get; set; }
         public void UpdateFromOptions(ref GeneralOptions _genOptions)
@@ -198,20 +200,46 @@ namespace MOTMaster2.ExtDevices
             ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled[dvcName], CheckHardware());
         }
         protected string tiltMessage = ""; //protected 
-        public void SequenceEvent(string EventName)
+        public string SequenceEvent(string EventName)
         {
-            if (!ucExtFactors.chkMutable.IsChecked.Value) return;
-            int k = 0;
-            if (EventName.Equals("start"))
+            if (Utils.isNull(remoteTilt)) return "";
+            if (!ucExtFactors.chkMutable.IsChecked.Value || !OptEnabled() || !remoteTilt.Enabled) return "";
+            int k = 0;            
+            switch (EventName)
             {
-                while (tiltMessage.Equals("") && (k < 3000)) // 5min
-                {
-                    Thread.Sleep(100); Utils.DoEvents(); k++;
-                }
-                if (k > 2990) ErrorMng.Log("Error: TiltSynchro is timed out (5 min) !!!", Brushes.DarkRed.Color);
-             }
+                case "start_proc":
+                    {
+                        if (inumStart.Value >= inumFinish.Value)
+                        {
+                            ErrorMng.Log("Error: Start position must be less than Finish position", Brushes.Green.Color);
+                            return "Err:wrong positions";
+                        }
+                        ErrorMng.Log("TiltSynchro is expecting...", Brushes.Green.Color);
+                        while (!tiltMessage.Equals(inumStart.Value.ToString()) && (k < 3000)) // 5min
+                        {
+                            Thread.Sleep(100); Utils.DoEvents(); k++;
+                        }
+                        if (k > 2990)
+                        {
+                            ErrorMng.Log("Error: TiltSynchro is timed out (5 min) !!!", Brushes.DarkRed.Color);
+                            return "Err:time-out";
+                        }
+                        else ErrorMng.Log("Start position detected.", Brushes.DarkGreen.Color);
+                    }
+                    break;
+                case "start_seq":
+                    {
+                        if (tiltMessage.Equals(inumFinish.Value.ToString()) || tiltMessage.Equals("100"))
+                        {
+                            ErrorMng.Log("Finish position detected.", Brushes.Maroon.Color);
+                            return "cancel"; 
+                        }
+                        else return "";
+                    }                   
+                default: return ""; // for any other events
+            }
+            return "";
         }
-
         public bool UpdateDevice(bool ignoreMutable = false)
         {
             return ucExtFactors.UpdateDevice(ignoreMutable);
@@ -231,7 +259,7 @@ namespace MOTMaster2.ExtDevices
         private void chkAxelTilt_Checked(object sender, RoutedEventArgs e)
         {
             if (Utils.isNull(remoteTilt)) return;
-            remoteTilt.Enabled = OptEnabled() && chkAxelTilt.IsChecked.Value;
+            remoteTilt.Enabled = OptEnabled();
             remoteTilt.CheckConnection(true);
         }
     }

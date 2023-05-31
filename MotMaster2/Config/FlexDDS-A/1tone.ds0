@@ -1,5 +1,5 @@
-Amplitude 1 [ampl]=100
-Freq 1 [MHz]=1
-Amplitude  2 [ampl]=40
-Freq 2 [MHz]=1
+Amplitude 1 [dBm]=2
+Freq 1 [MHz]=20
+Amplitude  2 [dBm]=-94
+Freq 2 [MHz]=30
 Mutable=False

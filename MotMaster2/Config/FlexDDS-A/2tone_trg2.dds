@@ -10,7 +10,7 @@ dcp 1 spi:STP0=0x$a1x1$$p1x1$$f1x1$
 dcp wait:$dly1$:
 dcp update:u
 
-dcp 0 spi:STP0=0x2D0E560
+dcp 0 spi:STP0=0x2D0E560 #11MHz
 dcp 1 spi:STP0=0x2D0E560
 dcp wait:$dr1$:
 dcp update:u
@@ -44,13 +44,3 @@ a1x2=Amplitude 1x2 [ampl]
 f1x2=Freq 1x2 [MHz]
 p1x2=Phase 1x2 [deg]=0
 dr2=Duration 2 [ms]
-
-
-
-
-
-
-
-
-
-

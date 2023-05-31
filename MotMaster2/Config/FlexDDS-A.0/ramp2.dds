@@ -1,0 +1,15 @@
+[script]
+
+@rampFreq(0,1.5, 3, 0.5, 6, 1) 
+
+dcp start
+
+[factors]
+fct1=Amplitude 1 [ampl]
+fct2=Freq Low [MHz]
+fct6=Phase 1 [deg]
+fct3=Amplitude  2 [ampl]
+fct4=Freq High [MHz]
+fct5=Freq 3 [MHz]
+dr1=Duration 1 [us]
+dr2=Duration 2 [ms]

@@ -1,0 +1,1 @@
+if we run the sequence which is used to lock the laser (e.g. C:\Users\Navigator\Desktop\MM_Sequence\220719\lock with new parameters), then we open the sequence associated with launching velocity or optical molasses (e.g. C:\Users\Navigator\Desktop\MM_Sequence\221011\launching velocity), the MotMaster will crash immediately. Could you help us to fix it?

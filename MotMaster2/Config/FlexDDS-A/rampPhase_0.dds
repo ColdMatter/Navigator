@@ -1,0 +1,26 @@
+[script]
+#phase ramp example: manual p.20
+
+dds reset
+dcp spi:STP0=0x3fff0000051eb852 
+#both channels: set STP0 to 30 MHz, full amplitude
+dcp spi:CFR2=0x1000080 
+#set CFR2 to matched latency and ASF from STP
+dcp update:u 
+#update; this makes the above appear at the RF outputs
+dcp wait:500000: 
+#wait half a second
+dcp 0 spi:DRR=0x00960096 
+#channel 0: prepare phase ramp: ramp rate. . .
+dcp 0 spi:DRSS=0x0000020000000200 
+#channel 0: . . . ramp step size and. . .
+dcp 0 spi:drl=0x7fffffff00000000 
+#channel 0: . . . ramp limits 0 to 180 degrees
+dcp 0 spi:CFR2=0x1180080 
+#channel 0: enable ramp generator (destination: phase)
+dcp 0 update:u+d 
+#update channel 0, DRCTL HIGH (upwards ramp)
+dcp start
+
+[factors]
+

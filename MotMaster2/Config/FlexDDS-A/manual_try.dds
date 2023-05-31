@@ -1,0 +1,27 @@
+[script]
+dds reset 
+
+dcp spi:DRL=0x$fct2$$fct3$
+dcp spi:DRSS=0x0000000a7fffffff
+dcp spi:DRR=0x0a960000
+dcp spi:CFR2=0x80080
+#dcp 0 wait::BNC_IN_A_RISING #no wait time between teh ramps
+dcp 0 update:u+d
+
+dcp 0 wait::BNC_IN_A_RISING #wait time between the ramps
+dcp update:-d
+
+dcp 0 wait:1:
+dcp 0 wait::DROVER
+dcp 0 update:u
+
+dcp 0 spi:CFR2=0x01000080
+dcp 0 spi:STP0=0x1fff0000$fct1$
+dcp 0 update:u
+
+dcp start
+
+[factors]
+fct1=Frequency 1 [MHz]
+fct2=Freq High [MHz]
+fct3=Freq Low [MHz]

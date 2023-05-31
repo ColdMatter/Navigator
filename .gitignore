@@ -43,3 +43,4 @@ packages/*
 *.tmp_proj
 
 .vscode/*
+/MotMaster2/Config/FlexDDS-A/archive

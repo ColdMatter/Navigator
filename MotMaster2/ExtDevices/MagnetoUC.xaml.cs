@@ -171,9 +171,9 @@ namespace MOTMaster2.ExtDevices
             genOpt = _genOptions;
             ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled[dvcName], CheckHardware());
         }
-        public void SequenceEvent(string EventName)
+        public string SequenceEvent(string EventName)
         {
-
+            return "";
         }
 
         public bool UpdateDevice(bool ignoreMutable = false)

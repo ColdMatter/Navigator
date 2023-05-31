@@ -1,0 +1,11 @@
+[script]
+@Init()
+
+@rampFreq(2, 0.083, $f1$, 2,30,1)
+
+@rampAmpl(2, -0.083, 0,2, 50,1) 
+
+@rampdBm(2, -0.083,-34,2, -5,1) 
+
+[factors]
+f1=first freq {MHz} [dbl]

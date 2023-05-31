@@ -41,6 +41,7 @@ namespace MOTMaster2
 
         public MainWindow()
         {
+            //Utils.baseLocation = Utils.BaseLocation.twoUp;
             controller = new Controller();
             controller.StartApplication();
 
@@ -179,10 +180,7 @@ namespace MOTMaster2
             MMscan mms = new MMscan();
             mms.AsString = modes.Scan;
             //List<string> 
-            cbParamsScan.Items.Clear();
-            //cbParamsScan.Items.Add(ramanPhase);
-            foreach (string param in Controller.sequenceData.ScannableParams())
-                if(param != "") cbParamsScan.Items.Add(param);
+            cbParamsScan_DropDownOpened(null, null);
             cbParamsScan.Text = mms.sParam;
             tbFromScan.Text = mms.sFrom.ToString();
             tbToScan.Text = mms.sTo.ToString();
@@ -235,7 +233,21 @@ namespace MOTMaster2
             //if (Math.Abs(Controller.ExpData.axis) == 2) 
                 ExtDevices.UpdateDevices(false);
             if (Controller.genOptions.DelayBwnShots > 0) Thread.Sleep(Controller.genOptions.DelayBwnShots);
-            ExtDevices.SequenceEvent("start");
+            
+            if (ExtDevices.DetectCancel(ExtDevices.SequenceEvent("start_seq")))
+            {
+                // stoppting proc
+                switch (groupRun)
+                {
+                    case GroupRun.repeat:
+                        if (!btnRun.Content.Equals("R u n")) btnRun_Click(null, null);
+                        break;
+                    case GroupRun.scan:
+                        if (!btnRun.Content.Equals("S c a n")) btnScan_Click(null, null);
+                        break;
+                }                
+            }
+            
             controller.RunStart(paramDict);
             //Would like to use RunStart as this Runs in a new thread
             if (controller.IsRunning())
@@ -257,6 +269,7 @@ namespace MOTMaster2
 
         #region RUNNING THINGS
         bool wait4adjust = false;
+        
         private void realRun(int Iters, string Hub = "none", int cmdId = -1)
         {
             Utils.traceDest = new FileLogger(); //tbLogger;
@@ -333,6 +346,7 @@ namespace MOTMaster2
                 Controller.ExpData.grpMME.Clear();
                 Controller.SaveTempSequence();
                 int Iters = (int)ntbIterNumb.Value;
+                
                 // Start repeat
                 try
                 {
@@ -397,10 +411,12 @@ namespace MOTMaster2
 
         protected void StartScanEvent(bool _start, bool _scanMode, MMscan _mmscan) // GaussImage
         {
+            if (_start) ExtDevices.SequenceEvent("start_proc");
+
             if (cbHub.SelectedIndex != 3) return;
             if (Utils.isNull(GaussImage1)) return;
             if (!GaussImage1.LineMode) return;
-            if (OnStartScan != null) OnStartScan(_start, _scanMode, _mmscan);
+            if (OnStartScan != null) OnStartScan(_start, _scanMode, _mmscan);            
         }
         public delegate void NextScanValHandler(double val);
         public event NextScanValHandler OnNextScanVal;
@@ -437,9 +453,9 @@ namespace MOTMaster2
                 SetScanParamExt(site, prm); // set the device factor
                 Parameter paramRP = Controller.sequenceData.Parameters[prm];
                 int j = cbParamsScan.Items.IndexOf(RamanPhase);
-                if (j>-1) cbParamsScan.SelectedIndex = j;
+                if (j > -1) cbParamsScan.SelectedIndex = j;
                 MMscan scan = new MMscan(); scan.sParam = parameter;
-                scan.sFrom = Convert.ToDouble(fromScanS); scan.sTo = Convert.ToDouble(toScanS); scan.sBy = Convert.ToDouble(byScanS);                
+                scan.sFrom = Convert.ToDouble(fromScanS); scan.sTo = Convert.ToDouble(toScanS); scan.sBy = Convert.ToDouble(byScanS);
                 double wr = scan.sFrom;
 
                 int Iters = (int)Math.Ceiling((scan.sTo - wr) / scan.sBy + 0.001);
@@ -454,23 +470,23 @@ namespace MOTMaster2
                 progBar.Maximum = Iters - 1;
                 int numInterations = Iters;
                 Controller.ExpData.ClearData();
-                Controller.numInterations = numInterations; 
+                Controller.numInterations = numInterations;
                 Controller.ExpData.ExperimentName = tbExperimentRun.Text;
                 if ((Controller.ExpData.ExperimentName.Equals("---") || String.IsNullOrEmpty(Controller.ExpData.ExperimentName)))
                 {
                     Controller.ExpData.ExperimentName = DateTime.Now.ToString("yy-MM-dd_H-mm-ss");
                     tbExperimentRun.Text = Controller.ExpData.ExperimentName;
-                }               
+                }
                 scan.groupID = Controller.ExpData.ExperimentName;
                 Controller.ScanParam = scan.Clone();
-                
+
                 Controller.StaticSequence = true;
                 if (!ExtFactors.IsScannable(prm))
                 {
-                    ErrorMng.errorMsg("Param of dvc. <"+prm+"> is not available!", 125); return;
+                    ErrorMng.errorMsg("Param of dvc. <" + prm + "> is not available!", 125); return;
                 }
                 groupRun = GroupRun.scan;
-                StartScanEvent(true, true, scan); 
+                StartScanEvent(true, true, scan);
                 for (int i = 0; i < numInterations; i++)
                 {
                     if (groupRun == GroupRun.none) break; //False if runThread was stopped elsewhere
@@ -490,7 +506,7 @@ namespace MOTMaster2
                 }
                 StartScanEvent(false, true, scan);
                 controller.AutoLogging = false; ExtFactors.ScanIter(parameter, -1); // reset factors
-                if (!btnScan.Content.Equals("S c a n")) btnScan_Click(null, null);               
+                if (!btnScan.Content.Equals("S c a n")) btnScan_Click(null, null);
                 return;
             }
 
@@ -501,6 +517,13 @@ namespace MOTMaster2
             Dictionary<string, object> scanDict = new Dictionary<string, object>();
             Controller.ExpData.ClearData();
             Controller.ExpData.SaveRawData = true;
+            if (numDittoScanCount.Value > 1)
+            {
+                if (!tbExperimentRun.Text.Equals("---")) 
+                    Controller.ExpData.Description = tbExperimentRun.Text + " (Ditto #" + numDittoScanCount.Value.ToString() + " dly=" + numDittoScanDelay.Value.ToString() + ")";
+                tbExperimentRun.Text = "---";
+            }
+            else Controller.ExpData.Description = "";
             Controller.ExpData.ExperimentName = tbExperimentRun.Text;
             if (Controller.ExpData.ExperimentName.Equals("---") || String.IsNullOrEmpty(Controller.ExpData.ExperimentName))
             {
@@ -527,7 +550,7 @@ namespace MOTMaster2
                 scanLength = (toScanI - fromScanI) / byScanI + 1;
                 if (scanLength < 0)
                 {
-                    ErrorMng.errorMsg("Incorrect looping parameters. <From> value must be smaller than <To> value if it increases per shot.",3,true);
+                    ErrorMng.errorMsg("Incorrect looping parameters. <From> value must be smaller than <To> value if it increases per shot.", 3, true);
                     return;
                 }
                 scanArray = new object[scanLength];
@@ -548,11 +571,11 @@ namespace MOTMaster2
                 scanLength = (int)((toScanD - fromScanD) / byScanD) + 1;
                 if (scanLength < 0)
                 {
-                    ErrorMng.errorMsg("Incorrect looping parameters. <From> value must be smaller than <To> value if it increases per shot.",3,true);
+                    ErrorMng.errorMsg("Incorrect looping parameters. <From> value must be smaller than <To> value if it increases per shot.", 3, true);
                     return;
                 }
                 scanArray = new object[scanLength];
-           
+
                 for (int i = 0; i < scanLength; i++)
                 {
                     scanArray[i] = fromScanD;
@@ -567,7 +590,7 @@ namespace MOTMaster2
             Controller.SaveTempSequence(null, scanParam);
 
             progBar.Minimum = 0;
-            progBar.Maximum = scanArray.Length-1;
+            progBar.Maximum = scanArray.Length - 1;
 
             int c = 0;
             Controller.ScanParam = scanParam.Clone();
@@ -577,19 +600,19 @@ namespace MOTMaster2
                 List<object> ls = scanArray.ToList<object>();
                 scanArray = Utils.Randomize<object>(ls).ToArray<object>();
             }
-            StartScanEvent(true, true, scanParam); 
+            StartScanEvent(true, true, scanParam);
             foreach (object scanItem in scanArray)
             {
                 Controller.BatchNumber = c; progBar.Value = c;
                 param.Value = scanItem;
                 NextScanValEvent(Convert.ToDouble(scanItem)); // call gaussImage before the body of the loop
-                scanDict[parameter] = scanItem;               
+                scanDict[parameter] = scanItem;
                 SetInterferometerParams(scanDict);
                 try
                 {
                     if (!Utils.isNull(Controller.ScanParam)) Controller.ScanParam.Value = Convert.ToDouble(scanItem);
                     if (scanExt) ExtFactors.ScanIter(parameter, c);
-                    if(!SingleShot(scanDict)) groupRun = GroupRun.none;                   
+                    if (!SingleShot(scanDict)) groupRun = GroupRun.none;
                 }
                 catch (Exception e)
                 {
@@ -599,14 +622,29 @@ namespace MOTMaster2
                 lbCurValue.Content = ((double)scanItem).ToString(Constants.ScanDataFormat);
                 DoEvents();
                 if (groupRun != GroupRun.scan) break;
-                c++;      
+                c++;
             }
+            bool bb = btnScan.Content.Equals("Cancel");
+
             if (!btnScan.Content.Equals("S c a n")) btnScan_Click(null, null);
             StartScanEvent(false, true, scanParam);
             param.Value = defaultValue;
             ExtFactors.ScanIter(parameter, -1); // reset factors           
             lbCurValue.Content = ((double)defaultValue).ToString(Constants.ScanDataFormat);
             controller.AutoLogging = false;
+
+            // Ditto-scan
+            if (numDittoScanCount.Value > 1 && bb)
+            {
+                numDittoScanCount.Value -= 1;
+                this.Dispatcher.BeginInvoke(new Action(() => gbDittoScan.BorderBrush = Brushes.Tomato), null);
+                gridScan.IsEnabled = false;
+                Thread.Sleep(Convert.ToInt32(numDittoScanDelay.Value * 1000));
+                gridScan.IsEnabled = true;
+                this.Dispatcher.BeginInvoke(new Action(() => gbDittoScan.BorderBrush = Brushes.Silver), null);
+                btnScan_Click(null, null);
+                if (numDittoScanCount.Value == 1) Controller.ExpData.Description = ""; // the last in the bunch
+            }
         }
 
         private void btnScan_Click(object sender, RoutedEventArgs e)
@@ -1187,7 +1225,20 @@ namespace MOTMaster2
                 case ("set"):
                     foreach (var prm in mme.prms)
                     {
-                        Controller.sequenceData.Parameters[prm.Key].Value = prm.Value;
+                        if (Controller.sequenceData.Parameters.ContainsKey(prm.Key)) Controller.sequenceData.Parameters[prm.Key].Value = prm.Value;
+                        else ErrorMng.errorMsg("No such parameter <" + prm.Key + ">", 4579);
+                    }
+                    if (tcMain.SelectedItem == tbSingle)
+                    {
+                        lbSetPrms.Items.Clear();
+                        foreach (var pair in mme.prms)
+                        {
+                            string pn = pair.Key;
+                            Controller.sequenceData.Parameters[pn].Value = pair.Value;
+                            ListBoxItem lbi = new ListBoxItem();
+                            lbi.Content = string.Format(" {0} = {1:G8}", pair.Key, pair.Value);
+                            lbSetPrms.Items.Add(lbi);
+                        }
                     }
                     break;
                 case ("load"):
@@ -1405,6 +1456,7 @@ namespace MOTMaster2
             switch ((string)scanBox.Content)
             {
                 case "Multi Scan":
+                    Controller.ScanParam = null;
                     scanBox.Content = "Cancel";
                     scanBox.Background = Brushes.Coral;
                     Controller.ExpData.grpMME.Clear();
@@ -1701,6 +1753,21 @@ namespace MOTMaster2
                 mi.Header = itm; mi.Click += new System.Windows.RoutedEventHandler(LoadSequence_Click);
                 mOpenRecent.Items.Add(mi);
             }
+        }
+
+        private void cbParamsScan_DropDownOpened(object sender, EventArgs e)
+        {
+            string last = cbParamsScan.Text;
+            cbParamsScan.Items.Clear();
+            //cbParamsScan.Items.Add(ramanPhase);
+            foreach (string param in Controller.sequenceData.ScannableParams())
+                if (param != "") cbParamsScan.Items.Add(param);
+            cbParamsScan.Text = last;
+        }
+
+        private void numDittoScanDelay_ValueChanged(object sender, NationalInstruments.Controls.ValueChangedEventArgs<double> e)
+        {
+
         }
     }
 }

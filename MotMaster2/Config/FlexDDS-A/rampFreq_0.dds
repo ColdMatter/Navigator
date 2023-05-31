@@ -1,0 +1,35 @@
+[script]
+#frequency ramp example: manual p.20
+
+dds reset
+dcp spi:STP0=0x3fff0000051eb852 
+#set 20 MHz, HALF amplitude
+dcp spi:CFR2=0x1000080 
+#set single tone ASF bit and matched latency
+dcp update:u 
+#update AD9910
+dcp wait:5000000: 
+#wait half a second
+dcp spi:DRL=0x1999999a051eb852 
+#prepare ramp limits to 20 MHz and 100 MHz
+dcp spi:DRSS=0x0000035a0000035a
+#prepare ramp step sizes
+#dcp spi:DRR=0x00080008 
+dcp spi:DRR=0x61a861a8
+#prepare ramp rate
+dcp spi:CFR2=0x1080080 
+#enable ramp
+dcp update:u+d 
+#IO UPDATE to start upwards ramp (DRCTL HIGH)
+dcp 0 spi:STP0=0x3fff00001999999a 
+#channel 0: set STP at 100 MHz, full amplitude
+dcp 0 spi:CFR2=0x1000080 
+#channel 0: disable ramp
+dcp wait:1:
+dcp wait::35 
+#wait indefinitely for ramp to complete (event 35)
+dcp 0 update:u 
+#IO UPDATE channel 0 to transition to STP0 (no glitch)
+dcp start
+
+[factors]

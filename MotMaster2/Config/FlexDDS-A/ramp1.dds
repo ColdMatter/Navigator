@@ -1,28 +1,48 @@
 [script]
 dds reset
-dcp spi:CFR2=0x80
+dcp spi:STP0=0x$fct1$0000$fct6$
+dcp spi:CFR2=0x1000080
+dcp update:u
+
+dcp wait:4000000:
 dcp spi:DRL=0x$fct4$$fct2$
-dcp spi:DRSS=0x0000001a0000000d
-dcp spi:DRR=0x00960096
+dcp spi:DRSS=0x0000003a0000003a
+dcp spi:DRR=0x61a861a8
 dcp spi:CFR2=0x80080
 dcp update:u+d
+
+dcp wait:1:
+dcp wait::DROVER
 dcp wait:4000000:
-dcp update:-d
-dcp spi:DRL=0x$fct5$$fct2$
-dcp spi:DRSS=0x0000001a00000081
+dcp update:u-d
+
 dcp wait:2000000:
+dcp wait:1:
+dcp wait::35
+dcp update:u
+
+dcp spi:DRL=0x$fct5$$fct2$
+dcp spi:DRSS=0x0000005a0000005a
+dcp spi:DRR=0x61a861a8
+dcp spi:CFR2=0x80080
 dcp update:u+d
+
+dcp wait:1:
+dcp wait::DROVER
+dcp wait:2000000:
+dcp update:u-d 
+
+#dcp wait:2000000: #wait time in between ramps
+dcp wait:1:
+dcp wait::35
+dcp update:u
 
 dcp start
 
 [factors]
 fct1=Amplitude 1 [ampl]
 fct2=Freq Low [MHz]
-fct6=Phase 1 [deg]
+fct6=Freq Start [MHz]
 fct3=Amplitude  2 [ampl]
 fct4=Freq High [MHz]
 fct5=Freq 3 [MHz]
-
-
-
-

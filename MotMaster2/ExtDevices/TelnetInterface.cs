@@ -25,7 +25,7 @@ namespace MinimalisticTelnet
         SGA = 3
     }
 
-    class TelnetConnection
+    public class TelnetConnection
     {
         public TcpClient tcpSocket;
 

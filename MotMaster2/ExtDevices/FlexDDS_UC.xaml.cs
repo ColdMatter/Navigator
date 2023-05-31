@@ -20,6 +20,7 @@ using DAQ.HAL;
 using ErrorManager;
 using UtilsNS;
 using System.Security.Policy;
+using Path = System.IO.Path;
 
 namespace MOTMaster2.ExtDevices
 {
@@ -31,9 +32,9 @@ namespace MOTMaster2.ExtDevices
         }
         public bool Connected { get { return connected; } }
 
-        public void Send2HW(string command, bool keepOpen = true)
+        public bool Send2HW(string command, bool keepOpen = false)
         {
-            Write(command, keepOpen);
+            return Write(command, keepOpen);
         }
     }
     /// <summary>
@@ -41,12 +42,15 @@ namespace MOTMaster2.ExtDevices
     /// </summary>
     public partial class FlexDDS_UC : UserControl, IExtDevice
     {
+
+        private bool localDebug = false; 
         FlexDDS_HW flexDDS_HW;
         DDS_script script;
         List<GroupBox> SelectFactors;
         public FlexDDS_UC(string __dvcName, SolidColorBrush brush)
         {
             InitializeComponent();
+            localDebug = Utils.TheosComputer() && (string)System.Environment.GetEnvironmentVariables()["COMPUTERNAME"] != "DESKTOP-U334RMA";
             _dvcName = __dvcName;
             grpBox.Header = dvcName;
             grpBox.BorderBrush = brush;
@@ -72,10 +76,26 @@ namespace MOTMaster2.ExtDevices
             if (Utils.isNull(genOpt)) return false;
             else return genOpt.ExtDvcEnabled["FlexDDS"];
         }
+        public bool TestComm()
+        {
+            if (Utils.isNull(flexDDS_HW)) return false;
+            if (localDebug) return true; // no actual hardware
+            string scr = "\r\n";
+            return flexDDS_HW.Send2HW(scr);
+        }
+        public bool RestartDDS()
+        {
+            string adr = flexDDS_HW.address;
+            flexDDS_HW.Disconnect(); flexDDS_HW = null; GC.Collect(); Utils.Sleep(200);
+            flexDDS_HW = new FlexDDS_HW(adr); Utils.Sleep(200);
+            flexDDS_HW.Connect();
+            if (!flexDDS_HW.Connected) return false;
+            return TestComm();
+        }
         protected bool lastCheckHardware = false;
         public bool CheckHardware()
         {
-            if (Controller.config.Debug) lastCheckHardware = true;
+            if (localDebug) lastCheckHardware = true;
             else // check connection to the device
             {
                 if (Utils.isNull(flexDDS_HW)) lastCheckHardware = false;
@@ -101,7 +121,7 @@ namespace MOTMaster2.ExtDevices
             //if (Controller.config.Debug) return true;
             if (!CheckHardware())
             {
-                ErrorMng.errorMsg("The device <" + dvcName + "> is not accesable!", 103); return false;
+                ErrorMng.errorMsg("The device <" + dvcName + "> is not accesible!", 103); return false;
             }
             if (!CheckEnabled(true)) return false;
             
@@ -113,20 +133,25 @@ namespace MOTMaster2.ExtDevices
             }
             scr = scr.Replace("\r", "\r\n");
             ucExtFactors.UpdateValues();
-            if (Controller.config.Debug) ErrorMng.Log(scr);
-            else flexDDS_HW.Send2HW(scr);
+            if (localDebug) ErrorMng.Log(scr);
+            else            
+                if (!flexDDS_HW.Send2HW(scr))
+                {
+                    ErrorMng.errorMsg("The device <" + dvcName + "> is not accesible!", 103); return false;
+                }
             return true;
         }
         public void Init(ref Sequence _sequenceData, ref GeneralOptions _genOptions) // params, opts
         {
             // load config file            
-            Dictionary<string, string> cfg = Utils.readDict(dvcPath+"FlexDDS.CFG");
+            Dictionary<string, string> cfg = Utils.readDict(Path.Combine(dvcPath,"FlexDDS.CFG"));
             if (!cfg.ContainsKey("Address"))
             {
                 ErrorMng.errorMsg("Address is missing from " + Utils.configPath + dvcName + ".CFG -> set to default #12", -436);
-                flexDDS_HW = new FlexDDS_HW("ASRL12::INSTR");
+                flexDDS_HW = new FlexDDS_HW("ASRL12::INSTR"); 
             }
             else flexDDS_HW = new FlexDDS_HW(cfg["Address"]);
+            flexDDS_HW.localDebug = localDebug;
 
             factorRow.Height = new GridLength(ucExtFactors.UpdateFactors());
             ucExtFactors.Init(); UpdateFromOptions(ref _genOptions);
@@ -138,7 +163,8 @@ namespace MOTMaster2.ExtDevices
             {
                 ErrorMng.errorMsg("LastScript is missing from " + dvcPath + ".CFG", -437); return;
             }
-            cbTemplates_DropDownOpened(null, null);
+            //cbTemplates_DropDownOpened(null, null);
+            readDDSfiles();
             int j = -1;
             for (int i = 0; i < cbTemplates.Items.Count; i++)
             {
@@ -149,8 +175,8 @@ namespace MOTMaster2.ExtDevices
             {
                 ErrorMng.errorMsg(cfg["LastScript"] + " is missing.", -438); return;
             }
-            cbTemplates.SelectedIndex = j;
-            cbTemplates_DropDownClosed(null, null);
+            if (cbTemplates.Items.Count > 0) cbTemplates.SelectedIndex = Utils.EnsureRange(j, 0, cbTemplates.Items.Count-1);
+            loadSelected();
             CheckEnabled();
         }
         public void Final() // closing stuff and save state 
@@ -188,22 +214,17 @@ namespace MOTMaster2.ExtDevices
             bool bb = true;
             return bb;
         }
-        public void SequenceEvent(string EventName)
+        public string SequenceEvent(string EventName)
         {
-
+            return "";
         }
         public bool UpdateDevice(bool ignoreMutable = false)
         {
             return ucExtFactors.UpdateDevice(ignoreMutable) && UpdateOthers(ignoreMutable);
         }
         private int lastSelectedIndex = -1;
-        private void cbTemplates_DropDownOpened(object sender, EventArgs e)
+        private void readDDSfiles()
         {
-            if (cbTemplates.SelectedIndex > -1) // save the previous template values
-            {
-                Utils.writeDict(System.IO.Path.ChangeExtension(script.filename, ".ds0"), ucExtFactors.factorsState);
-                lastSelectedIndex = cbTemplates.SelectedIndex;
-            }
             string[] files = Directory.GetFiles(dvcPath, "*.dds");
             cbTemplates.Items.Clear();
             foreach (string file in files)
@@ -211,18 +232,20 @@ namespace MOTMaster2.ExtDevices
                 ComboBoxItem cbi = new ComboBoxItem(); cbi.Content = System.IO.Path.GetFileName(file);
                 cbTemplates.Items.Add(cbi);
             }
+        }
+        private void cbTemplates_DropDownOpened(object sender, EventArgs e)
+        {
+            if (cbTemplates.SelectedIndex > -1) // save the previous template values
+            {
+                Utils.writeDict(System.IO.Path.ChangeExtension(script.filename, ".ds0"), ucExtFactors.factorsState);
+                lastSelectedIndex = cbTemplates.SelectedIndex;
+            }
+            readDDSfiles();
         } 
-        private void cbTemplates_DropDownClosed(object sender, EventArgs e)
+        private void loadSelected()
         {
             if (cbTemplates.SelectedIndex.Equals(-1))
-            {
-                ErrorMng.errorMsg("No template selected.", 121);
-                if (lastSelectedIndex > -1)
-                {
-                    ErrorMng.warningMsg("Trying to recover the last active one."); cbTemplates.SelectedIndex = lastSelectedIndex;
-                }
-                else return;
-            }
+                if (cbTemplates.Items.Count > 0) cbTemplates.SelectedIndex = 0;
             string fn = dvcPath + ((ComboBoxItem)cbTemplates.SelectedItem).Content.ToString();
             if (!File.Exists(fn))
             {
@@ -231,6 +254,20 @@ namespace MOTMaster2.ExtDevices
             script = new DDS_script(fn);
             SetAllFactors(true);           
             CheckEnabled();
+        }
+        private void cbTemplates_DropDownClosed(object sender, EventArgs e)
+        {
+            if (cbTemplates.SelectedIndex.Equals(-1))
+            {
+                ErrorMng.errorMsg("No template selected.", 121);
+                if (lastSelectedIndex > -1)
+                {
+                    ErrorMng.warningMsg("Trying to recover the last active one."); 
+                    cbTemplates.SelectedIndex = lastSelectedIndex;
+                }
+                else return;
+            }
+            loadSelected();
         }      
         private void SetAllFactors(bool inclContent) // from script
         {              
@@ -317,7 +354,9 @@ namespace MOTMaster2.ExtDevices
         }
         private void miCheckHw_Click(object sender, RoutedEventArgs e)
         {
-            ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["FlexDDS"], CheckHardware(), CheckEnabled(false));
+           if (RestartDDS()) Utils.TimedMessageBox("It's fine");
+            else Utils.TimedMessageBox("It's broken");
+            //ucExtFactors.UpdateEnabled(genOpt.ExtDvcEnabled["FlexDDS"], CheckHardware(), CheckEnabled(false));
         }
         private void miTestHw_Click(object sender, RoutedEventArgs e)
         {
@@ -337,6 +376,33 @@ namespace MOTMaster2.ExtDevices
                 flexDDS_HW.Send2HW(ss); 
             }
         }
+        private void miNewTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            string fn = new InputBox("New template name", "", "").ShowDialog();
+            if (fn.Equals("")) return;
+            fn = Path.ChangeExtension(fn, ".dds");
+            if (File.Exists(Path.Combine(dvcPath,fn))) { Utils.TimedMessageBox("Error: the template with that name already exists.", "", 3000); return; }
+            string[] sa = { "[script]", "@Init()", "", "[factors]", "" };
+            List<string> ls = new List<string>(sa);
+            Utils.writeList(Path.Combine(dvcPath, fn), ls);
+            ls.Clear(); ls.Add("# factors data"); string fn0 = Path.ChangeExtension(fn, ".ds0");
+            Utils.writeList(Path.Combine(dvcPath, fn0), ls); Utils.Sleep(500);
+
+            cbTemplates_DropDownOpened(null, null);
+            int j = -1;
+            for (int i = 0; i < cbTemplates.Items.Count; i++)
+            {
+                string ss = ((ComboBoxItem)cbTemplates.Items[i]).Content.ToString();
+                if (ss.Equals(fn)) { j = i; break; }
+            }
+            if (j == -1)
+            {
+                ErrorMng.errorMsg(fn + " is missing.", -439); return;
+            }
+            else cbTemplates.SelectedIndex = j;
+            loadSelected();
+            btnEdit_Click(null, null);
+        }
         private void imgTripleBars_MouseUp_1(object sender, MouseButtonEventArgs e)
         {
             ContextMenu cm = this.FindResource("cmTripleBars") as ContextMenu;
@@ -346,10 +412,3 @@ namespace MOTMaster2.ExtDevices
     }
 }
 
-/* Meta commands - start with @
- * Init() or Init(0/1) - initialize both or 0/1 channel 
- * 
- * 
- * 
- * 
- */

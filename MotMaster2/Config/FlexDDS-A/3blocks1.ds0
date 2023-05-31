@@ -1,11 +1,11 @@
 Amplitude 1 [ampl]=100
 Frequency 1 [MHz]=10
-Amplitude 2.0 [ampl]=20
-Frequency 2.0 [MHz]=11
+Amplitude 2.0 [ampl]=100
+Frequency 2.0 [MHz]=20
 Amplitude 2.1 [ampl]=10
-Frequency 2.1 [MHz]=11
+Frequency 2.1 [MHz]=20
 Duration 1 [ns]=1000000
 Amplitude 3 [ampl]=100
 Frequency 3 [MHz]=10
 Duration 2 [ns]=13000
-Mutable=True
+Mutable=False

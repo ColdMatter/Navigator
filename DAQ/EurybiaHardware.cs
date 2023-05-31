@@ -14,7 +14,7 @@ namespace DAQ.HAL
     /// This is the specific hardware for the Navigator experiment. Currently, the channels used must be specified here. At a later date, the physical channels may be defined inside a settings file for the hardware controller.
     /// </summary>
     public class EurybiaHardware : DAQ.HAL.Hardware
-    {       
+    {
         public EurybiaHardware()
         {
             //add information for MMConfig
@@ -63,7 +63,7 @@ namespace DAQ.HAL
             Info.Add("AIAcquireTrigger", "pfi0");
 
             //Add other instruments such as serial channels
-            
+
             if (File.Exists(Utils.configPath + "WindFreak.CFG"))
             {
                 ExtDevices["WindFreak"] = "2";
@@ -76,13 +76,12 @@ namespace DAQ.HAL
             Instruments.Add("MSquaredDCS", new ICEBlocDCS());
             Instruments.Add("MSquaredPLL", new ICEBlocPLL());
 
-            if (Environment.Environs.Debug)
+            //if (Environment.Environs.Debug)
             {
-                ExtDevices["FlexDDS"] = "3";
+                ExtDevices["FlexDDS"] = "4";
             }
-
+            //ExtDevices["TiltSynchro"] = "1";
             //ExtDevices["Magneto"] = "1";
-            ExtDevices["TiltSynchro"] = "1";
 
             // map of all analog, digital and counter channels 
             // complex names (name/showAs): 
@@ -149,8 +148,9 @@ namespace DAQ.HAL
             if (config.UseMuquans) AddDigitalOutputChannel("serialPreTrigger", hsdioBoard, 0, 31); */
 
             //map the analog output channels
-            AddAnalogOutputChannel("AO-2/motCTRL", aoBoard + "/ao2", -10, 10); // absent
-            AddAnalogOutputChannel("AO-3/mphiCTRL", aoBoard + "/ao3", -10, 10); // absent
+            AddAnalogOutputChannel("AO-2/eomVCOM2", aoBoard + "/ao2", -10, 10, Brushes.DarkSlateBlue);
+            AddAnalogOutputChannel("AO-3/masterSlowResM2", aoBoard + "/ao3", -10, 10, Brushes.DarkSlateBlue);
+            AddAnalogOutputChannel("AO-30/slaveSlowResM2", aoBoard + "/ao30", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-4/aom2DFreq", aoBoard + "/ao4", -10, 10, Brushes.Green);
             AddAnalogOutputChannel("AO-5/aomPushFreq", aoBoard + "/ao5", -10, 10, Brushes.Green);
             AddAnalogOutputChannel("AO-6/aomXPFreq", aoBoard + "/ao6", -10, 10, Brushes.DarkSlateBlue);
@@ -159,7 +159,7 @@ namespace DAQ.HAL
             AddAnalogOutputChannel("AO-9/aomYMFreq", aoBoard + "/ao9", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-10/aomZPFreq", aoBoard + "/ao10", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-11/aomZMFreq", aoBoard + "/ao11", -10, 10, Brushes.DarkSlateBlue);
-            AddAnalogOutputChannel("AO-0/DetFreq", aoBoard + "/ao0", -10, 10, Brushes.DarkSlateBlue);
+            AddAnalogOutputChannel("AO-0/aomDetFreq", aoBoard + "/ao0", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-13/xbias2DCoil", aoBoard + "/ao13", -10, 10, Brushes.Green);
             AddAnalogOutputChannel("AO-14/ybias2DCoil", aoBoard + "/ao14", -10, 10, Brushes.Green);
             AddAnalogOutputChannel("AO-19/2DMOTCoil", aoBoard + "/ao19", 0, 10, Brushes.Green);
@@ -174,13 +174,12 @@ namespace DAQ.HAL
             AddAnalogOutputChannel("AO-24/aomYPAtt", aoBoard + "/ao24", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-25/aomYMAtt", aoBoard + "/ao25", -10, 10, Brushes.DarkSlateBlue);
             AddAnalogOutputChannel("AO-26/aomZPAtt", aoBoard + "/ao26", -10, 10, Brushes.DarkSlateBlue);
-            AddAnalogOutputChannel("AO-27aomZMAtt", aoBoard + "/ao27", -10, 10, Brushes.DarkSlateBlue);
-            AddAnalogOutputChannel("AO-1/DetAttn", aoBoard + "/ao1", -10, 10, Brushes.DarkSlateBlue);
-            AddAnalogOutputChannel("AO-28/chirpFreq", aoBoard + "/ao28", -10, 10);
-            AddAnalogOutputChannel("AO-29/phaseCtrl", aoBoard + "/ao29", -10, 10);
-            AddAnalogOutputChannel("AO-12/spareCoil", aoBoard + "/ao12", -10, 10);
-            AddAnalogOutputChannel("AO-30", aoBoard + "/ao30", -10, 10);
-            AddAnalogOutputChannel("AO-31", aoBoard + "/ao31", -10, 10);
+            AddAnalogOutputChannel("AO-27/aomZMAtt", aoBoard + "/ao27", -10, 10, Brushes.DarkSlateBlue);
+            AddAnalogOutputChannel("AO-1/aomDetAttn", aoBoard + "/ao1", -10, 10, Brushes.DarkSlateBlue);
+            AddAnalogOutputChannel("AO-28/chirpFreq", aoBoard + "/ao28", -10, 10, Brushes.Green);
+            AddAnalogOutputChannel("AO-29/phaseCtrl", aoBoard + "/ao29", -10, 10, Brushes.Green);
+            AddAnalogOutputChannel("AO-12/@", aoBoard + "/ao12", -10, 10);
+            AddAnalogOutputChannel("AO-31/Test", aoBoard + "/ao31", -10, 10);
 
             //map the analog input channels
             AddAnalogInputChannel("photodiode", aiBoard + "/ai0", AITerminalConfiguration.Pseudodifferential, -10, 10);
@@ -200,28 +199,27 @@ namespace DAQ.HAL
             AddDigitalOutputChannel("digit-6/aomZPTTL", hsdioBoard, 0, 6, Brushes.Crimson);
             AddDigitalOutputChannel("digit-7/aomZMTTL", hsdioBoard, 0, 7, Brushes.Crimson);
             AddDigitalOutputChannel("digit-26/aomDetTTL", hsdioBoard, 0, 26, Brushes.Crimson);
-            AddDigitalOutputChannel("digit-21/DetTTL", hsdioBoard, 0, 21, Brushes.DarkBlue);
+            AddDigitalOutputChannel("digit-21/cameraTTL", hsdioBoard, 0, 21, Brushes.DarkBlue);
             AddDigitalOutputChannel("digit-24/MWTTL", hsdioBoard, 0, 24, Brushes.DarkBlue);
             AddDigitalOutputChannel("digit-25/FreeDO1", hsdioBoard, 0, 25, Brushes.DarkBlue);
-            AddDigitalOutputChannel("digit-8", hsdioBoard, 0, 8);
-            AddDigitalOutputChannel("digit-9", hsdioBoard, 0, 9);
-            AddDigitalOutputChannel("digit-10/@", hsdioBoard, 0, 10);
-            AddDigitalOutputChannel("digit-11", hsdioBoard, 0, 11);
-            AddDigitalOutputChannel("digit-12", hsdioBoard, 0, 12);
-            AddDigitalOutputChannel("digit-13", hsdioBoard, 0, 13);
-            AddDigitalOutputChannel("digit-14", hsdioBoard, 0, 14);
-            AddDigitalOutputChannel("digit-15", hsdioBoard, 0, 15);
-            AddDigitalOutputChannel("digit-16", hsdioBoard, 0, 16);
-            AddDigitalOutputChannel("digit-17", hsdioBoard, 0, 17);
-            AddDigitalOutputChannel("digit-18", hsdioBoard, 0, 18);
-            AddDigitalOutputChannel("digit-19", hsdioBoard, 0, 19);
-            AddDigitalOutputChannel("digit-23", hsdioBoard, 0, 23);
-            AddDigitalOutputChannel("digit-27", hsdioBoard, 0, 27);
-            AddDigitalOutputChannel("digit-28", hsdioBoard, 0, 28);
-            AddDigitalOutputChannel("digit-29", hsdioBoard, 0, 29);
-            AddDigitalOutputChannel("digit-30", hsdioBoard, 0, 30);
-            AddDigitalOutputChannel("digit-31", hsdioBoard, 0, 31);
-
+            AddDigitalOutputChannel("digit-8/coolingAOMM2", hsdioBoard, 0, 8, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-9/repumpAOMM2", hsdioBoard, 0, 9, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-10/vapourCellM2", hsdioBoard, 0, 10, Brushes.DarkRed);
+            AddDigitalOutputChannel("digit-11/phaseLockM2", hsdioBoard, 0, 11, Brushes.DarkRed);
+            AddDigitalOutputChannel("digit-12/highGainPhaseLockM2", hsdioBoard, 0, 12, Brushes.DarkRed);
+            AddDigitalOutputChannel("digit-13/ramanMasterM2", hsdioBoard, 0, 13, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-14/ramanXM2", hsdioBoard, 0, 14, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-15/ramanYM2", hsdioBoard, 0, 15, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-16/ramanZM2", hsdioBoard, 0, 16, Brushes.DarkGreen);
+            AddDigitalOutputChannel("digit-17/@", hsdioBoard, 0, 17);
+            AddDigitalOutputChannel("digit-18/@", hsdioBoard, 0, 18);
+            AddDigitalOutputChannel("digit-19/@", hsdioBoard, 0, 19);
+            AddDigitalOutputChannel("digit-23/@", hsdioBoard, 0, 23);
+            AddDigitalOutputChannel("digit-27/@", hsdioBoard, 0, 27);
+            AddDigitalOutputChannel("digit-28/@", hsdioBoard, 0, 28);
+            AddDigitalOutputChannel("digit-29/@", hsdioBoard, 0, 29);
+            AddDigitalOutputChannel("digit-30/@", hsdioBoard, 0, 30);
+            AddDigitalOutputChannel("digit-31/@", hsdioBoard, 0, 31);
 
             AddCounterChannel("Counter", multiBoard + "/ctr0");
 

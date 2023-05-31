@@ -201,9 +201,9 @@ namespace MOTMaster2.ExtDevices
             // Talk2Dvc(...
             return true;
         }
-        public void SequenceEvent(string EventName)
+        public string SequenceEvent(string EventName)
         {
-
+            return "";
         }
         public bool UpdateDevice(bool ignoreMutable = false)
         {

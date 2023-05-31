@@ -1,0 +1,54 @@
+[script]
+dds reset
+
+dcp 0 spi:STP0=0x$fct1$$fct3$$fct2$
+#sets single tone to factors above
+
+dcp 0 spi:CFR2=0x01000080 
+#think this step is just needed after stp??
+
+dcp 0 update:u 
+#starts the stp
+
+dcp 0 wait::BNC_IN_A_RISING 
+#waits to see rising edge in bncA
+
+dcp 0 spi:DRR=0x$upRate$$downRate$
+#sets ramp rate
+# (not sure what the numbers mean but higher 
+#number is slower)
+#first 4 digits are up ramp
+#second 4 are down ramp 
+#total ramp time also depends on
+# the ramp distance
+#need to find actual equation for DRR and DRSS
+
+dcp 0 spi:DRSS=0x$upStep$$downStep$ #00001F4000001F40 
+#sets step size, not too sure what the number
+# means though. Smaller number is longer ramp
+
+dcp 0 spi:drl=0x$rangeHigh$0000$rangeLow$0000 #ffffffff00000000
+#defines the ramp range
+dcp 0 spi:CFR2=0x02280080
+#enables ramp generator
+dcp 0 update:u+d
+
+dcp start
+
+[factors]
+fct1=Amplitude 1 [ampl]
+fct2=Freq 1 [MHz]
+fct3=Phase 2 [deg] = 0
+fct4=Amplitude High [dBm]
+fct5=Amplitude Low [dBm]
+upRate=Up ramp rate [hex:4]
+downRate=Down ramp rate [hex:4]=upRate
+upStep=Up ramp step [hex:8]
+downStep=Down ramp step[hex:8]=upStep
+rangeLow=Low limit of ramp range[dBmR]
+rangeHigh=High limit of ramp range[dBmR]
+
+
+
+
+

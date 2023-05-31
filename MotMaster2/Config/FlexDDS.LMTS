@@ -1,0 +1,12 @@
+# time
+ms=0:1E3
+us=0:1E6
+ns=0:1E9 
+# frequency
+Hz=0:1E9
+kHz=0:1E6
+MHz=0:1E3 
+# amplitude [%] 0-100
+ampl=0:100
+# phase degree 0-360
+deg=0:360

@@ -10,7 +10,7 @@ using UtilsNS;
 
 namespace AOMmaster
 {
-    class Hardware
+    public class Hardware
     {
         private string dvcDIO;
         niHSDIO hsTaskIn, hsTaskOut;
@@ -18,7 +18,7 @@ namespace AOMmaster
         private string dvcAO;
         public double analogMin { get; private set;}
         public double analogMax { get; private set; }
-        private bool hwSet = false;
+        public bool hwSet { get; private set; }
 
         public string boolArr2string(bool[] bArray)
         {
@@ -44,21 +44,37 @@ namespace AOMmaster
         {
             if (OnLog != null) OnLog(txt+" <hd>", detail);
         }
+        string InternalChannelList = "0,1,2,3,4,5,6,7,20,21,24,25,26";
+        public int[] extraDIO()
+        {
+            string[] icl = InternalChannelList.Split(',');
+            List<int> ls = new List<int>();
+            for (int i=0; i<32; i++)
+            {
+                bool found = false;
+                foreach (string ss in icl)
+                    found |= ss.Equals(i.ToString());
+                if (!found) ls.Add(i); 
+            }
+            return ls.ToArray();
+        }
 
         public bool configHardware(string _dvcDIO, string _dvcAO, double _analogMin, double _analogMax) // if false look for hardwareSet; if true - do it
-        {            
+        {
+            hwSet = false;
             // Digital In/Out
             dvcDIO = _dvcDIO;
-            string ChannelList = "0,1,2,3,4,5,6,7,20,21,24,25,26";  
+            
+            string ChannelList = "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31";
             analogMin = _analogMin; analogMax = _analogMax;          
             if ((dvcDIO == "") || Utils.TheosComputer()) return false;
             hsTaskIn = null; hsTaskOut = null;
             // read in
-            hsTaskIn = niHSDIO.InitAcquisitionSession(dvcDIO, false, true, "");
+            hsTaskIn = niHSDIO.InitAcquisitionSession(dvcDIO, false, false, "");
             hsTaskIn.AssignStaticChannels(ChannelList);
             hsTaskIn.ConfigureDataVoltageLogicFamily(ChannelList, niHSDIOConstants._33vLogic);
             // write out
-            hsTaskOut = niHSDIO.InitGenerationSession(dvcDIO, false, true, "");
+            hsTaskOut = niHSDIO.InitGenerationSession(dvcDIO, false, false, "");
             hsTaskOut.AssignStaticChannels(ChannelList);
             hsTaskOut.ConfigureDataVoltageLogicFamily(ChannelList, niHSDIOConstants._33vLogic);
             // Analog Out

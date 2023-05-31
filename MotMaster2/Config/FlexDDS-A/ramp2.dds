@@ -8,48 +8,46 @@ dcp spi:CFR2=0x80080
 dcp update:u+d
 dcp wait::35
 dcp update:-d
-#dcp spi:DRL=0x$fct5$$fct2$
-#dcp spi:DRSS=0x0000001a00000081
-#dcp wait:$dr2$:
-#dcp update:u+d
+dcp wait:1: #
+dcp wait::35 #
+dcp update:u #
 
+#dcp wait:1: #10 is minimum value 
+dcp spi:CFR2=0x1000080 #
+dcp update:u #
+
+dcp spi:STP0=0x3fff0000$fct6$ #
+dcp update:u #
+dcp spi:DRL=0x$fct5$$fct2$
+dcp spi:DRSS=0x0000001a0000001a
+dcp spi:DRR=0x06960696
+dcp spi:CFR2=0x80080
+#dcp wait:$dr2$:
+dcp update:u+d
+dcp wait:1:
+dcp wait::35
+dcp update:-d
+
+dcp wait:1: #
 dcp wait::35
 dcp spi:CFR2=0x1000080
 dcp update:u
 
+dcp spi:STP0=0x3fff0000$fct6$ #
+dcp wait:2000000: #
 #dcp 0 spi:STP0=0x2D0E560
 #dcp 1 spi:STP0=0x2D0E560
+dcp update:u
 
 dcp start
 
 [factors]
 fct1=Amplitude 1 [ampl]
 fct2=Freq Low [MHz]
-fct6=Phase 1 [deg]
+fct7=Phase 1 [deg]
 fct3=Amplitude  2 [ampl]
 fct4=Freq High [MHz]
 fct5=Freq 3 [MHz]
-dr1=Duration 1 [ms]
+fct6=Freq ST [MHz]
+dr1=Duration 1 [us]
 dr2=Duration 2 [ms]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

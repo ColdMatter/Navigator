@@ -15,10 +15,12 @@ namespace DAQ.HAL
         public string address { get; protected set; }
         protected bool connected = false;
         protected int baudrate = 9600;
+        public bool localDebug = false;
 
         public RS232Instrument(String visaAddress)
         {
             this.address = visaAddress;
+            localDebug = Environs.Debug;
         }
 
         public override void Connect()
@@ -27,7 +29,7 @@ namespace DAQ.HAL
         }
         protected void Connect(SerialTerminationMethod method)
         {
-            if (!Environs.Debug)
+            if (!localDebug)
             {
                 try
                 {
@@ -49,29 +51,30 @@ namespace DAQ.HAL
 
         public override void Disconnect()
         {
-            if (!Environs.Debug) serial.Dispose();
+            if (!localDebug) serial.Dispose();
             connected = false;
         }
 
         protected override void Write(string command)
         {
             if (!connected) Connect();
-            if (!Environs.Debug) serial.Write(command);
+            if (!localDebug) serial.Write(command);
             Disconnect();
         }
 
         protected void Write(byte[] command)
         {
             if (!connected) Connect();
-            if (!Environs.Debug) serial.Write(command);
+            if (!localDebug) serial.Write(command);
             Disconnect();
         }
 
-        protected void Write(string command, bool keepOpen)
+        protected bool Write(string command, bool keepOpen)
         {
-            if (!connected) Connect();
-            if (!Environs.Debug) serial.Write(command);
-            if (!keepOpen)Disconnect();
+            if (!connected) Connect();           
+            if (!localDebug) serial.Write(command);
+            if (!keepOpen) Disconnect();
+            return true;
         }
         protected string Query(string q)
         {
@@ -97,7 +100,7 @@ namespace DAQ.HAL
         {
             double d = 0.0;
             if (!connected) Connect();
-            if (!Environs.Debug) d = Convert.ToDouble(Query(q));
+            if (!localDebug) d = Convert.ToDouble(Query(q));
             Disconnect();
             return d;
         }

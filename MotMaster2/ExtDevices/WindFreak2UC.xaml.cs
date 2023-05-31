@@ -180,9 +180,9 @@ namespace MOTMaster2.ExtDevices
             bb &= Talk2Dvc("RFPower:C", chkRFPowerC.IsChecked.Value); bb &= Talk2Dvc("RFPower:D", chkRFPowerD.IsChecked.Value);
             return bb;
         }
-        public void SequenceEvent(string EventName)
+        public string SequenceEvent(string EventName)
         {
-
+            return "";
         }
         public bool UpdateDevice(bool ignoreMutable = false)
         {

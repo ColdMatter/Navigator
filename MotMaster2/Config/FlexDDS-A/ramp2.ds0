@@ -1,3 +1,5 @@
-Freq High [MHz]=4
 Freq Low [MHz]=2
+Freq High [MHz]=4
+Freq 3 [MHz]=5
+Freq ST [MHz]=4
 Mutable=False

@@ -8,7 +8,7 @@
         x:Class="MOTMaster2.MainWindow"
         x:Name="frmMain" 
 
-    Title="MOTMaster2" Height="875.714" Width="923.884" ResizeMode="CanResizeWithGrip" Closing="frmMain_Closing" Icon="Properties/3axis.ico" SourceInitialized="frmMain_SourceInitialized" PreviewKeyDown="frmMain_PreviewKeyDown" WindowState="Maximized" Loaded="frmMain_Loaded">
+    Title="MOTMaster2" Height="875.714" Width="1105.384" ResizeMode="CanResizeWithGrip" Closing="frmMain_Closing" Icon="Properties/3axis.ico" SourceInitialized="frmMain_SourceInitialized" PreviewKeyDown="frmMain_PreviewKeyDown" WindowState="Maximized" Loaded="frmMain_Loaded">
     <Window.Resources>
         <controls:Controller x:Key="controller"/>
     </Window.Resources>
@@ -69,7 +69,7 @@
             </GroupBox>
         </Grid>
         <Grid Grid.Row="2" Margin="0,4.857,0.143,0.857" Grid.ColumnSpan="2">
-            <TabControl x:Name="tcMain" HorizontalAlignment="Left" Margin="0,-1,0,0.286" Width="825" SelectedIndex="0" SelectionChanged="tcMain_SelectionChanged">
+            <TabControl x:Name="tcMain" HorizontalAlignment="Left" Margin="0,-1,0,0.286" Width="1005" SelectedIndex="0" SelectionChanged="tcMain_SelectionChanged">
                 <TabItem x:Name="tbRepeat" Header="  Repeat  " Width="70" Height="25" Foreground="#FF085A01" FontSize="13" Background="#FFECECEC">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -83,8 +83,8 @@
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="tbScan" Header="   Scan   " Width="70" Height="25" Margin="0,0,0,0.333" Foreground="#FF614300" FontSize="13" Background="#FFE9E7E7">
-                    <Grid>
-                        <ComboBox x:Name="cbParamsScan" HorizontalAlignment="Left" Height="27" Margin="10,0,0,0" VerticalAlignment="Center" Width="206" Grid.ColumnSpan="2" SelectedIndex="0" SelectionChanged="cbParamsScan_SelectionChanged" Background="#FFFEFEEC"/>
+                    <Grid x:Name="gridScan">
+                        <ComboBox x:Name="cbParamsScan" HorizontalAlignment="Left" Height="27" Margin="10,0,0,0" VerticalAlignment="Center" Width="206" Grid.ColumnSpan="2" SelectedIndex="0" SelectionChanged="cbParamsScan_SelectionChanged" Background="#FFFEFEEC" DropDownOpened="cbParamsScan_DropDownOpened"/>
                         <Label Content="Parameter:" HorizontalAlignment="Left" Height="26" Margin="10,0,0,0" VerticalAlignment="Top" Width="125" Grid.ColumnSpan="2"/>
                         <Label Content="From:" HorizontalAlignment="Left" Height="26" Margin="301,22,0,24" VerticalAlignment="Center" Width="41"/>
                         <TextBox x:Name="tbFromScan" HorizontalAlignment="Left" Height="26" Margin="341,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="73" Text="0" FontSize="14"/>
@@ -94,7 +94,16 @@
                         <TextBox x:Name="tbToScan" HorizontalAlignment="Left" Height="26" Margin="445,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="73" Text="100" FontSize="14"/>
                         <TextBox x:Name="tbByScan" HorizontalAlignment="Left" Height="26" Margin="549,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="53" Text="1" FontSize="14"/>
                         <Label x:Name="lbCurValue" Content="0" HorizontalAlignment="Left" Height="27" Margin="221,21,0,20.051" VerticalAlignment="Center" Width="88" FontWeight="Bold" FontSize="14" Foreground="#FF27836E"/>
-                        <CheckBox x:Name="chkRandomize" Content="Randomize" Width="92" Margin="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <CheckBox x:Name="chkRandomize" Content="Randomize" Width="92" Margin="0,0,180,0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <GroupBox x:Name="gbDittoScan" Header="Ditto-scan" Width="180" HorizontalAlignment="Right" Margin="0,0,0.494,0.051" BorderBrush="Silver">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="#" Margin="0,10,0,0"></Label>
+                                <ni:RadixNumericTextBoxInt32 x:Name="numDittoScanCount" Height="24" Range="1, 1000, System.Int32" RadixVisibility="Collapsed" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50"/>
+                                <Label Content="Dly[s]" Margin="0,10,0,0"></Label>
+                                <ni:NumericTextBoxDouble x:Name="numDittoScanDelay" HorizontalAlignment="Left" Height="24" Margin="0" VerticalAlignment="Center" Width="55" Range="0, 1000, System.Double" ValueChanged="numDittoScanDelay_ValueChanged"/>
+
+                            </StackPanel>
+                        </GroupBox>
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="tbMultiScan" Header="  Multi Scan  " Width="100" Height="25"  VerticalAlignment="Bottom" FontSize="13" Background="#FFE4E3E3" Foreground="#FF614300">
@@ -116,7 +125,7 @@
                         <Button x:Name="btnMScan" Content="Multi Scan" HorizontalAlignment="Left" Height="33" Margin="135,64,0,-24.429" VerticalAlignment="Center" Width="85" Background="#FFF9EFAD" Grid.Column="4" Click="btnMScan_Click" FontSize="14"/>
                         <TextBox x:Name="tbToMScan" HorizontalAlignment="Left" Height="26" Margin="52,70,0,-23.429" TextWrapping="Wrap" VerticalAlignment="Center" Width="73" Text="100" FontSize="14" Grid.Column="4" TextChanged="tbFromMScan_TextChanged"/>
                         <TextBox x:Name="tbByMScan" HorizontalAlignment="Left" Height="26" Margin="163,31,0,15.571" TextWrapping="Wrap" VerticalAlignment="Center" Width="57" Text="1" FontSize="14" Grid.Column="4" TextChanged="tbFromMScan_TextChanged"/>
-                        <CheckBox x:Name="cbSaveAfterLoop" Grid.Column="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4.857,7,0,0" Width="129" Content="Save Lowest Loop" FontSize="13" Height="16" Visibility="Collapsed"/>
+                        <CheckBox x:Name="cbSaveAfterLoop" Grid.Column="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="4.857,7,0,0" Width="129" Content="Save Lowest Loop" FontSize="13" Height="16"/>
                         <ListBox x:Name="lstParams" Margin="0,0,0.286,-0.429" Grid.Column="1" MouseUp="lstParams_MouseUp" FontSize="13" DataContextChanged="lstParams_DataContextChanged" Grid.ColumnSpan="2"/>
                         <ListBox x:Name="lstValue" Margin="4.857,0,0,-0.429" Grid.Column="2" FontSize="13" FontWeight="Bold" Foreground="#FF0F03AA" Grid.ColumnSpan="2"/>
                         <ListBox x:Name="lstOut" Margin="4.857,0,0.429,-0.429" Grid.Column="5" FontSize="13" Visibility="Hidden">

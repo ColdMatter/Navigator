@@ -8,13 +8,36 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using ErrorManager;
 using UtilsNS;
+using System.Reflection;
 
 namespace MOTMaster2.ExtDevices
 {
+    public static class DCPutils
+    {
+
+        public static string dbl2hex(double vl, int len)
+        {
+            string sval = "";
+            try
+            {
+                sval = Convert.ToString(Convert.ToInt64(vl), 16);
+            }
+            catch (OverflowException e)
+            {
+                ErrorMng.errorMsg("Overflow -> " + e.Message + " for " + vl, 120);
+            }
+            if (len > 0) // if size-restricted
+                if (sval.Length > len)
+                {
+                    ErrorMng.errorMsg("Hexadecimal too long -> " + sval, 121); return "";
+                }
+            return new String('0', len - sval.Length) + sval;
+        }
+    }
     /// <summary>
     /// Name, Desc [unit], value/factor
     /// </summary>
-    public class DCP_factors: List<Tuple<string,string,string>> //
+    public class DCP_factors : List<Tuple<string, string, string>> 
     {
         public DCP_factors()
         {
@@ -24,10 +47,10 @@ namespace MOTMaster2.ExtDevices
         {
             AsListOfString = ls;
         }
-        
+
         public int AddFactor(string[] fct)
         {
-            if (!Utils.InRange(fct.Length,2,3))
+            if (!Utils.InRange(fct.Length, 2, 3))
             {
                 ErrorMng.errorMsg("Wrong format factor", 444); return -1;
             }
@@ -42,8 +65,8 @@ namespace MOTMaster2.ExtDevices
                     break;
                 case 3:
                     this.Add(new Tuple<string, string, string>(fct[0], fct[1], fct[2]));
-                    break;                
-             }           
+                    break;
+            }
             return this.Count;
         }
         public int IdxFromDesc(string fDesc)
@@ -85,9 +108,9 @@ namespace MOTMaster2.ExtDevices
             }
             set
             {
-                Clear(); 
+                Clear();
                 foreach (string ss in value)
-                    if(!string.IsNullOrWhiteSpace(ss))
+                    if (!string.IsNullOrWhiteSpace(ss))
                         AddFactor(ss.Split('='));
             }
         }
@@ -95,13 +118,13 @@ namespace MOTMaster2.ExtDevices
     public class DDS_units : List<Tuple<string, double, int>> // 0 size -> no size restrictions
     {
         public bool allowNoUnit = false;
+        public const double freqStep = 0.2328306437; // [Hz] -> frequency step
+        public const double usStep = 1.024; // microsec step
+        public const double nsStep = 0.125; // nanosec step (high-res mode)
+        public const double degreeSemiTurn = 32767; // 180 [deg]
+        public const double amplFull_dBm = 2; // full amplitude [dBm]
+        public const double amplFull_ampl = 16383; // full amplitude [ampl]
 
-        const double freqStep = 232.83064E-3; // [Hz] -> frequency step
-        const double usStep = 1.024; // microsec step
-        const double nsStep = 0.125; // nanosec step (high-res mode)
-        const double degreeSemiTurn = 32767; // 180 [deg]
-        const double amplFull_dBm = -2; // full amplitude [dBm]
-        const double amplFull_ampl = 16383; // full amplitude [ampl]
         public DDS_units()
         {
             // time
@@ -118,8 +141,12 @@ namespace MOTMaster2.ExtDevices
             AddUnit("deg", degreeSemiTurn / 180, 4);
             // non-coeff conversion            
             AddUnit("dBm", Double.NaN, 4);
+            AddUnit("dBmR", Double.NaN, 4);
             // decimal
-            AddUnit("dec", Double.NaN, 0);
+            AddUnit("int", Double.NaN, 0);
+            AddUnit("dbl", Double.NaN, 0); // only for macro commands
+            // hexa-decimal
+            AddUnit("hex", Double.NaN, 0);
         }
         public int AddUnit(string unit, double coeff, int size)
         {
@@ -131,39 +158,52 @@ namespace MOTMaster2.ExtDevices
             int j = -1;
             for (int i = 0; i < Count; i++)
             {
-                if ((this[i].Item1).Equals(unit)) { j = i; break; }
+                if ((this[i].Item1).Equals(unit) ||
+                    ((this[i].Item1).Equals("hex") && unit.Substring(0, 3).Equals("hex"))) { j = i; break; }
             }
             return j;
         }
 
-        public string replaceValueByUnit(string unit, double vl)
+        public string replaceValueByUnit(string unit, double vl, int len = 0)
         {
             if (unit.Equals("") && allowNoUnit) return Convert.ToString(vl);
-            int j = IdxFromUnit(unit);
+            int j = IdxFromUnit(unit); string sval = "";
             if (j < 0)
             {
                 ErrorMng.errorMsg("Undefined unit -> " + unit, 122); return "";
             }
-            double fct = Double.NaN;
-            if (Double.IsNaN(this[j].Item2)) 
+            double fct = Double.NaN; int hexaLen = this[j].Item3;
+            if (Double.IsNaN(this[j].Item2))
             {
-                switch (unit) // non-coeff units
+                switch (unit.Substring(0, 3)) // non-coeff units
                 {
-                     case "dBm":
+                    case "dBm":
                         double up = (vl - amplFull_dBm) / 20;
                         fct = Math.Pow(10, up) * (Math.Pow(2, 14) - 1);
+                        if (unit.Equals("dBmR")) fct = fct * 4;
                         break;
+                    case "int":
+                        return Convert.ToInt64(vl).ToString();
+                    case "dbl":
+                        return vl.ToString();
+                    case "hex":
+                        string[] hex = unit.Split(':');
+                        if (!hex.Length.Equals(2))
+                        {
+                            ErrorMng.errorMsg("Wrong format of hex unit -> " + unit, 122); return "";
+                        }
+                        return DCPutils.dbl2hex(vl, Convert.ToInt32(hex[1]));                       
                 }
             }
             else // coeff conversion
             {
                 switch (unit) // time is decimal
                 {
-                    case "ms":                        
+                    case "ms":
                     case "us":
-                        return Convert.ToInt32(vl * this[j].Item2).ToString();
+                        return Convert.ToInt64(vl * this[j].Item2).ToString();
                     case "ns":
-                        return Convert.ToInt32(vl * this[j].Item2).ToString() + "h";
+                        return Convert.ToInt64(vl * this[j].Item2).ToString() + "h";
                 }
                 fct = vl * this[j].Item2;
             }
@@ -171,72 +211,14 @@ namespace MOTMaster2.ExtDevices
             {
                 ErrorMng.errorMsg("Wrong unit -> " + unit, 123); return "";
             }
-            string sval = "";
-            try
-            {
-                sval = Convert.ToString(Convert.ToInt32(fct), 16);
-            }   
-            catch (OverflowException e)
-            {
-                ErrorMng.errorMsg("Overflow -> " + e.Message + " for " + fct, 120);
-            }    
-            if (this[j].Item3 > 0) // if size-restricted
-                if (sval.Length > this[j].Item3)
-                {
-                    ErrorMng.errorMsg("Hexadecimal too long -> " + sval, 121); return "";
-                }
-            return new String('0', this[j].Item3 - sval.Length) + sval;
-        }
-    }
-    public class MetaDCP
-    {
-        private Dictionary<string, List<string>> metaCmds;
-        private DDS_units units;
-        public MetaDCP(ref DDS_units _units)
-        {
-            units = _units;
-            metaCmds = Utils.readStructList(Utils.configPath + "MetaDDS.txt");
-        }
-
-        public List<string> meta2Script(string meta, Dictionary<string, string> fcts)
-        {
-            List<string> ls = new List<string>();
-            if (meta.IndexOf('(') == -1)
-            {
-                ErrorMng.errorMsg("( is missing", 456); return ls;
-            }
-            // no arguments
-            foreach (var cmd in metaCmds)
-            {
-                if (meta.Equals(cmd.Key))
-                {
-                    ls.AddRange(cmd.Value);
-                    return ls;
-                }
-            }
-            // with arguments
-            string[] mtCmd = meta.Split('('); string[] mtArgs = (mtCmd[1].Remove(mtCmd[1].Length-1)).Split(','); // in the script          
-            foreach (var cmd in metaCmds)
-            {
-                string[] mtList = cmd.Key.Split('('); if (mtList[1].Equals(')')) continue; // no arguments
-                string[] mtPrms = (mtList[1].Remove(mtList[1].Length - 1)).Split(','); // from MetaDDS file
-                if (mtCmd[0].Equals(mtList[0])) // match arg with prm
-                {
-                    // replace mtPrms with mtArgs from cmd.Value
-                    foreach (string line in cmd.Value)
-                    {
-
-                    }
-                }
-            }
-            return ls;
+            return DCPutils.dbl2hex(fct, (len == 0) ? this[j].Item3 : len);
         }
     }
 
     public class DDS_script
     {
         public DDS_units units;
-        private MetaDCP metaDCP;
+        private DDSmacros metaCommand;
         private void SetUnits()
         {
             units = new DDS_units();
@@ -245,13 +227,13 @@ namespace MOTMaster2.ExtDevices
         {
             AsList = new List<string>(_template);
             SetUnits();
-            metaDCP = new MetaDCP(ref units); 
+            metaCommand = new DDSmacros(ref units);
         }
         public DDS_script(string __filename)
         {
             Open(__filename);
             SetUnits();
-            metaDCP = new MetaDCP(ref units);
+            metaCommand = new DDSmacros(ref units);
         }
         // data core source
         protected void UpdateFromScript()
@@ -261,29 +243,66 @@ namespace MOTMaster2.ExtDevices
             _factorsSection = new DCP_factors(ls);
         }
         public List<string> _AsList;
-        public List<string> AsList 
+        public List<string> AsList
         {
             get { return _AsList; }
-            private set 
+            private set
             {
                 _AsList = new List<string>(value);
                 UpdateFromScript();
-            } 
+            }
         }
         public string[] AsArray
         {
             get { return AsList.ToArray(); }
-            set { AsList = new List<string>(value); }
+            set 
+            { 
+                AsList = new List<string>(value); 
+            }
         }
-        private List<string> _scriptSection;       
+        private List<string> _scriptSection;
         public List<string> scriptSection
         {
             get { return _scriptSection; }
         }
+        public List<string> scriptSectionNoComments
+        {
+            get
+            {
+                List<string> ls = new List<string>(); bool multilineComment = false;
+                foreach (string line in scriptSection)
+                {
+                    if (line.Length > 1)
+                    {
+                        if (multilineComment)
+                        {
+                            if (line.Substring(0, 2).Equals("#>")) // the end of multi line comment
+                            {
+                                multilineComment = false; continue;
+                            }
+                            else continue;
+                        }
+                        else
+                        {
+                            if (line.Substring(0, 2).Equals("#<")) // the begining of multi line comment
+                            {
+                                multilineComment = true; continue;
+                            }
+                        }
+                    }
+                    if (line.Length > 0)
+                    {
+                        if (line[0] == '#') continue;
+                    }
+                    ls.Add(Utils.skimRem(line));
+                }
+                return ls;
+            }
+        }
         public DCP_factors _factorsSection;
         public DCP_factors factorsSection
         {
-            get { return _factorsSection; } 
+            get { return _factorsSection; }
         }
         public List<string> ExtractFactors(bool select, out bool correct)
         {
@@ -291,12 +310,12 @@ namespace MOTMaster2.ExtDevices
             List<string> sf = new List<string>(); // factors in the script
             if (scriptSection.Count == 0) return sf;
 
-            foreach (string line in scriptSection)
+            foreach (string line in scriptSectionNoComments)
             {
                 int j = 0;
                 string ss = Utils.skimRem(line);
-                if (ss.Length.Equals(0)) continue;               
-                 
+                if (ss.Length.Equals(0)) continue;
+
                 while (ss.IndexOf('$', j + 1) > -1)
                 {
                     int i = ss.IndexOf('$', j + 1);
@@ -328,11 +347,11 @@ namespace MOTMaster2.ExtDevices
                 {
                     if (factorsSection.IdxFromName(fct.Item3) > -1) // resulting field is a factor
                     {
-                        if (rslt.IndexOf(fct.Item3) == -1)                    
-                            ErrorMng.errorMsg(fct.Item3 + " is not recognized as a factor.", -134); 
-                        continue;                                           
+                        if (rslt.IndexOf(fct.Item3) == -1)
+                            ErrorMng.errorMsg(fct.Item3 + " is not recognized as a factor.", -134);
+                        continue;
                     }
-                    if (sf.IndexOf(fct.Item1) > -1) rslt.Add(fct.Item1);               
+                    if (sf.IndexOf(fct.Item1) > -1) rslt.Add(fct.Item1);
                 }
             }
             return rslt;
@@ -358,27 +377,27 @@ namespace MOTMaster2.ExtDevices
                 textBox.Text += line + "\r";
             }
         }
-        private string _filename;
-        public string filename { get { return _filename; } }
+        public string filename { get; private set; }
         public bool Open(string fn)
         {
             if (!File.Exists(fn)) return false;
-            _filename = fn;
+            filename = fn;
             AsArray = File.ReadAllLines(fn);
             return true;
         }
         public void Save(string fn = "")
         {
-            if (!fn.Equals("")) _filename = fn;
+            if (!fn.Equals("")) filename = fn;
             if (filename.Equals(""))
             {
                 ErrorMng.errorMsg("Missing filename", 223); return;
             }
+            while (_AsList[_AsList.Count - 1].Trim().Equals("")) _AsList.RemoveAt(_AsList.Count - 1); // remove trailing empties                      
             File.WriteAllLines(filename, AsArray);
         }
-        public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors = null) 
+        public Dictionary<string, string> replacements(FactorsUC ucExtFactors, Dictionary<string, string> OtherFactors = null)
         {
-            Dictionary<string, string> repl; 
+            Dictionary<string, string> repl;
             if (Utils.isNull(OtherFactors)) repl = new Dictionary<string, string>();
             else repl = new Dictionary<string, string>(OtherFactors);
             Dictionary<string, double> vals = new Dictionary<string, double>();
@@ -390,10 +409,10 @@ namespace MOTMaster2.ExtDevices
                 {
                     ErrorMng.errorMsg("Missing value of factor <" + key + "> ", 118); continue;
                 }
-                if (!factorsSection[j].Item3.Equals("")) 
-                {                   
-                    if (!double.TryParse(factorsSection[j].Item3, out fct)) // factor-constant
-                        fct = vals[factorsSection[j].Item3];                                                                    
+                if (!factorsSection[j].Item3.Equals(""))
+                {
+                    if (!double.TryParse(factorsSection[j].Item3, out fct) && vals.ContainsKey(factorsSection[j].Item3)) // factor-constant
+                        fct = vals[factorsSection[j].Item3];
                 }
                 else // open factor
                 {
@@ -408,7 +427,7 @@ namespace MOTMaster2.ExtDevices
                 }
                 bool isBrackets = (pr.Item2.IndexOf("[") > 0) && (pr.Item2.IndexOf("]") > 0);
                 string unit = "";
-                if (isBrackets) unit = Utils.betweenStrings(pr.Item2, "[", "]");                 
+                if (isBrackets) unit = Utils.betweenStrings(pr.Item2, "[", "]");
                 if (!units.allowNoUnit && unit.Equals(""))
                 {
                     ErrorMng.errorMsg("No units in " + pr.Item2, 120); continue;
@@ -417,24 +436,15 @@ namespace MOTMaster2.ExtDevices
                 vals[key] = fct;
                 string ss = units.replaceValueByUnit(unit, fct);
                 if (ss.Equals("")) continue;
-                repl[key] = ss;             
+                repl[key] = ss;
             }
             return repl;
         }
         public List<string> actualScript(Dictionary<string, string> fcts)
         {
-            List<string> ls = new List<string>();
-            foreach (string line in scriptSection)
+            List<string> ls = new List<string>(); ls.Add("");
+            foreach (string line in scriptSectionNoComments)
             {
-                if (line.Length > 0)
-                {               
-                    if (line[0] == '#') continue;
-                    if (line[0] == '@')
-                    {
-                        ls.AddRange(metaDCP.meta2Script(line.Substring(1), fcts));                   
-                        continue;
-                    }
-                }
                 string ss = Utils.skimRem(line);
                 foreach (var fct in fcts)
                 {
@@ -444,6 +454,14 @@ namespace MOTMaster2.ExtDevices
                 if (ss.IndexOf('$') > -1)
                 {
                     ErrorMng.errorMsg("Missing factor in " + line, 323); continue;
+                }
+                if (line.Length > 0)
+                {
+                    if (line[0] == '@')
+                    {
+                        ls.AddRange(metaCommand.meta2Script(ss.Substring(1)));
+                        continue;
+                    }
                 }
                 ls.Add(ss);
             }

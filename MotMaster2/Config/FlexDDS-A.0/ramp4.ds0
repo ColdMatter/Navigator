@@ -1,0 +1,6 @@
+Amplitude 1 [dBm]=-5
+Freq 1 [MHz]=7
+Amplitude  2 [ampl]=40
+Freq 2 [MHz]=30
+test 1[dbl]=2
+Mutable=True
